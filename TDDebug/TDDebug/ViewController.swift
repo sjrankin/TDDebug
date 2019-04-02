@@ -11,11 +11,13 @@ import Cocoa
 import AppKit
 import MultipeerConnectivity
 
+/// Code to run the main view controller for TDDebug.
 class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSource, MultiPeerDelegate, MainProtocol, StateProtocol
 {
     let KVPTableTag = 100
     let LogTableTag = 200
     var MPMgr: MultiPeerManager!
+    var LocalCommands: ClientCommands!
     
     override func viewDidLoad()
     {
@@ -29,6 +31,8 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
         MPMgr = MultiPeerManager()
         MPMgr.Delegate = self
         
+        LocalCommands = ClientCommands()
+        
         AddKVPData("Program", Versioning.ApplicationName)
         AddKVPData("Version", Versioning.MakeVersionString())
         AddKVPData("Build", "\(Versioning.Build)")
@@ -38,11 +42,11 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
     {
         super.viewDidLayout()
         IdiotLights["A1"] = (A1View, A1Text)
-        IdiotLights["A2"] = (A1View, A2Text)
-        IdiotLights["A3"] = (A1View, A3Text)
+        IdiotLights["A2"] = (A2View, A2Text)
+        IdiotLights["A3"] = (A3View, A3Text)
         IdiotLights["B1"] = (B1View, B1Text)
-        IdiotLights["B2"] = (B1View, B2Text)
-        IdiotLights["B3"] = (B1View, B3Text)
+        IdiotLights["B2"] = (B2View, B2Text)
+        IdiotLights["B3"] = (B3View, B3Text)
         IdiotLights["C1"] = (C1View, C1Text)
         IdiotLights["C2"] = (C2View, C2Text)
         IdiotLights["C3"] = (C3View, C3Text)
@@ -151,6 +155,11 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
         let Item = LogItem(Text: "Device \(Changed.displayName) is \(StateDescription)")
         Item.HostName = "TDDump"
         AddLogMessage(Item: Item)
+        if Changed == _ConnectedClient && NewState == .notConnected
+        {
+            _ConnectedClient = nil
+            State.TransitionTo(NewState: .Disconnected)
+        }
     }
     
     func DisplayHeartbeatData(_ Raw: String, TimeStamp: String, Host: String, Peer: MCPeerID)
@@ -286,6 +295,7 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
                 case .ClearLogList:
                     self.LogItems.removeAll()
                     self.LogTable.reloadData()
+                    
                 default:
                     break
                 }
@@ -296,6 +306,7 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
     {
         let GetClientCmds = MessageHelper.MakeGetAllClientCommands()
         let EncapsulatedID = MPMgr.SendWithAsyncResponse(Message: GetClientCmds, To: Peer)
+        print("GetCommands(EncapsulatedID)=\(EncapsulatedID.uuidString)")
         WaitingFor.append((EncapsulatedID, MessageTypes.GetAllClientCommands))
     }
     
@@ -307,11 +318,13 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
         {
             if _ConnectedClient == nil
             {
+                print("Connected client reset - command list cleared.")
                 _ClientCommandList.removeAll()
             }
             else
             {
-            GetCommandsFromClient(_ConnectedClient!)
+                print("Set connected client - getting command list.")
+                GetCommandsFromClient(_ConnectedClient!)
             }
         }
     }
@@ -387,10 +400,26 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
         }
     }
     
-    func ReceivedData(Manager: MultiPeerManager, Peer: MCPeerID, RawData: String)
+    func SendClientCommandList(Peer: MCPeerID, CommandID: UUID)
     {
-        let MessageType = MessageHelper.GetMessageType(RawData)
-        print("Received message type \(MessageType)")
+        let AllCommands = MessageHelper.MakeAllClientCommands(Commands: LocalCommands)
+        let EncapsulatedReturn = MessageHelper.MakeEncapsulatedCommand(WithID: CommandID, Payload: AllCommands)
+        MPMgr.SendPreformatted(Message: EncapsulatedReturn, To: Peer)
+    }
+    
+    func ReceivedData(Manager: MultiPeerManager, Peer: MCPeerID, RawData: String,
+                      OverrideMessageType: MessageTypes? = nil, EncapsulatedID: UUID? = nil)
+    {
+        var MessageType: MessageTypes = .Unknown
+        if let OverrideMe = OverrideMessageType
+        {
+            MessageType = OverrideMe
+        }
+        else
+        {
+            MessageType = MessageHelper.GetMessageType(RawData)
+        }
+        print("MessageType=\(MessageType)")
         switch MessageType
         {
         case .HandShake:
@@ -420,9 +449,19 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
         case .TextMessage:
             HandleTextMessage(RawData)
             
+        case .GetAllClientCommands:
+            SendClientCommandList(Peer: Peer, CommandID: EncapsulatedID!)
+            
         default:
+            print("Unhandled message type: \(MessageType)")
             break
         }
+    }
+    
+    func ProcessAsyncResult(CommandID: UUID, Peer: MCPeerID, MessageType: MessageTypes, RawData: String)
+    {
+        WaitingFor.removeAll(where: {$0.0 == CommandID})
+        print("RawData=\(RawData)")
     }
     
     func ReceivedAsyncData(Manager: MultiPeerManager, Peer: MCPeerID, CommandID: UUID, RawData: String)
@@ -432,8 +471,24 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
         {
             if ID == CommandID
             {
+                //Handle the asynchronous response here - be sure to return after handling it and to not
+                //drop through the bottom of the loop.
                 print("Found matching response for \(MessageType) command.")
+                ProcessAsyncResult(CommandID: CommandID, Peer: Peer, MessageType: MessageType, RawData: RawData)
+                return
             }
+        }
+        
+        //If we're here, we most likely received an encapsulated command.
+        if let MessageType = MessageHelper.MessageTypeFromString(RawData)
+        {
+            print("Bottom of ReceivedAsyncData: MessageType=\(MessageType), RawData=\(RawData)")
+            ReceivedData(Manager: Manager, Peer: Peer, RawData: RawData,
+                         OverrideMessageType: MessageType, EncapsulatedID: CommandID)
+        }
+        else
+        {
+            print("Unknown message type found: \(RawData)")
         }
     }
     
