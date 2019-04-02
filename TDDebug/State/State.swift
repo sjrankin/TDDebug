@@ -36,7 +36,7 @@ class State
     ///
     /// - Parameter NewState: The new state to transition to.
     /// - Returns: The result of the transition request.
-    public static func TransitionTo(NewState: HandShakeCommands) -> HandShakeCommands
+    @discardableResult public static func TransitionTo(NewState: HandShakeCommands) -> HandShakeCommands
     {
         if !IsInitialized
         {
