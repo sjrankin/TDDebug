@@ -193,7 +193,8 @@ class MultiPeerManager: NSObject, MCNearbyServiceAdvertiserDelegate, MCNearbySer
     ///   - peerID: The ID of the peer accepting the invitation.
     ///   - context: Not used.
     ///   - invitationHandler: Handles invitations.
-    func advertiser(_ advertiser: MCNearbyServiceAdvertiser, didReceiveInvitationFromPeer peerID: MCPeerID, withContext context: Data?, invitationHandler: @escaping (Bool, MCSession?) -> Void)
+    func advertiser(_ advertiser: MCNearbyServiceAdvertiser, didReceiveInvitationFromPeer peerID: MCPeerID,
+                    withContext context: Data?, invitationHandler: @escaping (Bool, MCSession?) -> Void)
     {
         print("Received invitation from \(peerID.displayName)")
         invitationHandler(true, Session)
@@ -215,7 +216,8 @@ class MultiPeerManager: NSObject, MCNearbyServiceAdvertiserDelegate, MCNearbySer
     ///   - browser: The nearby service browser.
     ///   - peerID: The ID of the peer that was found.
     ///   - info: Not used.
-    func browser(_ browser: MCNearbyServiceBrowser, foundPeer peerID: MCPeerID, withDiscoveryInfo info: [String : String]?)
+    func browser(_ browser: MCNearbyServiceBrowser, foundPeer peerID: MCPeerID,
+                 withDiscoveryInfo info: [String : String]?)
     {
         print("Found peer \(peerID.displayName) - inviting to session.")
         browser.invitePeer(peerID, to: Session, withContext: nil, timeout: 10)
@@ -258,6 +260,7 @@ class MultiPeerManager: NSObject, MCNearbyServiceAdvertiserDelegate, MCNearbySer
     {
         let Message = String(data: data, encoding: .utf8)
         let Cmd = MessageHelper.GetMessageType(Message!)
+        print("didReceive: Cmd=\(Cmd)")
         if Cmd == MessageTypes.IDEncapsulatedCommand
         {
             if let (ID, EnMsg) = MessageHelper.DecodeEncapsulatedCommand(Message!)
@@ -266,7 +269,8 @@ class MultiPeerManager: NSObject, MCNearbyServiceAdvertiserDelegate, MCNearbySer
                 return
             }
         }
-        Delegate?.ReceivedData(Manager: self, Peer: peerID, RawData: Message!)
+        Delegate?.ReceivedData(Manager: self, Peer: peerID, RawData: Message!,
+                               OverrideMessageType: nil, EncapsulatedID: nil)
     }
     
     /// Handle the received input stream from a session event.
@@ -276,7 +280,8 @@ class MultiPeerManager: NSObject, MCNearbyServiceAdvertiserDelegate, MCNearbySer
     ///   - stream: The input stream from the peer.
     ///   - streamName: The name of the stream.
     ///   - peerID: The ID of the peer that started the input stream.
-    func session(_ session: MCSession, didReceive stream: InputStream, withName streamName: String, fromPeer peerID: MCPeerID)
+    func session(_ session: MCSession, didReceive stream: InputStream, withName streamName: String,
+                 fromPeer peerID: MCPeerID)
     {
         print("Received stream data from \(peerID.displayName)")
     }
@@ -288,7 +293,8 @@ class MultiPeerManager: NSObject, MCNearbyServiceAdvertiserDelegate, MCNearbySer
     ///   - resourceName: The name of the resource.
     ///   - peerID: The ID of the peer that sent the resource.
     ///   - progress: A progress object.
-    func session(_ session: MCSession, didStartReceivingResourceWithName resourceName: String, fromPeer peerID: MCPeerID, with progress: Progress)
+    func session(_ session: MCSession, didStartReceivingResourceWithName resourceName: String,
+                 fromPeer peerID: MCPeerID, with progress: Progress)
     {
         print("Started receiving resource from \(peerID.displayName)")
     }
@@ -301,7 +307,8 @@ class MultiPeerManager: NSObject, MCNearbyServiceAdvertiserDelegate, MCNearbySer
     ///   - peerID: The ID of the peer that sent the resource.
     ///   - localURL: Local URL.
     ///   - error: Error information if relevant.
-    func session(_ session: MCSession, didFinishReceivingResourceWithName resourceName: String, fromPeer peerID: MCPeerID, at localURL: URL?, withError error: Error?)
+    func session(_ session: MCSession, didFinishReceivingResourceWithName resourceName: String,
+                 fromPeer peerID: MCPeerID, at localURL: URL?, withError error: Error?)
     {
         print("Finished receiving resource from \(peerID.displayName)")
     }
