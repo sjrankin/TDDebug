@@ -28,7 +28,11 @@ protocol MultiPeerDelegate
     ///   - Manager: The instance of the multipeer manager.
     ///   - Peer: The peer that sent the data. The data sent is not from a stream or a resource.
     ///   - RawData: The raw data in string format.
-    func ReceivedData(Manager: MultiPeerManager, Peer: MCPeerID, RawData: String)
+    ///   - OverrideMessageType: If present, this message type overrides the contents of the
+    ///                          message type in `RawData`.
+    ///   - EncapsulatedID: If present, the encapsulted ID value to use as a return value.
+    func ReceivedData(Manager: MultiPeerManager, Peer: MCPeerID, RawData: String,
+                      OverrideMessageType: MessageTypes?, EncapsulatedID: UUID?)
     
     /// Notifies the receiver of data received asynchronously as part of a request from the client.
     ///
