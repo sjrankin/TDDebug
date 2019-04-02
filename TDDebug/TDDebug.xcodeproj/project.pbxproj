@@ -127,8 +127,8 @@
 			isa = PBXGroup;
 			children = (
 				1743C1472252032F003FE6B2 /* MultiPeer.swift */,
-				1743C1492252034E003FE6B2 /* MessageHelper.swift */,
 				1743C14B22520366003FE6B2 /* MultiPeerDelegate.swift */,
+				1743C1492252034E003FE6B2 /* MessageHelper.swift */,
 				1704C5B72253244D00C49E91 /* ClientCommands.swift */,
 			);
 			path = MultiPeer;
