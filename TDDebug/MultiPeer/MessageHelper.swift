@@ -13,6 +13,7 @@ import AppKit
 import UIKit
 #endif
 
+/// Class that helps with encoding and decoding messages sent to and from TD{D}ebug instances.
 class MessageHelper
 {
     private static func DecodeKVP(_ Raw: String, Delimiter: String) -> (String, String)?
@@ -44,7 +45,7 @@ class MessageHelper
         let (_, IDS) = DecodeKVP(String(Parts[1]), Delimiter: "=")!
         if let ID = UUID(uuidString: IDS)
         {
-        return (ID, String(Parts[2]))
+            return (ID, String(Parts[2]))
         }
         return nil
     }
@@ -247,7 +248,7 @@ class MessageHelper
     {
         if Raw.isEmpty
         {
-            return MessageTypes.Unknown
+            return .Unknown
         }
         let Delimiter = String(Raw.first!)
         var Next = Raw
@@ -648,13 +649,27 @@ class MessageHelper
         return MessageTypeIndicators[.GetAllClientCommands]!
     }
     
-    public static func MakeAllClientCommands(Commands: ClientCommands)
+    /// Make a command string returning all client commands.
+    ///
+    /// - Parameter Commands: The client command manager, populated with all supported client commands.
+    /// - Returns: String with all client commands in the passed client command manager.
+    public static func MakeAllClientCommands(Commands: ClientCommands) -> String
     {
         let CommandList = Commands.MakeCommandList()
         let Cmd = MessageTypeIndicators[.AllClientCommandsReturned]!
         let CmdCount = "Count=\(CommandList.count)"
+        let Delimiter = GetUnusedDelimiter(From: [[Cmd, CmdCount], CommandList])
+        let Final = AssembleCommandsEx(FromParts: [[Cmd, CmdCount], CommandList], WithDelimiter: Delimiter)
+        return Final
     }
     
+    /// Make an encapsulated command. Encapsulated commands are used to coordinate asynchronous commands with
+    /// their asynchronous results.
+    ///
+    /// - Parameters:
+    ///   - WithID: The asynchronous command ID - each time this is called, a different UIID should be used.
+    ///   - Payload: The command to encapsulate.
+    /// - Returns: Encpasulated command string.
     public static func MakeEncapsulatedCommand(WithID: UUID, Payload: String) -> String
     {
         let Cmd = MessageTypeIndicators[.IDEncapsulatedCommand]!
@@ -702,6 +717,26 @@ class MessageHelper
     {
         let FinalList = FromParts.flatMap{$0}
         return AssembleCommand(FromParts: FinalList, WithDelimiter: WithDelimiter)
+    }
+    
+    /// Given a message type ID in string format, return the actual message type.
+    ///
+    /// - Parameter Raw: Message type ID in string format.
+    /// - Returns: MessageType enumeration on success, nil if not found.
+    public static func MessageTypeFromString(_ Raw: String) -> MessageTypes?
+    {
+        if let FindMe = UUID(uuidString: Raw)
+        {
+            for (MType, RawString) in MessageTypeIndicators
+            {
+                let MID = UUID(uuidString: RawString)
+                if MID == FindMe
+                {
+                    return MType
+                }
+            }
+        }
+        return nil
     }
     
     private static let MessageTypeIndicators: [MessageTypes: String] =
