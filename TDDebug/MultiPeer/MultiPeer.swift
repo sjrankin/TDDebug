@@ -151,7 +151,9 @@ class MultiPeerManager: NSObject, MCNearbyServiceAdvertiserDelegate, MCNearbySer
     /// - Returns: List of connected peers. May change over time so call periodically.
     func GetPeerList() -> [MCPeerID]
     {
-        return Session.connectedPeers
+        let PeerList: [MCPeerID] = Session.connectedPeers
+        //print("MultiPeer: PeerList.count=\(PeerList.count)")
+        return PeerList
     }
     
     /// Handles the advertising service did not start event.
@@ -173,7 +175,7 @@ class MultiPeerManager: NSObject, MCNearbyServiceAdvertiserDelegate, MCNearbySer
     ///   - invitationHandler: Handles invitations.
     func advertiser(_ advertiser: MCNearbyServiceAdvertiser, didReceiveInvitationFromPeer peerID: MCPeerID, withContext context: Data?, invitationHandler: @escaping (Bool, MCSession?) -> Void)
     {
-        print("Received invitation from \(peerID)")
+        print("Received invitation from \(peerID.displayName)")
         invitationHandler(true, Session)
     }
     
@@ -195,7 +197,7 @@ class MultiPeerManager: NSObject, MCNearbyServiceAdvertiserDelegate, MCNearbySer
     ///   - info: Not used.
     func browser(_ browser: MCNearbyServiceBrowser, foundPeer peerID: MCPeerID, withDiscoveryInfo info: [String : String]?)
     {
-        print("Found peer \(peerID) - inviting to session.")
+        print("Found peer \(peerID.displayName) - inviting to session.")
         browser.invitePeer(peerID, to: Session, withContext: nil, timeout: 10)
     }
     
@@ -206,7 +208,7 @@ class MultiPeerManager: NSObject, MCNearbyServiceAdvertiserDelegate, MCNearbySer
     ///   - peerID: The ID of the peer that was lost.
     func browser(_ browser: MCNearbyServiceBrowser, lostPeer peerID: MCPeerID)
     {
-        print("Lost peer \(peerID)")
+        print("Lost peer \(peerID.displayName)")
     }
     
     /// Handle the some peer changed state event.
@@ -217,7 +219,7 @@ class MultiPeerManager: NSObject, MCNearbyServiceAdvertiserDelegate, MCNearbySer
     ///   - state: The peer's new state.
     func session(_ session: MCSession, peer peerID: MCPeerID, didChange state: MCSessionState)
     {
-        print("Peer \(peerID) changed state: \(state.rawValue)")
+        print("Peer \(peerID.displayName) changed state: \(state.rawValue)")
         Delegate?.ConnectedDeviceChanged(Manager: self, ConnectedDevices: Session.connectedPeers,
                                          Changed: peerID, NewState: state)
     }
@@ -243,7 +245,7 @@ class MultiPeerManager: NSObject, MCNearbyServiceAdvertiserDelegate, MCNearbySer
     ///   - peerID: The ID of the peer that started the input stream.
     func session(_ session: MCSession, didReceive stream: InputStream, withName streamName: String, fromPeer peerID: MCPeerID)
     {
-        print("Received stream data from \(peerID)")
+        print("Received stream data from \(peerID.displayName)")
     }
     
     /// Handle the started receiving a resource with a name event.
@@ -255,7 +257,7 @@ class MultiPeerManager: NSObject, MCNearbyServiceAdvertiserDelegate, MCNearbySer
     ///   - progress: A progress object.
     func session(_ session: MCSession, didStartReceivingResourceWithName resourceName: String, fromPeer peerID: MCPeerID, with progress: Progress)
     {
-        print("Started receiving resource from \(peerID)")
+        print("Started receiving resource from \(peerID.displayName)")
     }
     
     /// Handle the ended receiving a resource with a name event.
@@ -268,7 +270,7 @@ class MultiPeerManager: NSObject, MCNearbyServiceAdvertiserDelegate, MCNearbySer
     ///   - error: Error information if relevant.
     func session(_ session: MCSession, didFinishReceivingResourceWithName resourceName: String, fromPeer peerID: MCPeerID, at localURL: URL?, withError error: Error?)
     {
-        print("Finished receiving resource from \(peerID)")
+        print("Finished receiving resource from \(peerID.displayName)")
     }
     
     /// Returns the name of the current device. The name is the network name given to the device by the user.
