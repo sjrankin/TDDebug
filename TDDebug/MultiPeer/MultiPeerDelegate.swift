@@ -29,4 +29,16 @@ protocol MultiPeerDelegate
     ///   - Peer: The peer that sent the data. The data sent is not from a stream or a resource.
     ///   - RawData: The raw data in string format.
     func ReceivedData(Manager: MultiPeerManager, Peer: MCPeerID, RawData: String)
+    
+    /// Notifies the receiver of data received asynchronously as part of a request from the client.
+    ///
+    /// - Parameters:
+    ///   - Manager: The instance of the multipeer manager.
+    ///   - Peer: The peer that sent the data. The data sent is not from a stream or a resource.
+    ///   - CommandID: The ID of the command (but not the command ID). In other words, each encapsulated
+    ///                message is sent with a unique ID so that the responder can use the same ID when
+    ///                responding, allowing for synchronizing the response to the original request. This
+    ///                is the unique ID that allows for that.
+    ///   - RawData: The encapsulated message from the responder.
+    func ReceivedAsyncData(Manager: MultiPeerManager, Peer: MCPeerID, CommandID: UUID, RawData: String)
 }
