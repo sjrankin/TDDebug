@@ -11,11 +11,11 @@ import Cocoa
 import AppKit
 import MultipeerConnectivity
 
-class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSource, MultiPeerDelegate
+class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSource, MultiPeerDelegate, MainProtocol
 {    
     let KVPTableTag = 100
     let LogTableTag = 200
-    var MPMgr: MultiPeerManager? = nil
+    var MPMgr: MultiPeerManager!
     
     override func viewDidLoad()
     {
@@ -26,12 +26,28 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
         InitializeTables()
         
         MPMgr = MultiPeerManager()
-        MPMgr?.Delegate = self
+        MPMgr.Delegate = self
         
         AddKVPData("Program", Versioning.ApplicationName)
         AddKVPData("Version", Versioning.MakeVersionString())
         AddKVPData("Build", "\(Versioning.Build)")
     }
+    
+    override func viewDidLayout()
+    {
+        super.viewDidLayout()
+        IdiotLights["A1"] = (A1View, A1Text)
+        IdiotLights["A2"] = (A1View, A2Text)
+        IdiotLights["A3"] = (A1View, A3Text)
+        IdiotLights["B1"] = (B1View, B1Text)
+        IdiotLights["B2"] = (B1View, B2Text)
+        IdiotLights["B3"] = (B1View, B3Text)
+        IdiotLights["C1"] = (C1View, C1Text)
+        IdiotLights["C2"] = (C1View, C2Text)
+        IdiotLights["C3"] = (C1View, C3Text)
+    }
+    
+    var IdiotLights = [String: (NSView, NSTextField)]()
     
     var MPManager: MultiPeerManager
     {
@@ -53,7 +69,7 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
     {
         OperationQueue.main.addOperation
             {
-            self.LogItems.append(Item)
+                self.LogItems.append(Item)
                 self.LogTable.reloadData()
                 self.LogTable.scrollToEndOfDocument(self)
         }
@@ -109,8 +125,251 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
         AddLogMessage(Item: Item)
     }
     
+    func DisplayHeartbeatData(_ Raw: String, TimeStamp: String, Host: String, Peer: MCPeerID)
+    {
+        if let (NextExpected, Payload) = MessageHelper.DecodeHeartbeat(Raw)
+        {
+            OperationQueue.main.addOperation
+                {
+                    var HBMessage = "Received heartbeat. Next expected in \(NextExpected) seconds."
+                    if let FinalPayload = Payload
+                    {
+                        HBMessage = HBMessage + "\n" + FinalPayload
+                    }
+                    let Item = LogItem(TimeStamp: TimeStamp, Host: Host, Text: HBMessage)
+                    self.AddLogMessage(Item: Item)
+            }
+        }
+    }
+    
+    func ControlIdiotLight(_ Raw: String)
+    {
+        OperationQueue.main.addOperation
+            {
+                let (Command, Address, Text, FGColor, BGColor) = MessageHelper.DecodeIdiotLightMessage(Raw)
+                let FinalAddress = Address.uppercased()
+                print("Controlling idiot light at \(Address)")
+                switch Command
+                {
+                case .Disable:
+                    self.EnableIdiotLight(FinalAddress, false)
+                    
+                case .Enable:
+                    self.EnableIdiotLight(FinalAddress, true)
+                    
+                case .SetBGColor:
+                    self.IdiotLights[FinalAddress]!.0.layer?.backgroundColor = BGColor?.cgColor
+                    let CS: String = BGColor!.AsHexString()
+                    print("BGColor for \(FinalAddress) = \(CS)")
+                    
+                case .SetFGColor:
+                    self.IdiotLights[FinalAddress]!.1.textColor = FGColor!
+                    let CS: String = FGColor!.AsHexString()
+                    print("BGColor for \(FinalAddress) = \(CS)")
+                    
+                case .SetText:
+                    self.IdiotLights[FinalAddress]!.1.stringValue = Text!
+                    
+                default:
+                    return
+                }
+        }
+    }
+    
+    func DoEcho(Delay: Int, Message: String)
+    {
+        if EchoTimer != nil
+        {
+            EchoTimer.invalidate()
+            EchoTimer = nil
+        }
+        MessageToEcho = Message
+        EchoTimer = Timer.scheduledTimer(timeInterval: Double(Delay), target: self,
+                                         selector: #selector(EchoSomething(_:)),
+                                         userInfo: Message as Any?, repeats: false)
+    }
+    
+    @objc func EchoSomething(_ Info: Any?)
+    {
+        let ReturnToSender = MessageToEcho//Info as? String
+        let Message = MessageHelper.MakeMessage(WithType: .EchoReturn, ReturnToSender!, GetDeviceName())
+        MPMgr!.SendPreformatted(Message: Message, To: EchoBackTo)
+        let Item = LogItem(Text: "Echoing message to \(EchoBackTo.displayName)")
+        Item.HostName = "TDebug"
+        AddLogMessage(Item: Item)
+    }
+    
+    var EchoTimer: Timer!
+    var EchoBackTo: MCPeerID!
+    var MessageToEcho: String!
+    
+    func HandleEchoMessage(_ Raw: String, Peer: MCPeerID)
+    {
+        let (EchoMessage, _, Delay, _) = MessageHelper.DecodeEchoMessage(Raw)
+        print("HandleEchoMessage: Delay=\(Delay)")
+        let REchoMessage = String(EchoMessage.reversed())
+        EchoBackTo = Peer
+        OperationQueue.main.addOperation
+            {
+                print("Echoing \(REchoMessage) to \(self.EchoBackTo.displayName) in \(Delay) seconds")
+                self.DoEcho(Delay: Delay, Message: REchoMessage)
+        }
+    }
+    
+    func ManageKVPData(_ Raw: String, Peer: MCPeerID)
+    {
+        OperationQueue.main.addOperation
+            {
+                let (ID, Key, Value) = MessageHelper.DecodeKVPMessage(Raw)
+                print("Received KVP \(Key):\(Value)")
+                if ID == nil
+                {
+                    let TimeStamp = MessageHelper.MakeTimeStamp(FromDate: Date())
+                    let Message = "Received KVP with Key of \"\(Key)\" and value of \"\(Value)\" but no valid ID."
+                    let Item = LogItem(TimeStamp: TimeStamp, Host: Peer.displayName, Text: Message, ShowInitialAnimation: true)
+                    self.AddLogMessage(Item: Item)
+                    return
+                }
+                self.AddKVPData(ID: ID!, Key, Value)
+        }
+    }
+    
+    func HandleSpecialCommand(_ Raw: String, Peer: MCPeerID)
+    {
+        OperationQueue.main.addOperation
+            {
+                let Operation = MessageHelper.DecodeSpecialCommand(Raw)
+                switch Operation
+                {
+                case .ClearIdiotLights:
+                    self.EnableIdiotLight("A2", false)
+                    self.EnableIdiotLight("A3", false)
+                    self.EnableIdiotLight("B1", false)
+                    self.EnableIdiotLight("B2", false)
+                    self.EnableIdiotLight("B3", false)
+                    self.EnableIdiotLight("C1", false)
+                    self.EnableIdiotLight("C2", false)
+                    self.EnableIdiotLight("C3", false)
+                    
+                case .ClearKVPList:
+                    self.KVPItems.removeAll()
+                    self.KVPTable.reloadData()
+                    
+                case .ClearLogList:
+                    self.LogItems.removeAll()
+                    self.LogTable.reloadData()
+                default:
+                    break
+                }
+        }
+    }
+    
+    func HandleHandShakeCommand(_ Raw: String, Peer: MCPeerID)
+    {
+        let Command = MessageHelper.DecodeHandShakeCommand(Raw)
+        print("Handshake command: \(Command)")
+        OperationQueue.main.addOperation
+            {
+                let ReturnMe = State.TransitionTo(NewState: Command)
+                print("State result=\(ReturnMe), State.CurrentState=\(State.CurrentState)")
+                var ReturnState = ""
+                switch ReturnMe
+                {
+                case .ConnectionClose:
+                    break
+                    
+                case .ConnectionGranted:
+                    let Item = LogItem(Text: "\(Peer.displayName) is debugee.")
+                    self.AddLogMessage(Item: Item)
+                    ReturnState = MessageHelper.MakeHandShake(ReturnMe)
+                    
+                case .ConnectionRefused:
+                    let Item = LogItem(Text: "Connection refused by \(Peer.displayName)")
+                    self.AddLogMessage(Item: Item)
+                    ReturnState = MessageHelper.MakeHandShake(ReturnMe)
+                    
+                case .Disconnected:
+                    ReturnState = MessageHelper.MakeHandShake(ReturnMe)
+                    
+                case .RequestConnection:
+                    break
+                    
+                case .Unknown:
+                    break
+                }
+                if !ReturnState.isEmpty
+                {
+                    self.MPMgr!.SendPreformatted(Message: ReturnState, To: Peer)
+                }
+        }
+    }
+    
+    func HandleEchoReturn(_ Raw: String)
+    {
+        let (_, HostName, TimeStamp, FinalMessage) = MessageHelper.DecodeMessage(Raw)
+        OperationQueue.main.addOperation
+            {
+                let Item = LogItem(TimeStamp: TimeStamp, Host: HostName, Text: "Echo returned: " + FinalMessage,
+                                   ShowInitialAnimation: true, FinalBG: NSColor.green)
+                self.AddLogMessage(Item: Item)
+        }
+    }
+    
+    func HandleTextMessage(_ Raw: String)
+    {
+        let (_, HostName, TimeStamp, FinalMessage) = MessageHelper.DecodeMessage(Raw)
+        OperationQueue.main.addOperation
+            {
+                let Item = LogItem(TimeStamp: TimeStamp, Host: HostName, Text: FinalMessage, ShowInitialAnimation: true,
+                                   FinalBG: NSColor.white)
+                self.AddLogMessage(Item: Item)
+        }
+    }
+    
     func ReceivedData(Manager: MultiPeerManager, Peer: MCPeerID, RawData: String)
     {
+        let MessageType = MessageHelper.GetMessageType(RawData)
+        print("Received message type \(MessageType)")
+        switch MessageType
+        {
+        case .HandShake:
+            HandleHandShakeCommand(RawData, Peer: Peer)
+            
+        case .SpecialCommand:
+            HandleSpecialCommand(RawData, Peer: Peer)
+            
+        case .EchoMessage:
+            //Should be handled by the instance that received the echo.
+            HandleEchoMessage(RawData, Peer: Peer)
+            
+        case .Heartbeat:
+            let (_, HostName, TimeStamp, FinalMessage) = MessageHelper.DecodeMessage(RawData)
+            DisplayHeartbeatData(FinalMessage, TimeStamp: TimeStamp, Host: HostName, Peer: Peer)
+            
+        case .ControlIdiotLight:
+            ControlIdiotLight(RawData)
+            
+        case .KVPData:
+            ManageKVPData(RawData, Peer: Peer)
+            
+        case .EchoReturn:
+            //Should be handled by the instance that sent the echo in the first place.
+            HandleEchoReturn(RawData)
+            
+        case .TextMessage:
+            HandleTextMessage(RawData)
+            
+        default:
+            break
+        }
+    }
+    
+    func EnableIdiotLight(_ Address: String, _ DoEnable: Bool,
+                          _ EnableFGColor: NSColor = NSColor.black,
+                          _ EnableBGColor: NSColor = NSColor.white)
+    {
+        IdiotLights[Address]!.0.layer?.backgroundColor = DoEnable ? EnableBGColor.cgColor : NSColor.white.cgColor
+        IdiotLights[Address]!.1.textColor = DoEnable ? EnableFGColor : NSColor.clear
     }
     
     func InitializeTables()
@@ -121,8 +380,6 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
     
     var LogItems = [LogItem]()
     var KVPItems = [KVPItem]()
-//    var KVPItems = [(String, String)]()
-//    var LogItems = [(String, String, String)]()
     
     func PopulateTuple(ItemCount: Int) -> (String?, String?, String?, String?)
     {
@@ -160,14 +417,6 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
     
     func InitializeKVPTable()
     {
-        #if false
-        let RndCnt = [3, 5, 9, 15].randomElement()!
-        for _ in 0 ..< RndCnt
-        {
-            let (E1, E2, _, _) = PopulateTuple(ItemCount: 2)
-            KVPItems.append((E1!, E2!))
-        }
-        #endif
         KVPTable.delegate = self
         KVPTable.dataSource = self
         KVPTable.reloadData()
@@ -175,14 +424,6 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
     
     func InitializeLogTable()
     {
-        #if false
-        let RndCnt = [3, 5, 9, 15, 30, 50, 100].randomElement()!
-        for _ in 0 ..< RndCnt
-        {
-            let (E1, E2, E3, _) = PopulateTuple(ItemCount: 3)
-            LogItems.append((E1!, E2!, E3!))
-        }
-        #endif
         LogTable.delegate = self
         LogTable.dataSource = self
         LogTable.reloadData()
@@ -291,6 +532,25 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
         }
         let Parts = Name.split(separator: ".")
         return String(Parts[0])
+    }
+    
+    var PeerViewerController: NSWindowController? = nil
+    
+    //https://stackoverflow.com/questions/24694587/osx-storyboards-open-non-modal-window-with-standard-segue
+    @IBAction func HandleShowCurrentPeers(_ sender: Any)
+    {
+        //print("Show peers.")
+        //performSegue(withIdentifier: "ToPeerViewer2", sender: self)
+        if PeerViewerController == nil
+        {
+            let Storyboard = NSStoryboard(name: "Main", bundle: nil)
+            PeerViewerController = Storyboard.instantiateController(withIdentifier: "PeerViewerUI") as? PeerViewerUIWindow
+        }
+        if let PVC = PeerViewerController as? PeerViewerUIWindow
+        {
+            PVC.MainDelegate = self
+            PVC.showWindow(sender)
+        }
     }
     
     @IBOutlet weak var A1View: NSView!
