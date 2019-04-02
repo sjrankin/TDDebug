@@ -17,7 +17,7 @@ class PeerViewerUIWindow: NSWindowController
         {
             let VC = window!.contentViewController as? PeerViewerUICode
             VC?.Delegate = MainDelegate
-            print("PeerViewerUIwindow: \(MainDelegate!)")
+            //print("PeerViewerUIwindow: \(MainDelegate!)")
         }
     }
 }
