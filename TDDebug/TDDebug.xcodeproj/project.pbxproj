@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1704C5B4225311D400C49E91 /* SendToClientUIWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1704C5B3225311D400C49E91 /* SendToClientUIWindow.swift */; };
+		1704C5B62253123F00C49E91 /* SendToClientUICode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1704C5B52253123F00C49E91 /* SendToClientUICode.swift */; };
+		1704C5B82253244D00C49E91 /* ClientCommands.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1704C5B72253244D00C49E91 /* ClientCommands.swift */; };
 		172426D7225239C400E34282 /* PeerViewerUICode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 172426D6225239C400E34282 /* PeerViewerUICode.swift */; };
 		172426D92252488F00E34282 /* PeerViewerUIWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 172426D82252488F00E34282 /* PeerViewerUIWindow.swift */; };
 		1743C1372251DF9B003FE6B2 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1743C1362251DF9B003FE6B2 /* AppDelegate.swift */; };
@@ -26,6 +29,9 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		1704C5B3225311D400C49E91 /* SendToClientUIWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SendToClientUIWindow.swift; sourceTree = "<group>"; };
+		1704C5B52253123F00C49E91 /* SendToClientUICode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SendToClientUICode.swift; sourceTree = "<group>"; };
+		1704C5B72253244D00C49E91 /* ClientCommands.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClientCommands.swift; sourceTree = "<group>"; };
 		172426D6225239C400E34282 /* PeerViewerUICode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeerViewerUICode.swift; sourceTree = "<group>"; };
 		172426D82252488F00E34282 /* PeerViewerUIWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeerViewerUIWindow.swift; sourceTree = "<group>"; };
 		1743C1332251DF9B003FE6B2 /* TDDebug.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TDDebug.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -58,6 +64,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		1704C5B222530FA800C49E91 /* SendToClient */ = {
+			isa = PBXGroup;
+			children = (
+				1704C5B3225311D400C49E91 /* SendToClientUIWindow.swift */,
+				1704C5B52253123F00C49E91 /* SendToClientUICode.swift */,
+			);
+			path = SendToClient;
+			sourceTree = "<group>";
+		};
 		172426D32252398900E34282 /* PeerViewer */ = {
 			isa = PBXGroup;
 			children = (
@@ -89,7 +104,6 @@
 		1743C1352251DF9B003FE6B2 /* TDDebug */ = {
 			isa = PBXGroup;
 			children = (
-				172426D32252398900E34282 /* PeerViewer */,
 				1743C13A2251DF9C003FE6B2 /* Assets.xcassets */,
 				1743C1362251DF9B003FE6B2 /* AppDelegate.swift */,
 				1743C1382251DF9B003FE6B2 /* ViewController.swift */,
@@ -100,6 +114,8 @@
 				1746B54022520AB900E554EC /* Versioning.swift */,
 				1743C13F2251DF9C003FE6B2 /* Info.plist */,
 				1743C1402251DF9C003FE6B2 /* TDDebug.entitlements */,
+				1704C5B222530FA800C49E91 /* SendToClient */,
+				172426D32252398900E34282 /* PeerViewer */,
 			);
 			path = TDDebug;
 			sourceTree = "<group>";
@@ -110,6 +126,7 @@
 				1743C1472252032F003FE6B2 /* MultiPeer.swift */,
 				1743C1492252034E003FE6B2 /* MessageHelper.swift */,
 				1743C14B22520366003FE6B2 /* MultiPeerDelegate.swift */,
+				1704C5B72253244D00C49E91 /* ClientCommands.swift */,
 			);
 			path = MultiPeer;
 			sourceTree = "<group>";
@@ -228,7 +245,10 @@
 				1743C1372251DF9B003FE6B2 /* AppDelegate.swift in Sources */,
 				1743C14E2252041B003FE6B2 /* NSColorExtensions.swift in Sources */,
 				1746B54422520C6700E554EC /* KVPItem.swift in Sources */,
+				1704C5B82253244D00C49E91 /* ClientCommands.swift in Sources */,
 				1743C1482252032F003FE6B2 /* MultiPeer.swift in Sources */,
+				1704C5B4225311D400C49E91 /* SendToClientUIWindow.swift in Sources */,
+				1704C5B62253123F00C49E91 /* SendToClientUICode.swift in Sources */,
 				1746B54122520AB900E554EC /* Versioning.swift in Sources */,
 				1743C14C22520366003FE6B2 /* MultiPeerDelegate.swift in Sources */,
 				172426D92252488F00E34282 /* PeerViewerUIWindow.swift in Sources */,
