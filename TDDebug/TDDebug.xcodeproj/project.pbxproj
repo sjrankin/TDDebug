@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		172426D7225239C400E34282 /* PeerViewerUICode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 172426D6225239C400E34282 /* PeerViewerUICode.swift */; };
+		172426D92252488F00E34282 /* PeerViewerUIWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 172426D82252488F00E34282 /* PeerViewerUIWindow.swift */; };
 		1743C1372251DF9B003FE6B2 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1743C1362251DF9B003FE6B2 /* AppDelegate.swift */; };
 		1743C1392251DF9B003FE6B2 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1743C1382251DF9B003FE6B2 /* ViewController.swift */; };
 		1743C13B2251DF9C003FE6B2 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1743C13A2251DF9C003FE6B2 /* Assets.xcassets */; };
@@ -24,6 +26,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		172426D6225239C400E34282 /* PeerViewerUICode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeerViewerUICode.swift; sourceTree = "<group>"; };
+		172426D82252488F00E34282 /* PeerViewerUIWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeerViewerUIWindow.swift; sourceTree = "<group>"; };
 		1743C1332251DF9B003FE6B2 /* TDDebug.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TDDebug.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1743C1362251DF9B003FE6B2 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		1743C1382251DF9B003FE6B2 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -54,6 +58,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		172426D32252398900E34282 /* PeerViewer */ = {
+			isa = PBXGroup;
+			children = (
+				172426D6225239C400E34282 /* PeerViewerUICode.swift */,
+				172426D82252488F00E34282 /* PeerViewerUIWindow.swift */,
+			);
+			path = PeerViewer;
+			sourceTree = "<group>";
+		};
 		1743C12A2251DF9A003FE6B2 = {
 			isa = PBXGroup;
 			children = (
@@ -76,6 +89,7 @@
 		1743C1352251DF9B003FE6B2 /* TDDebug */ = {
 			isa = PBXGroup;
 			children = (
+				172426D32252398900E34282 /* PeerViewer */,
 				1743C13A2251DF9C003FE6B2 /* Assets.xcassets */,
 				1743C1362251DF9B003FE6B2 /* AppDelegate.swift */,
 				1743C1382251DF9B003FE6B2 /* ViewController.swift */,
@@ -217,8 +231,10 @@
 				1743C1482252032F003FE6B2 /* MultiPeer.swift in Sources */,
 				1746B54122520AB900E554EC /* Versioning.swift in Sources */,
 				1743C14C22520366003FE6B2 /* MultiPeerDelegate.swift in Sources */,
+				172426D92252488F00E34282 /* PeerViewerUIWindow.swift in Sources */,
 				1746B54622520C9F00E554EC /* MainProtocol.swift in Sources */,
 				1746B53D22520A7000E554EC /* State.swift in Sources */,
+				172426D7225239C400E34282 /* PeerViewerUICode.swift in Sources */,
 				1743C14A2252034E003FE6B2 /* MessageHelper.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
