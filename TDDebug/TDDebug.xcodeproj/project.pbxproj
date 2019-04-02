@@ -19,13 +19,14 @@
 		1743C1482252032F003FE6B2 /* MultiPeer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1743C1472252032F003FE6B2 /* MultiPeer.swift */; };
 		1743C14A2252034E003FE6B2 /* MessageHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1743C1492252034E003FE6B2 /* MessageHelper.swift */; };
 		1743C14C22520366003FE6B2 /* MultiPeerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1743C14B22520366003FE6B2 /* MultiPeerDelegate.swift */; };
-		1743C14E2252041B003FE6B2 /* NSColorExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1743C14D2252041B003FE6B2 /* NSColorExtensions.swift */; };
+		1743C14E2252041B003FE6B2 /* OSColorExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1743C14D2252041B003FE6B2 /* OSColorExtensions.swift */; };
 		1746B53D22520A7000E554EC /* State.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1746B53C22520A7000E554EC /* State.swift */; };
 		1746B53F22520A8D00E554EC /* StateProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1746B53E22520A8D00E554EC /* StateProtocol.swift */; };
 		1746B54122520AB900E554EC /* Versioning.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1746B54022520AB900E554EC /* Versioning.swift */; };
 		1746B54422520C6700E554EC /* KVPItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1746B54322520C6700E554EC /* KVPItem.swift */; };
 		1746B54622520C9F00E554EC /* MainProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1746B54522520C9F00E554EC /* MainProtocol.swift */; };
 		1746B54822520D4A00E554EC /* LogItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1746B54722520D4A00E554EC /* LogItem.swift */; };
+		1772A2FB2253705C006D0A16 /* OSColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1772A2FA2253705C006D0A16 /* OSColor.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -44,13 +45,14 @@
 		1743C1472252032F003FE6B2 /* MultiPeer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultiPeer.swift; sourceTree = "<group>"; };
 		1743C1492252034E003FE6B2 /* MessageHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageHelper.swift; sourceTree = "<group>"; };
 		1743C14B22520366003FE6B2 /* MultiPeerDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultiPeerDelegate.swift; sourceTree = "<group>"; };
-		1743C14D2252041B003FE6B2 /* NSColorExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSColorExtensions.swift; sourceTree = "<group>"; };
+		1743C14D2252041B003FE6B2 /* OSColorExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OSColorExtensions.swift; sourceTree = "<group>"; };
 		1746B53C22520A7000E554EC /* State.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = State.swift; sourceTree = "<group>"; };
 		1746B53E22520A8D00E554EC /* StateProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StateProtocol.swift; sourceTree = "<group>"; };
 		1746B54022520AB900E554EC /* Versioning.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Versioning.swift; sourceTree = "<group>"; };
 		1746B54322520C6700E554EC /* KVPItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KVPItem.swift; sourceTree = "<group>"; };
 		1746B54522520C9F00E554EC /* MainProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainProtocol.swift; sourceTree = "<group>"; };
 		1746B54722520D4A00E554EC /* LogItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogItem.swift; sourceTree = "<group>"; };
+		1772A2FA2253705C006D0A16 /* OSColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OSColor.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -88,6 +90,7 @@
 				1743C1352251DF9B003FE6B2 /* TDDebug */,
 				1746B53B22520A5F00E554EC /* State */,
 				1743C14622520314003FE6B2 /* MultiPeer */,
+				1772A2F92253704A006D0A16 /* OSColor */,
 				1796A2D422521117004975D4 /* Extensions */,
 				1743C1342251DF9B003FE6B2 /* Products */,
 			);
@@ -140,10 +143,18 @@
 			path = State;
 			sourceTree = "<group>";
 		};
+		1772A2F92253704A006D0A16 /* OSColor */ = {
+			isa = PBXGroup;
+			children = (
+				1772A2FA2253705C006D0A16 /* OSColor.swift */,
+			);
+			path = OSColor;
+			sourceTree = "<group>";
+		};
 		1796A2D422521117004975D4 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
-				1743C14D2252041B003FE6B2 /* NSColorExtensions.swift */,
+				1743C14D2252041B003FE6B2 /* OSColorExtensions.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -242,8 +253,9 @@
 				1743C1392251DF9B003FE6B2 /* ViewController.swift in Sources */,
 				1746B54822520D4A00E554EC /* LogItem.swift in Sources */,
 				1746B53F22520A8D00E554EC /* StateProtocol.swift in Sources */,
+				1772A2FB2253705C006D0A16 /* OSColor.swift in Sources */,
 				1743C1372251DF9B003FE6B2 /* AppDelegate.swift in Sources */,
-				1743C14E2252041B003FE6B2 /* NSColorExtensions.swift in Sources */,
+				1743C14E2252041B003FE6B2 /* OSColorExtensions.swift in Sources */,
 				1746B54422520C6700E554EC /* KVPItem.swift in Sources */,
 				1704C5B82253244D00C49E91 /* ClientCommands.swift in Sources */,
 				1743C1482252032F003FE6B2 /* MultiPeer.swift in Sources */,
@@ -403,6 +415,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = Irorio.TDDebug;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				"SWIFT_ACTIVE_COMPILATION_CONDITIONS[sdk=macosx*]" = FOR_MACOS;
 				SWIFT_VERSION = 5.0;
 			};
 			name = Debug;
@@ -422,6 +435,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = Irorio.TDDebug;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				"SWIFT_ACTIVE_COMPILATION_CONDITIONS[sdk=macosx*]" = FOR_MACOS;
 				SWIFT_VERSION = 5.0;
 			};
 			name = Release;
