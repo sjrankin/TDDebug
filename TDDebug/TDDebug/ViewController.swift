@@ -578,7 +578,7 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
         switch tableView.tag
         {
         case LogTableTag:
-            rowView.backgroundColor = NSColor.MakeRandomColor(.Light)
+            rowView.backgroundColor = OSColor.MakeRandomColor(.Light)
             
         default:
             return
