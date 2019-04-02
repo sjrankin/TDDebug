@@ -15,7 +15,7 @@ class PeerViewerUICode: NSViewController, NSTableViewDelegate, NSTableViewDataSo
     #if true
     var HaveDelegate = false
     weak var Delegate: MainProtocol!
-{
+        {
         didSet
         {
             HaveDelegate = true
@@ -25,7 +25,7 @@ class PeerViewerUICode: NSViewController, NSTableViewDelegate, NSTableViewDataSo
     }
     #else
     weak var Delegate: MainProtocol? = nil
-    {
+        {
         didSet
         {
             print("PeerViewUICode: \(Delegate!)")
@@ -33,7 +33,7 @@ class PeerViewerUICode: NSViewController, NSTableViewDelegate, NSTableViewDataSo
             let x = D.MPManager.GetPeerList()
             if Delegate != nil
             {
-                            print("PeerViewUICode2: \(Delegate!)")
+                print("PeerViewUICode2: \(Delegate!)")
                 PeerList = (Delegate?.MPManager.GetPeerList())!
             }
         }
@@ -71,8 +71,11 @@ class PeerViewerUICode: NSViewController, NSTableViewDelegate, NSTableViewDataSo
     
     override func viewDidDisappear()
     {
-        RefreshTimer.invalidate()
-        RefreshTimer = nil
+        if RefreshTimer != nil
+        {
+            RefreshTimer.invalidate()
+            RefreshTimer = nil
+        }
         super.viewWillDisappear()
     }
     
