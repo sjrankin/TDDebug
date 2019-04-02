@@ -7,7 +7,11 @@
 //
 
 import Foundation
+#if FOR_MACOS
 import AppKit
+#else
+import UIKit
+#endif
 
 class MessageHelper
 {
@@ -178,7 +182,7 @@ class MessageHelper
     
     //Format of command: command,address{,data}
     //returns command, address, text, fg color, bg color
-    public static func DecodeIdiotLightMessage(_ Raw: String) ->(IdiotLightCommands, String, String?, NSColor?, NSColor?)
+    public static func DecodeIdiotLightMessage(_ Raw: String) ->(IdiotLightCommands, String, String?, OSColor?, OSColor?)
     {
         let Delimiter = String(Raw.first!)
         var Next = Raw
@@ -200,8 +204,8 @@ class MessageHelper
         var Address = ""
         var Text: String? = nil
         var Command: IdiotLightCommands = .Unknown
-        var BGColor: NSColor? = nil
-        var FGColor: NSColor? = nil
+        var BGColor: OSColor? = nil
+        var FGColor: OSColor? = nil
         for Part in PartsList
         {
             switch Part.0
@@ -226,11 +230,11 @@ class MessageHelper
                 
             case "BGColor":
                 Command = .SetBGColor
-                BGColor = NSColor(HexString: Part.1)!
+                BGColor = OSColor(HexString: Part.1)!
                 
             case "FGColor":
                 Command = .SetFGColor
-                FGColor = NSColor(HexString: Part.1)!
+                FGColor = OSColor(HexString: Part.1)!
                 
             default:
                 continue
@@ -492,7 +496,7 @@ class MessageHelper
         return Final
     }
     
-    public static func MakeIdiotLightMessage(Address: String, FGColor: NSColor) -> String
+    public static func MakeIdiotLightMessage(Address: String, FGColor: OSColor) -> String
     {
         let Command = MessageTypeIndicators[.ControlIdiotLight]!
         let Addr = "Address=\(Address)"
@@ -502,7 +506,7 @@ class MessageHelper
         return Final
     }
     
-    public static func MakeIdiotLightMessage(Address: String, BGColor: NSColor) -> String
+    public static func MakeIdiotLightMessage(Address: String, BGColor: OSColor) -> String
     {
         let Command = MessageTypeIndicators[.ControlIdiotLight]!
         let Addr = "Address=\(Address)"
