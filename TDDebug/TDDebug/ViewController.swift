@@ -11,8 +11,8 @@ import Cocoa
 import AppKit
 import MultipeerConnectivity
 
-class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSource, MultiPeerDelegate, MainProtocol
-{    
+class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSource, MultiPeerDelegate, MainProtocol, StateProtocol
+{
     let KVPTableTag = 100
     let LogTableTag = 200
     var MPMgr: MultiPeerManager!
@@ -21,7 +21,8 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
     {
         super.viewDidLoad()
         
-        // Do any additional setup after loading the view.
+        State.Initialize(WithDelegate: self)
+        
         InitializeIdiotLights()
         InitializeTables()
         
@@ -43,8 +44,8 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
         IdiotLights["B2"] = (B1View, B2Text)
         IdiotLights["B3"] = (B1View, B3Text)
         IdiotLights["C1"] = (C1View, C1Text)
-        IdiotLights["C2"] = (C1View, C2Text)
-        IdiotLights["C3"] = (C1View, C3Text)
+        IdiotLights["C2"] = (C2View, C2Text)
+        IdiotLights["C3"] = (C3View, C3Text)
     }
     
     var IdiotLights = [String: (NSView, NSTextField)]()
@@ -57,11 +58,38 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
         }
     }
     
+    private var _ClientCommandList: [ClientCommand] = [ClientCommand]()
+    var ClientCommandList: [ClientCommand]
+    {
+        get
+        {
+            return _ClientCommandList
+        }
+    }
+    
     override var representedObject: Any?
         {
         didSet
         {
             // Update the view, if already loaded.
+        }
+    }
+    
+    func StateChanged(NewState: States, HandShake: HandShakeCommands)
+    {
+        OperationQueue.main.addOperation
+            {
+                switch HandShake
+                {
+                case .ConnectionGranted:
+                    self.SetIdiotLight("A1", "Connected", NSColor.black, NSColor.green)
+                    
+                case .Disconnected:
+                    self.SetIdiotLight("A1", "Not Connected", NSColor.white, NSColor(red: 0.5, green: 0.0, blue: 0.0, alpha: 1.0))
+                    
+                default:
+                    break
+                }
         }
     }
     
@@ -264,6 +292,37 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
         }
     }
     
+    func GetCommandsFromClient(_ Peer: MCPeerID)
+    {
+        let GetClientCmds = MessageHelper.MakeGetAllClientCommands()
+        let EncapsulatedID = MPMgr.SendWithAsyncResponse(Message: GetClientCmds, To: Peer)
+        WaitingFor.append((EncapsulatedID, MessageTypes.GetAllClientCommands))
+    }
+    
+    var WaitingFor = [(UUID, MessageTypes)]()
+    
+    var _ConnectedClient: MCPeerID? = nil
+    {
+        didSet
+        {
+            if _ConnectedClient == nil
+            {
+                _ClientCommandList.removeAll()
+            }
+            else
+            {
+            GetCommandsFromClient(_ConnectedClient!)
+            }
+        }
+    }
+    var ConnectedClient: MCPeerID?
+    {
+        get
+        {
+            return _ConnectedClient
+        }
+    }
+    
     func HandleHandShakeCommand(_ Raw: String, Peer: MCPeerID)
     {
         let Command = MessageHelper.DecodeHandShakeCommand(Raw)
@@ -279,6 +338,7 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
                     break
                     
                 case .ConnectionGranted:
+                    self._ConnectedClient = Peer
                     let Item = LogItem(Text: "\(Peer.displayName) is debugee.")
                     self.AddLogMessage(Item: Item)
                     ReturnState = MessageHelper.MakeHandShake(ReturnMe)
@@ -289,6 +349,7 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
                     ReturnState = MessageHelper.MakeHandShake(ReturnMe)
                     
                 case .Disconnected:
+                    self._ConnectedClient = nil
                     ReturnState = MessageHelper.MakeHandShake(ReturnMe)
                     
                 case .RequestConnection:
@@ -364,12 +425,32 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
         }
     }
     
+    func ReceivedAsyncData(Manager: MultiPeerManager, Peer: MCPeerID, CommandID: UUID, RawData: String)
+    {
+        print("Received async response from ID: \(CommandID).")
+        for (ID, MessageType) in WaitingFor
+        {
+            if ID == CommandID
+            {
+                print("Found matching response for \(MessageType) command.")
+            }
+        }
+    }
+    
     func EnableIdiotLight(_ Address: String, _ DoEnable: Bool,
                           _ EnableFGColor: NSColor = NSColor.black,
                           _ EnableBGColor: NSColor = NSColor.white)
     {
         IdiotLights[Address]!.0.layer?.backgroundColor = DoEnable ? EnableBGColor.cgColor : NSColor.white.cgColor
         IdiotLights[Address]!.1.textColor = DoEnable ? EnableFGColor : NSColor.clear
+    }
+    
+    func SetIdiotLight(_ Address: String, _ Text: String, _ TextColor: NSColor = NSColor.black,
+                       _ BGColor: NSColor = NSColor.white)
+    {
+        IdiotLights[Address]!.0.layer?.backgroundColor = BGColor.cgColor
+        IdiotLights[Address]!.1.textColor = TextColor
+        IdiotLights[Address]!.1.stringValue = Text
     }
     
     func InitializeTables()
@@ -492,6 +573,18 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
         }
     }
     
+    func tableView(_ tableView: NSTableView, didAdd rowView: NSTableRowView, forRow row: Int)
+    {
+        switch tableView.tag
+        {
+        case LogTableTag:
+            rowView.backgroundColor = NSColor.MakeRandomColor(.Light)
+            
+        default:
+            return
+        }
+    }
+    
     func InitializeIdiotLights()
     {
         IdiotLightContainer.fillColor = NSColor.clear
@@ -539,8 +632,6 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
     //https://stackoverflow.com/questions/24694587/osx-storyboards-open-non-modal-window-with-standard-segue
     @IBAction func HandleShowCurrentPeers(_ sender: Any)
     {
-        //print("Show peers.")
-        //performSegue(withIdentifier: "ToPeerViewer2", sender: self)
         if PeerViewerController == nil
         {
             let Storyboard = NSStoryboard(name: "Main", bundle: nil)
@@ -550,6 +641,22 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
         {
             PVC.MainDelegate = self
             PVC.showWindow(sender)
+        }
+    }
+    
+    var SendToController: NSWindowController? = nil
+    
+    @IBAction func HandleSendToClient(_ sender: Any)
+    {
+        if SendToController == nil
+        {
+            let Storyboard = NSStoryboard(name: "Main", bundle: nil)
+            SendToController = Storyboard.instantiateController(withIdentifier: "SendToClientWindow") as? SendToClientUIWindow
+        }
+        if let SVC = SendToController as? SendToClientUIWindow
+        {
+            SVC.MainDelegate = self
+            SVC.showWindow(sender)
         }
     }
     
