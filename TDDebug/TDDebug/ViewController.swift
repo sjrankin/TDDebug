@@ -824,6 +824,28 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
         DoShowHelp()
     }
     
+    func DoCustomize()
+    {
+        
+    }
+    
+    @IBAction func RunCustomization(_ sender: Any)
+    {
+        
+    }
+    
+    func DoShowAbout()
+    {
+        let Storyboard = NSStoryboard(name: "AboutTDDebug", bundle: nil)
+        let AboutController = Storyboard.instantiateController(withIdentifier: "AboutTDDebugWindow") as? NSWindowController
+        AboutController?.showWindow(nil)
+    }
+    
+    @IBAction func AboutTDDebug(_ sender: Any)
+    {
+        DoShowAbout()
+    }
+    
     @IBOutlet weak var A1View: NSView!
     @IBOutlet weak var A2View: NSView!
     @IBOutlet weak var A3View: NSView!
