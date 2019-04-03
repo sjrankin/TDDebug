@@ -19,11 +19,15 @@
                                         <menuItem title="About TDDebug" id="5kV-Vb-QxS">
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <connections>
-                                                <action selector="orderFrontStandardAboutPanel:" target="Ady-hI-5gd" id="Exp-CZ-Vem"/>
+                                                <action selector="AboutTDDebug:" target="Ady-hI-5gd" id="E1l-vi-kOx"/>
                                             </connections>
                                         </menuItem>
                                         <menuItem isSeparatorItem="YES" id="VOq-y0-SEH"/>
-                                        <menuItem title="Preferences…" keyEquivalent="," id="BOF-NM-1cW"/>
+                                        <menuItem title="Preferences…" keyEquivalent="," id="BOF-NM-1cW">
+                                            <connections>
+                                                <action selector="RunCustomization:" target="Ady-hI-5gd" id="pyg-bA-ISF"/>
+                                            </connections>
+                                        </menuItem>
                                         <menuItem isSeparatorItem="YES" id="wFC-TO-SCJ"/>
                                         <menuItem title="Services" id="NMo-om-nkz">
                                             <modifierMask key="keyEquivalentModifierMask"/>
@@ -113,7 +117,7 @@
                                     <items>
                                         <menuItem title="TDDebug Help" keyEquivalent="?" id="FKE-Sm-Kum">
                                             <connections>
-                                                <action selector="showHelp:" target="Ady-hI-5gd" id="y7X-2Q-9no"/>
+                                                <action selector="ShowHelp:" target="Ady-hI-5gd" id="InS-EU-kmi"/>
                                             </connections>
                                         </menuItem>
                                     </items>
@@ -142,9 +146,6 @@
                         <rect key="screenRect" x="0.0" y="0.0" width="1680" height="1027"/>
                         <toolbar key="toolbar" implicitIdentifier="D7590265-DBF7-4509-AEFE-9EFFBCEB12E9" displayMode="iconAndLabel" sizeMode="small" id="usP-SH-4Fn">
                             <allowedToolbarItems>
-                                <toolbarItem implicitItemIdentifier="NSToolbarShowColorsItem" id="kVd-lP-Nrq"/>
-                                <toolbarItem implicitItemIdentifier="NSToolbarShowFontsItem" id="DlP-v9-ih9"/>
-                                <toolbarItem implicitItemIdentifier="NSToolbarPrintItem" id="tIK-rx-jEf"/>
                                 <toolbarItem implicitItemIdentifier="NSToolbarSpaceItem" id="pTd-de-Abu"/>
                                 <toolbarItem implicitItemIdentifier="NSToolbarFlexibleSpaceItem" id="er7-qd-Fll"/>
                                 <toolbarItem implicitItemIdentifier="67CEC1FF-180C-46C7-B316-904EEC216925" label="Peers" paletteLabel="Peers" tag="-1" image="Peer" id="KsA-vt-sct">
@@ -175,12 +176,21 @@
                                         <action selector="HandleDisconnectButton:" target="B8D-0N-5wS" id="Pfp-ih-QAA"/>
                                     </connections>
                                 </toolbarItem>
+                                <toolbarItem implicitItemIdentifier="9F4BDCAA-556F-4804-9449-AAC583494707" label="Customize" paletteLabel="Customize" tag="-1" image="Customize" id="iMU-ei-LRy">
+                                    <size key="minSize" width="24" height="24"/>
+                                    <size key="maxSize" width="24" height="24"/>
+                                    <connections>
+                                        <action selector="HandleCustomizeButtonPress:" target="B8D-0N-5wS" id="q2D-lZ-Gqq"/>
+                                    </connections>
+                                </toolbarItem>
                             </allowedToolbarItems>
                             <defaultToolbarItems>
                                 <toolbarItem reference="KsA-vt-sct"/>
                                 <toolbarItem reference="L0k-Zt-P5Z"/>
                                 <toolbarItem reference="06z-nW-7TV"/>
                                 <toolbarItem reference="er7-qd-Fll"/>
+                                <toolbarItem reference="iMU-ei-LRy"/>
+                                <toolbarItem reference="pTd-de-Abu"/>
                                 <toolbarItem reference="P1x-77-Bpu"/>
                             </defaultToolbarItems>
                         </toolbar>
@@ -189,6 +199,7 @@
                         </connections>
                     </window>
                     <connections>
+                        <outlet property="CustomizeButton" destination="iMU-ei-LRy" id="bBv-s9-BKh"/>
                         <outlet property="DisconnectButton" destination="06z-nW-7TV" id="sgb-k2-Lps"/>
                         <outlet property="HelpButton" destination="P1x-77-Bpu" id="5pL-cl-FBf"/>
                         <outlet property="PeersButton" destination="KsA-vt-sct" id="GZu-VV-lTS"/>
@@ -1178,6 +1189,7 @@
     </scenes>
     <resources>
         <image name="Connect" width="16" height="16"/>
+        <image name="Customize" width="24" height="24"/>
         <image name="Disconnect" width="16" height="16"/>
         <image name="Help" width="24" height="24"/>
         <image name="Peer" width="24" height="24"/>
