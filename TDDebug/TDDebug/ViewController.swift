@@ -97,11 +97,9 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
                 {
                 case .ConnectionGranted:
                     self.SetIdiotLightA1(ToState: .Connected)
-                    //                    self.SetIdiotLight("A1", "Connected", NSColor.black, NSColor.green)
                     
                 case .Disconnected:
                     self.SetIdiotLightA1(ToState: .PeersFound)
-                    //                    self.SetIdiotLight("A1", "Not Connected", NSColor.white, NSColor(red: 0.5, green: 0.0, blue: 0.0, alpha: 1.0))
                     
                 default:
                     break
@@ -151,15 +149,21 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
     
     func RemoveKVP(ItemID: UUID)
     {
-        KVPItems.removeAll(where: {$0.ID == ItemID})
-        KVPTable.reloadData()
+        OperationQueue.main.addOperation
+            {
+        self.KVPItems.removeAll(where: {$0.ID == ItemID})
+        self.KVPTable.reloadData()
+        }
     }
     
     func ClearKVPList()
     {
-        KVPItems.removeAll()
-        KVPTable.reloadData()
-    }
+        OperationQueue.main.addOperation
+            {
+        self.KVPItems.removeAll()
+        self.KVPTable.reloadData()
+        }
+        }
     
     func ConnectedDeviceChanged(Manager: MultiPeerManager, ConnectedDevices: [MCPeerID], Changed: MCPeerID, NewState: MCSessionState)
     {
@@ -323,6 +327,9 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
         }
     }
     
+    /// Send a get-all-commands to the specified peer. Response is asynchronous and handled with a different mechanism.
+    ///
+    /// - Parameter Peer: The peer to ask for commands.
     func GetCommandsFromClient(_ Peer: MCPeerID)
     {
         let GetClientCmds = MessageHelper.MakeGetAllClientCommands()
@@ -331,8 +338,10 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
         WaitingFor.append((EncapsulatedID, MessageTypes.GetAllClientCommands))
     }
     
+    /// Holds the IDs and message types of asynchronous calls.
     var WaitingFor = [(UUID, MessageTypes)]()
     
+    /// Stores the connected client ID. Setting it may immediately affect the UI.
     var _ConnectedClient: MCPeerID? = nil
     {
         didSet
@@ -349,6 +358,7 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
             }
         }
     }
+    /// Get or set the connected client. The connected client is the client that is currently debugging.
     var ConnectedClient: MCPeerID?
     {
         get
@@ -431,6 +441,25 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
         }
     }
     
+    func HandlePushedVersionInformation(_ Raw: String)
+    {
+        let (Name, OS, Version, Build, BuildTimeStamp, Copyright, BuildID) = MessageHelper.DecodeVersionInfo(Raw)
+    }
+    
+    func ExecuteClientCommand(_ Command: ClientCommand)
+    {
+        
+    }
+    
+    func HandleClientCommand(_ Raw: String, Peer: MCPeerID)
+    {
+        let ClientCmd = MessageHelper.DecodeClientCommand(Raw)
+        OperationQueue.main.addOperation
+            {
+                self.ExecuteClientCommand(ClientCmd!)
+        }
+    }
+    
     func SendClientCommandList(Peer: MCPeerID, CommandID: UUID)
     {
         let AllCommands = MessageHelper.MakeAllClientCommands(Commands: LocalCommands)
@@ -480,8 +509,14 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
         case .TextMessage:
             HandleTextMessage(RawData)
             
+        case .SendCommandToClient:
+            HandleClientCommand(RawData, Peer: Peer)
+            
         case .GetAllClientCommands:
             SendClientCommandList(Peer: Peer, CommandID: EncapsulatedID!)
+            
+        case .PushVersionInformation:
+            HandlePushedVersionInformation(RawData)
             
         default:
             print("Unhandled message type: \(MessageType)")
@@ -492,7 +527,21 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
     func ProcessAsyncResult(CommandID: UUID, Peer: MCPeerID, MessageType: MessageTypes, RawData: String)
     {
         WaitingFor.removeAll(where: {$0.0 == CommandID})
-        print("RawData=\(RawData)")
+        let ReceivedCommand = MessageHelper.GetMessageType(RawData)
+        switch ReceivedCommand
+        {
+        case .AllClientCommandsReturned:
+            let Parsed = MessageHelper.DecodeReturnedCommandList(RawData)
+            if Parsed!.count < 1
+            {
+                return
+            }
+            print("Received \((Parsed?.count)!) client commands from \(Peer.displayName)")
+            _ClientCommandList = Parsed!
+            
+        default:
+            break
+        }
     }
     
     func ReceivedAsyncData(Manager: MultiPeerManager, Peer: MCPeerID, CommandID: UUID, RawData: String)
