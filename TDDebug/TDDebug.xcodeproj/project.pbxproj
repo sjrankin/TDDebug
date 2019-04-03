@@ -27,6 +27,7 @@
 		1746B54622520C9F00E554EC /* MainProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1746B54522520C9F00E554EC /* MainProtocol.swift */; };
 		1746B54822520D4A00E554EC /* LogItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1746B54722520D4A00E554EC /* LogItem.swift */; };
 		1772A2FB2253705C006D0A16 /* OSColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1772A2FA2253705C006D0A16 /* OSColor.swift */; };
+		17B68CCA225468CC00AEBE94 /* MainWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17B68CC9225468CC00AEBE94 /* MainWindow.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -53,6 +54,7 @@
 		1746B54522520C9F00E554EC /* MainProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainProtocol.swift; sourceTree = "<group>"; };
 		1746B54722520D4A00E554EC /* LogItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogItem.swift; sourceTree = "<group>"; };
 		1772A2FA2253705C006D0A16 /* OSColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OSColor.swift; sourceTree = "<group>"; };
+		17B68CC9225468CC00AEBE94 /* MainWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainWindow.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -111,6 +113,7 @@
 				1743C1362251DF9B003FE6B2 /* AppDelegate.swift */,
 				1743C1382251DF9B003FE6B2 /* ViewController.swift */,
 				1743C13C2251DF9C003FE6B2 /* Main.storyboard */,
+				17B68CC9225468CC00AEBE94 /* MainWindow.swift */,
 				1746B54522520C9F00E554EC /* MainProtocol.swift */,
 				1746B54722520D4A00E554EC /* LogItem.swift */,
 				1746B54322520C6700E554EC /* KVPItem.swift */,
@@ -260,6 +263,7 @@
 				1704C5B82253244D00C49E91 /* ClientCommands.swift in Sources */,
 				1743C1482252032F003FE6B2 /* MultiPeer.swift in Sources */,
 				1704C5B4225311D400C49E91 /* SendToClientUIWindow.swift in Sources */,
+				17B68CCA225468CC00AEBE94 /* MainWindow.swift in Sources */,
 				1704C5B62253123F00C49E91 /* SendToClientUICode.swift in Sources */,
 				1746B54122520AB900E554EC /* Versioning.swift in Sources */,
 				1743C14C22520366003FE6B2 /* MultiPeerDelegate.swift in Sources */,
