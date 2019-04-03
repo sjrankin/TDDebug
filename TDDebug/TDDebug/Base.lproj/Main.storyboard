@@ -72,6 +72,13 @@
                                                 <action selector="HandleSendToClient:" target="Ady-hI-5gd" id="4EH-dt-U9a"/>
                                             </connections>
                                         </menuItem>
+                                        <menuItem isSeparatorItem="YES" id="eFH-ev-raD"/>
+                                        <menuItem title="Disconnect" id="aez-Kh-5TV">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="DisconnectFromDebuggee:" target="Ady-hI-5gd" id="J0n-Eh-5js"/>
+                                            </connections>
+                                        </menuItem>
                                     </items>
                                 </menu>
                             </menuItem>
@@ -127,17 +134,65 @@
         <!--Window Controller-->
         <scene sceneID="R2V-B0-nI4">
             <objects>
-                <windowController id="B8D-0N-5wS" sceneMemberID="viewController">
+                <windowController id="B8D-0N-5wS" customClass="MainWindow" customModule="TDDebug" customModuleProvider="target" sceneMemberID="viewController">
                     <window key="window" title="TDDebug" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" animationBehavior="default" id="IQv-IB-iLA">
                         <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
                         <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
                         <rect key="contentRect" x="196" y="240" width="1000" height="600"/>
                         <rect key="screenRect" x="0.0" y="0.0" width="1680" height="1027"/>
+                        <toolbar key="toolbar" implicitIdentifier="D7590265-DBF7-4509-AEFE-9EFFBCEB12E9" displayMode="iconAndLabel" sizeMode="small" id="usP-SH-4Fn">
+                            <allowedToolbarItems>
+                                <toolbarItem implicitItemIdentifier="NSToolbarShowColorsItem" id="kVd-lP-Nrq"/>
+                                <toolbarItem implicitItemIdentifier="NSToolbarShowFontsItem" id="DlP-v9-ih9"/>
+                                <toolbarItem implicitItemIdentifier="NSToolbarPrintItem" id="tIK-rx-jEf"/>
+                                <toolbarItem implicitItemIdentifier="NSToolbarSpaceItem" id="pTd-de-Abu"/>
+                                <toolbarItem implicitItemIdentifier="NSToolbarFlexibleSpaceItem" id="er7-qd-Fll"/>
+                                <toolbarItem implicitItemIdentifier="67CEC1FF-180C-46C7-B316-904EEC216925" label="Peers" paletteLabel="Peers" tag="-1" image="Peer" id="KsA-vt-sct">
+                                    <size key="minSize" width="24" height="24"/>
+                                    <size key="maxSize" width="24" height="24"/>
+                                    <connections>
+                                        <action selector="HandlePeersButtonPressed:" target="B8D-0N-5wS" id="HxT-oN-6jX"/>
+                                    </connections>
+                                </toolbarItem>
+                                <toolbarItem implicitItemIdentifier="A8189118-489A-4BE6-8885-22C433866B27" label="Send to Peer" paletteLabel="Send to Peer" tag="-1" image="Send" id="L0k-Zt-P5Z">
+                                    <size key="minSize" width="24" height="24"/>
+                                    <size key="maxSize" width="24" height="24"/>
+                                    <connections>
+                                        <action selector="HandleSendToPeerButtonPressed:" target="B8D-0N-5wS" id="flz-jN-7kY"/>
+                                    </connections>
+                                </toolbarItem>
+                                <toolbarItem implicitItemIdentifier="8DBCED86-187F-4CAA-B8AA-C4E367DDE270" label="Help" paletteLabel="Help" tag="-1" image="Help" id="P1x-77-Bpu">
+                                    <size key="minSize" width="24" height="24"/>
+                                    <size key="maxSize" width="24" height="24"/>
+                                    <connections>
+                                        <action selector="HandleHelpButtonPressed:" target="B8D-0N-5wS" id="pTa-1h-U3E"/>
+                                    </connections>
+                                </toolbarItem>
+                                <toolbarItem implicitItemIdentifier="ED36634F-8DCC-4C8A-BEB8-2160D771EBB7" label="Disconnect" paletteLabel="Disconnect from Client" tag="-1" image="Disconnect" id="06z-nW-7TV">
+                                    <size key="minSize" width="16" height="16"/>
+                                    <size key="maxSize" width="16" height="16"/>
+                                    <connections>
+                                        <action selector="HandleDisconnectButton:" target="B8D-0N-5wS" id="Pfp-ih-QAA"/>
+                                    </connections>
+                                </toolbarItem>
+                            </allowedToolbarItems>
+                            <defaultToolbarItems>
+                                <toolbarItem reference="KsA-vt-sct"/>
+                                <toolbarItem reference="L0k-Zt-P5Z"/>
+                                <toolbarItem reference="06z-nW-7TV"/>
+                                <toolbarItem reference="er7-qd-Fll"/>
+                                <toolbarItem reference="P1x-77-Bpu"/>
+                            </defaultToolbarItems>
+                        </toolbar>
                         <connections>
                             <outlet property="delegate" destination="B8D-0N-5wS" id="98r-iN-zZc"/>
                         </connections>
                     </window>
                     <connections>
+                        <outlet property="DisconnectButton" destination="06z-nW-7TV" id="sgb-k2-Lps"/>
+                        <outlet property="HelpButton" destination="P1x-77-Bpu" id="5pL-cl-FBf"/>
+                        <outlet property="PeersButton" destination="KsA-vt-sct" id="GZu-VV-lTS"/>
+                        <outlet property="SendButton" destination="L0k-Zt-P5Z" id="FVy-xK-wTs"/>
                         <segue destination="XfG-lQ-9wD" kind="relationship" relationship="window.shadowedContentViewController" id="cq2-FE-JQM"/>
                     </connections>
                 </windowController>
@@ -644,7 +699,6 @@
                         <outlet property="KVPTableHeader" destination="LVm-lf-hEp" id="pmh-Qd-rqz"/>
                         <outlet property="LogTable" destination="cej-sh-zmU" id="rse-qh-W3L"/>
                         <outlet property="LogTableHeader" destination="Iuf-GZ-5yN" id="aar-M2-Y3F"/>
-                        <segue destination="382-pW-3Kj" kind="show" identifier="ToPeerViewer2" id="jby-Et-z1a"/>
                     </connections>
                 </viewController>
             </objects>
@@ -659,6 +713,42 @@
                         <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
                         <rect key="contentRect" x="490" y="534" width="480" height="270"/>
                         <rect key="screenRect" x="0.0" y="0.0" width="2880" height="1597"/>
+                        <toolbar key="toolbar" implicitIdentifier="2E67EFC6-CA14-471B-B547-8E5F1FA7E12F" displayMode="iconAndLabel" sizeMode="small" id="IMk-hX-PSI">
+                            <allowedToolbarItems>
+                                <toolbarItem implicitItemIdentifier="NSToolbarShowColorsItem" id="lgg-gg-zZO"/>
+                                <toolbarItem implicitItemIdentifier="NSToolbarShowFontsItem" id="XhZ-hj-1FJ"/>
+                                <toolbarItem implicitItemIdentifier="NSToolbarPrintItem" id="Wbx-na-3Zf"/>
+                                <toolbarItem implicitItemIdentifier="NSToolbarSpaceItem" id="1UK-XV-18A"/>
+                                <toolbarItem implicitItemIdentifier="NSToolbarFlexibleSpaceItem" id="PbD-ba-26s"/>
+                                <toolbarItem implicitItemIdentifier="23AA8B8E-F623-419C-85F6-E7188F8E27FD" label="Connect as Client" paletteLabel="Connect" tag="-1" image="Connect" id="ShI-TT-Y1h">
+                                    <size key="minSize" width="16" height="16"/>
+                                    <size key="maxSize" width="16" height="16"/>
+                                    <connections>
+                                        <action selector="HandleConnectToClient:" target="382-pW-3Kj" id="eOY-xL-3tQ"/>
+                                    </connections>
+                                </toolbarItem>
+                                <toolbarItem implicitItemIdentifier="7CFF2A1F-C0D1-4C29-AB1A-563D3C37EAF9" label="Disconnect Client" paletteLabel="Disconnect" tag="-1" image="Disconnect" id="IpC-BH-LSP">
+                                    <size key="minSize" width="16" height="16"/>
+                                    <size key="maxSize" width="16" height="16"/>
+                                    <connections>
+                                        <action selector="HandleDisconnectFromClient:" target="382-pW-3Kj" id="FCj-pK-ftH"/>
+                                    </connections>
+                                </toolbarItem>
+                                <toolbarItem implicitItemIdentifier="04BFB7CE-CD0C-4DA3-9089-DBB7B2CE02A1" label="Refresh" paletteLabel="Refresh" tag="-1" image="Refresh" id="c5z-7i-CLh">
+                                    <size key="minSize" width="16" height="16"/>
+                                    <size key="maxSize" width="16" height="16"/>
+                                    <connections>
+                                        <action selector="HandleRefreshPeerList:" target="382-pW-3Kj" id="dWC-Pa-j9b"/>
+                                    </connections>
+                                </toolbarItem>
+                            </allowedToolbarItems>
+                            <defaultToolbarItems>
+                                <toolbarItem reference="ShI-TT-Y1h"/>
+                                <toolbarItem reference="IpC-BH-LSP"/>
+                                <toolbarItem reference="PbD-ba-26s"/>
+                                <toolbarItem reference="c5z-7i-CLh"/>
+                            </defaultToolbarItems>
+                        </toolbar>
                         <connections>
                             <outlet property="delegate" destination="382-pW-3Kj" id="4Qm-yj-FUb"/>
                         </connections>
@@ -669,7 +759,7 @@
                 </windowController>
                 <customObject id="JEl-hB-GbK" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1429" y="1039"/>
+            <point key="canvasLocation" x="1429" y="815"/>
         </scene>
         <!--Window Controller-->
         <scene sceneID="35S-N4-kgO">
@@ -1086,4 +1176,12 @@
             <point key="canvasLocation" x="1429" y="1503"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="Connect" width="16" height="16"/>
+        <image name="Disconnect" width="16" height="16"/>
+        <image name="Help" width="24" height="24"/>
+        <image name="Peer" width="24" height="24"/>
+        <image name="Refresh" width="16" height="16"/>
+        <image name="Send" width="24" height="24"/>
+    </resources>
 </document>
