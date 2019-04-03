@@ -12,59 +12,37 @@ import MultipeerConnectivity
 
 class PeerViewerUICode: NSViewController, NSTableViewDelegate, NSTableViewDataSource
 {
-    #if true
     var HaveDelegate = false
     weak var Delegate: MainProtocol!
         {
         didSet
         {
             HaveDelegate = true
-            //print("PeerViewUICode: \(Delegate!)")
             RefreshPeerList()
         }
     }
-    #else
-    weak var Delegate: MainProtocol? = nil
-        {
-        didSet
-        {
-            print("PeerViewUICode: \(Delegate!)")
-            let D: MainProtocol = Delegate as! MainProtocol
-            let x = D.MPManager.GetPeerList()
-            if Delegate != nil
-            {
-                print("PeerViewUICode2: \(Delegate!)")
-                PeerList = (Delegate?.MPManager.GetPeerList())!
-            }
-        }
-    }
-    #endif
     
     override func viewDidLoad()
     {
         super.viewDidLoad()
-        //PeerList = (Delegate?.MPManager.GetPeerList())!
         PeerTable.delegate = self
         PeerTable.dataSource = self
         PeerTable.reloadData()
-        RefreshTimer = Timer.scheduledTimer(timeInterval: 5, target: self,
+        #if false
+        RefreshTimer = Timer.scheduledTimer(timeInterval: 3, target: self,
                                             selector: #selector(RefreshPeerList),
                                             userInfo: nil,
                                             repeats: true)
+        #endif
     }
     
     @objc func RefreshPeerList()
     {
-        #if true
         if HaveDelegate
         {
             PeerList = Delegate.MPManager.GetPeerList()
-            //print("RefreshPeerList: count=\(PeerList.count)")
+            PeerTable.reloadData()
         }
-        #else
-        PeerList = (Delegate?.MPManager.GetPeerList())!
-        #endif
-        PeerTable.reloadData()
     }
     
     var RefreshTimer: Timer!
@@ -83,7 +61,6 @@ class PeerViewerUICode: NSViewController, NSTableViewDelegate, NSTableViewDataSo
     
     func numberOfRows(in tableView: NSTableView) -> Int
     {
-        //print("PeerList.count=\(PeerList.count)")
         return PeerList.count
     }
     
@@ -96,15 +73,68 @@ class PeerViewerUICode: NSViewController, NSTableViewDelegate, NSTableViewDataSo
             Contents = PeerList[row].displayName
             Identifier = "PeerColumn"
         }
+        var IsDebugClient = false
         if tableColumn == tableView.tableColumns[1]
         {
-            Contents = ""
+            if PeerList[row] == Delegate.ConnectedClient
+            {
+                Contents = "debug client"
+                IsDebugClient = true
+            }
+            else
+            {
+                Contents = "connected"
+                IsDebugClient = false
+            }
             Identifier = "StateColumn"
         }
         let Cell = tableView.makeView(withIdentifier: NSUserInterfaceItemIdentifier(rawValue: Identifier), owner: self) as? NSTableCellView
         Cell?.textField?.stringValue = Contents
+        if IsDebugClient
+        {
+            Cell?.textField?.textColor = OSColor.blue
+        }
         return Cell
     }
     
     @IBOutlet weak var PeerTable: NSTableView!
+    
+    func HandleConnectButtonPressed()
+    {
+        let SelectedRow = PeerTable.selectedRow
+        if SelectedRow == -1
+        {
+            print("No row selected.")
+            return
+        }
+        if PeerList[SelectedRow] == Delegate.ConnectedClient
+        {
+            print("\((Delegate.ConnectedClient?.displayName)!) already connected as client")
+            return
+        }
+        Delegate.ConnectedClient = PeerList[SelectedRow]
+        RefreshPeerList()
+    }
+    
+    func HandleDisconnectButtonPressed()
+    {
+        let SelectedRow = PeerTable.selectedRow
+        if SelectedRow == -1
+        {
+            print("No row selected.")
+            return
+        }
+        if PeerList[SelectedRow] != Delegate.ConnectedClient
+        {
+                        print("\((Delegate.ConnectedClient?.displayName)!) is not connected as client")
+            return
+        }
+        Delegate.ConnectedClient = nil
+        RefreshPeerList()
+    }
+    
+    func HandleRefreshButtonPressed()
+    {
+        RefreshPeerList()
+    }
 }
