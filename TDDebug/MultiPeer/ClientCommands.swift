@@ -127,7 +127,7 @@ class ClientCommands
         {
             let CmdStr = MessageHelper.MakeReturnCommandByIndex(Index: Cmd.SortOrder, Command: Cmd.ID,
                                                                 CommandName: Cmd.Name, Description: Cmd.Description,
-                                                                Parameters: Cmd.Parameters)
+                                                                ParameterCount: Cmd.ParameterCount, Parameters: Cmd.Parameters)
             Results.append(CmdStr)
         }
         return Results
@@ -178,7 +178,7 @@ class ClientCommand
         _ID = CmdID
         _Name = CmdName
         _Description = CmdDescription
-        Parameters.append(Parameter)
+        Parameters[0] = Parameter
         _SortOrder = Order
     }
     
@@ -195,9 +195,11 @@ class ClientCommand
         _ID = CmdID
         _Name = CmdName
         _Description = CmdDescription
+        var Index = 0
         for Param in ParameterList
         {
-            Parameters.append(Param)
+            Parameters[Index] = Param
+            Index = Index + 1
         }
         _SortOrder = Order
     }
@@ -258,7 +260,28 @@ class ClientCommand
         }
     }
     
-    private var _Parameters: [String] = [String]()
+    /// Returns the number of parameters in the client command. Do **not** used `Parameters.count` as the count will not be correct.
+    public var ParameterCount: Int
+    {
+        get
+        {
+            var Count = 0
+            for SomeName in Parameters
+            {
+                if !SomeName.isEmpty
+                {
+                    Count = Count + 1
+                }
+                else
+                {
+                    break
+                }
+            }
+            return Count
+        }
+    }
+    
+    private var _Parameters: [String] = [String](repeating: "", count: 10)
     /// Get or set the list of parameters.
     public var Parameters: [String]
     {
@@ -269,6 +292,20 @@ class ClientCommand
         set
         {
             _Parameters = newValue
+        }
+    }
+    
+    private var _ParameterValues: [String] = [String](repeating: "", count: 10)
+    /// Get or set the values that correspond to the parameters at the same position.
+    public var ParameterValues: [String]
+    {
+        get
+        {
+            return _ParameterValues
+        }
+        set
+        {
+            _ParameterValues = newValue
         }
     }
 }
