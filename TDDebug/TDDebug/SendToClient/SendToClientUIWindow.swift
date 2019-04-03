@@ -13,10 +13,10 @@ class SendToClientUIWindow: NSWindowController
 {
     weak var MainDelegate: MainProtocol? = nil
         {
-     didSet
-     {
-        let VC = window!.contentViewController as? SendToClientUICode
-        VC?.Delegate = MainDelegate
-    }
+        didSet
+        {
+            let VC = window!.contentViewController as? SendToClientUICode
+            VC?.Delegate = MainDelegate
+        }
     }
 }
