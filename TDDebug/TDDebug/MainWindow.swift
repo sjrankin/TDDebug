@@ -38,4 +38,14 @@ class MainWindow: NSWindowController
         let VC = window!.contentViewController as? ViewController
         VC?.DoShowPeers()
     }
+    
+    @IBOutlet weak var FontButton: NSToolbarItem!
+    @IBAction func HandleFontButtonPress(_ sender: Any)
+    {
+    }
+    
+    @IBOutlet weak var CustomizeButton: NSToolbarItem!
+    @IBAction func HandleCustomizeButtonPress(_ sender: Any)
+    {
+    }
 }
