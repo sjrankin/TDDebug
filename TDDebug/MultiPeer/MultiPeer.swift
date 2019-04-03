@@ -260,7 +260,6 @@ class MultiPeerManager: NSObject, MCNearbyServiceAdvertiserDelegate, MCNearbySer
     {
         let Message = String(data: data, encoding: .utf8)
         let Cmd = MessageHelper.GetMessageType(Message!)
-        print("didReceive: Cmd=\(Cmd)")
         if Cmd == MessageTypes.IDEncapsulatedCommand
         {
             if let (ID, EnMsg) = MessageHelper.DecodeEncapsulatedCommand(Message!)
