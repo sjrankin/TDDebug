@@ -50,6 +50,16 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
         IdiotLights["C1"] = (C1View, C1Text)
         IdiotLights["C2"] = (C2View, C2Text)
         IdiotLights["C3"] = (C3View, C3Text)
+        
+        SetIdiotLightA1(ToState: .NotConnected)
+        EnableIdiotLight("A2", false)
+        EnableIdiotLight("A3", false)
+        EnableIdiotLight("B1", false)
+        EnableIdiotLight("B2", false)
+        EnableIdiotLight("B3", false)
+        EnableIdiotLight("C1", false)
+        EnableIdiotLight("C2", false)
+        EnableIdiotLight("C3", false)
     }
     
     var IdiotLights = [String: (NSView, NSTextField)]()
@@ -86,10 +96,12 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
                 switch HandShake
                 {
                 case .ConnectionGranted:
-                    self.SetIdiotLight("A1", "Connected", NSColor.black, NSColor.green)
+                    self.SetIdiotLightA1(ToState: .Connected)
+                    //                    self.SetIdiotLight("A1", "Connected", NSColor.black, NSColor.green)
                     
                 case .Disconnected:
-                    self.SetIdiotLight("A1", "Not Connected", NSColor.white, NSColor(red: 0.5, green: 0.0, blue: 0.0, alpha: 1.0))
+                    self.SetIdiotLightA1(ToState: .PeersFound)
+                    //                    self.SetIdiotLight("A1", "Not Connected", NSColor.white, NSColor(red: 0.5, green: 0.0, blue: 0.0, alpha: 1.0))
                     
                 default:
                     break
@@ -159,6 +171,15 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
         {
             _ConnectedClient = nil
             State.TransitionTo(NewState: .Disconnected)
+            SetIdiotLightA1(ToState: .PeersFound)
+        }
+        if ConnectedDevices.count < 1
+        {
+            SetIdiotLightA1(ToState: .NoPeers)
+        }
+        else
+        {
+            SetIdiotLightA1(ToState: .PeersFound)
         }
     }
     
@@ -334,6 +355,10 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
         {
             return _ConnectedClient
         }
+        set
+        {
+            _ConnectedClient = newValue
+        }
     }
     
     func HandleHandShakeCommand(_ Raw: String, Peer: MCPeerID)
@@ -352,7 +377,8 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
                     
                 case .ConnectionGranted:
                     self._ConnectedClient = Peer
-                    let Item = LogItem(Text: "\(Peer.displayName) is debugee.")
+                    let Item = LogItem(Text: "\(Peer.displayName) is debug client.")
+                    Item.HostName = "TDDebug"
                     self.AddLogMessage(Item: Item)
                     ReturnState = MessageHelper.MakeHandShake(ReturnMe)
                     
@@ -367,6 +393,11 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
                     
                 case .RequestConnection:
                     break
+                    
+                case .DropAsClient:
+                    let Item = LogItem(Text: "Dropped as client by \(Peer.displayName)")
+                    self.AddLogMessage(Item: Item)
+                    State.TransitionTo(NewState: .Disconnected)
                     
                 case .Unknown:
                     break
@@ -496,16 +527,50 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
                           _ EnableFGColor: NSColor = NSColor.black,
                           _ EnableBGColor: NSColor = NSColor.white)
     {
-        IdiotLights[Address]!.0.layer?.backgroundColor = DoEnable ? EnableBGColor.cgColor : NSColor.white.cgColor
-        IdiotLights[Address]!.1.textColor = DoEnable ? EnableFGColor : NSColor.clear
+        OperationQueue.main.addOperation
+            {
+                self.IdiotLights[Address]!.0.layer?.backgroundColor = DoEnable ? EnableBGColor.cgColor : NSColor.white.cgColor
+                self.IdiotLights[Address]!.1.textColor = DoEnable ? EnableFGColor : NSColor.clear
+        }
     }
     
     func SetIdiotLight(_ Address: String, _ Text: String, _ TextColor: NSColor = NSColor.black,
                        _ BGColor: NSColor = NSColor.white)
     {
-        IdiotLights[Address]!.0.layer?.backgroundColor = BGColor.cgColor
-        IdiotLights[Address]!.1.textColor = TextColor
-        IdiotLights[Address]!.1.stringValue = Text
+        OperationQueue.main.addOperation
+            {
+                self.IdiotLights[Address]!.0.layer?.backgroundColor = BGColor.cgColor
+                self.IdiotLights[Address]!.1.textColor = TextColor
+                self.IdiotLights[Address]!.1.stringValue = Text
+        }
+    }
+    
+    func SetIdiotLightA1(ToState: A1States)
+    {
+        OperationQueue.main.addOperation {
+            switch ToState
+            {
+            case .NotConnected:
+                self.SetIdiotLight("A1", "Not Connected", OSColor.black, OSColor.white)
+                
+            case .Connected:
+                self.SetIdiotLight("A1", "Connected to Client", OSColor.black, OSColor.green)
+                
+            case .NoPeers:
+                self.SetIdiotLight("A1", "No Peers", OSColor.black, OSColor.lightGray)
+                
+            case .PeersFound:
+                self.SetIdiotLight("A1", "Peers Available", OSColor.white, OSColor.purple)
+            }
+        }
+    }
+    
+    enum A1States
+    {
+        case NotConnected
+        case PeersFound
+        case NoPeers
+        case Connected
     }
     
     func InitializeTables()
@@ -644,7 +709,7 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
     {
         IdiotLightContainer.fillColor = NSColor.clear
         
-        InitializeIdiotLight(A1View, A1Text)
+        InitializeIdiotLight(A1View, A1Text, IsA1: true)
         InitializeIdiotLight(A2View, A2Text)
         InitializeIdiotLight(A3View, A3Text)
         InitializeIdiotLight(B1View, B1Text)
@@ -655,11 +720,11 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
         InitializeIdiotLight(C3View, C3Text)
     }
     
-    func InitializeIdiotLight(_ Light: NSView, _ Text: NSTextField)
+    func InitializeIdiotLight(_ Light: NSView, _ Text: NSTextField, IsA1: Bool = false)
     {
         Light.wantsLayer = true
         Light.layer?.borderColor = NSColor.black.cgColor
-        Light.layer?.borderWidth = 0.5
+        Light.layer?.borderWidth = IsA1 ? 2.0 : 0.5
         Light.layer?.cornerRadius = 5.0
         Light.layer?.backgroundColor = NSColor.white.cgColor
         Text.font = NSFont(name: "Avenir-Heavy", size: 15.0)
@@ -684,8 +749,7 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
     
     var PeerViewerController: NSWindowController? = nil
     
-    //https://stackoverflow.com/questions/24694587/osx-storyboards-open-non-modal-window-with-standard-segue
-    @IBAction func HandleShowCurrentPeers(_ sender: Any)
+    func DoShowPeers()
     {
         if PeerViewerController == nil
         {
@@ -695,13 +759,19 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
         if let PVC = PeerViewerController as? PeerViewerUIWindow
         {
             PVC.MainDelegate = self
-            PVC.showWindow(sender)
+            PVC.showWindow(nil)
         }
+    }
+    
+    //https://stackoverflow.com/questions/24694587/osx-storyboards-open-non-modal-window-with-standard-segue
+    @IBAction func HandleShowCurrentPeers(_ sender: Any)
+    {
+        DoShowPeers()
     }
     
     var SendToController: NSWindowController? = nil
     
-    @IBAction func HandleSendToClient(_ sender: Any)
+    func DoSendToClient()
     {
         if SendToController == nil
         {
@@ -711,8 +781,47 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
         if let SVC = SendToController as? SendToClientUIWindow
         {
             SVC.MainDelegate = self
-            SVC.showWindow(sender)
+            SVC.showWindow(nil)
         }
+    }
+    
+    @IBAction func HandleSendToClient(_ sender: Any)
+    {
+        DoSendToClient()
+    }
+    
+    func DoDisconnectFromClient()
+    {
+        if ConnectedClient == nil
+        {
+            print("No one to drop.")
+            return
+        }
+        let DroppedClientName: String = (ConnectedClient?.displayName)!
+        print("Dropping \(DroppedClientName) as client.")
+        let Disconnect = MessageHelper.MakeHandShake(.DropAsClient)
+        MPMgr.SendPreformatted(Message: Disconnect, To: ConnectedClient!)
+        _ConnectedClient = nil
+        State.TransitionTo(NewState: .Disconnected)
+        SetIdiotLightA1(ToState: .PeersFound)
+        let Item = LogItem(Text: "Dropped \(DroppedClientName) as debug client.")
+        Item.HostName = "TDDump"
+        AddLogMessage(Item: Item)
+    }
+    
+    @IBAction func DisconnectFromDebuggee(_ sender: Any)
+    {
+        DoDisconnectFromClient()
+    }
+    
+    func DoShowHelp()
+    {
+        
+    }
+    
+    @IBAction func ShowHelp(_ sender: Any)
+    {
+        DoShowHelp()
     }
     
     @IBOutlet weak var A1View: NSView!
