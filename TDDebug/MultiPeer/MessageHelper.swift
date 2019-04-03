@@ -16,7 +16,13 @@ import UIKit
 /// Class that helps with encoding and decoding messages sent to and from TD{D}ebug instances.
 class MessageHelper
 {
-    private static func DecodeKVP(_ Raw: String, Delimiter: String) -> (String, String)?
+    /// Decode a key-value pair with the specified delimiter. The format is assumed to be: key=value.
+    ///
+    /// - Parameters:
+    ///   - Raw: The string with the value to decode.
+    ///   - Delimiter: The delimiter between the key and value.
+    /// - Returns: Tuple with (Key, Value) (both as Strings) on success, nil on error.
+    private static func DecodeKVP(_ Raw: String, Delimiter: String = "=") -> (String, String)?
     {
         if Delimiter.isEmpty
         {
@@ -32,6 +38,112 @@ class MessageHelper
         return (String(Parts[0]), String(Parts[1]))
     }
     
+    /// Decode a returned client command list response.
+    ///
+    /// - Parameter Raw: The raw response from the client that sent the response.
+    /// - Returns: List of client command classes. Nil on error.
+    public static func DecodeReturnedCommandList(_ Raw: String) -> [ClientCommand]?
+    {
+        var Result = [ClientCommand]()
+        
+        //First, remove the returned command
+        let Delimiter = String(Raw.first!)
+        var Next = Raw
+        Next.removeFirst()
+        let Parts = Next.split(separator: String.Element(Delimiter))
+        let (CmdCountKey, CmdCountValue) = DecodeKVP(String(Parts[1]))!
+        if CmdCountKey != "Count"
+        {
+            print("Mal-formed returned command list encountered.")
+            return nil
+        }
+        let CmdCount = Int(CmdCountValue)!
+        
+        var LastPart = String(Parts[2])
+        let LPDel = String(LastPart.first!)
+        LastPart.removeFirst()
+        let CParts = LastPart.split(separator: String.Element(LPDel))
+        
+        for Part in CParts
+        {
+            var SCmd = String(Part)
+            let CmdDel = String(SCmd.first!)
+            SCmd.removeFirst()
+            let CmdParts = SCmd.split(separator: String.Element(CmdDel))
+            var FirstPass = [(String, String)]()
+            for CmdPart in CmdParts
+            {
+                let (K, V) = DecodeKVP(String(CmdPart))!
+                FirstPass.append((K, V))
+            }
+            var CmdID: UUID!
+            var CmdIndex: Int!
+            var CmdName: String!
+            var CmdDescription: String!
+            var CmdPCount: Int!
+            var CmdParameters = [String]()
+            for (Name, Value) in FirstPass
+            {
+                switch Name
+                {
+                case "ID":
+                    //This should be ignored.
+                    break
+                    
+                case "Index":
+                    if let CI = Int(Value)
+                    {
+                        CmdIndex = CI
+                    }
+                    else
+                    {
+                        CmdIndex = 0
+                    }
+                    
+                case "Command":
+                    if let CIv = UUID(uuidString: Value)
+                    {
+                        CmdID = CIv
+                    }
+                    else
+                    {
+                        CmdID = UUID()
+                    }
+                    
+                case "Name":
+                    CmdName = Value
+                    
+                case "Description":
+                    CmdDescription = Value
+                    
+                case "ParameterCount":
+                    if let CPC = Int(Value)
+                    {
+                        CmdPCount = CPC
+                    }
+                    else
+                    {
+                        CmdPCount = 0
+                    }
+                    
+                case "Param":
+                    CmdParameters.append(Value)
+                    
+                default:
+                    print("Unexpected command key encountered: \(Name).")
+                }
+            }
+            let CCmd = ClientCommand(CmdID, CmdName, CmdDescription, CmdIndex, CmdParameters)
+            Result.append(CCmd)
+        }
+        
+        return Result
+    }
+    
+    /// Decode an encapsulated ID command.
+    ///
+    /// - Parameter Raw: The raw value to decode.
+    /// - Returns: Tupele in the following order: (ID of the encapsulated command, Raw, encoded command). Nil on error.
     public static func DecodeEncapsulatedCommand(_ Raw: String) -> (UUID, String)?
     {
         let Delimiter = String(Raw.first!)
@@ -48,6 +160,48 @@ class MessageHelper
             return (ID, String(Parts[2]))
         }
         return nil
+    }
+    
+    /// Decode a client command string.
+    ///
+    /// - Parameter Raw: The raw message string.
+    /// - Returns: ClientCommand class with the command ID and parameters (but no other fields populated).
+    public static func DecodeClientCommand(_ Raw: String) -> ClientCommand?
+    {
+        let Delimiter = String(Raw.first!)
+        var Next = Raw
+        Next.removeFirst()
+        var Parts = Next.split(separator: String.Element(Delimiter))
+        Parts.removeFirst()
+        var PartsList = [(String, String)]()
+        for Part in Parts
+        {
+            let (Key, Value) = DecodeKVP(String(Part))!
+            PartsList.append((Key, Value))
+        }
+        var Params = [(String, String)]()
+        var Command: String = ""
+        for (Key, Value) in PartsList
+        {
+            switch Key
+            {
+            case "Command":
+                Command = Value
+                
+            case "ParameterCount":
+                break
+                
+            default:
+                Params.append((Key, Value))
+            }
+        }
+        let Cmd = ClientCommand(UUID(uuidString: Command)!, "", "", 0)
+        for Index in 0 ..< Params.count
+        {
+            Cmd.Parameters[Index] = Params[Index].0
+            Cmd.ParameterValues[Index] = Params[Index].1
+        }
+        return Cmd
     }
     
     public static func DecodeHandShakeCommand(_ Raw: String) -> HandShakeCommands
@@ -179,6 +333,67 @@ class MessageHelper
             }
         }
         return (Message, EchoTo, Delay, Count)
+    }
+    
+    /// Decode a pushed version message.
+    ///
+    /// - Parameter Raw: Raw message text.
+    /// - Returns: Decoded version information in the order: (Program Name, Host OS, Version, Build, Build Time Stamp, Copyright, Build ID, Program ID).
+    public static func DecodeVersionInfo(_ Raw: String) -> (String, String, String, String, String, String, String, String)
+    {
+        let Delimiter = String(Raw.first!)
+        var Next = Raw
+        Next.removeFirst()
+        let Parts = Next.split(separator: String.Element(Delimiter))
+        var PartsList = [(String, String)]()
+        for Part in Parts
+        {
+            if let (Key, Value) = DecodeKVP(String(Part), Delimiter: "=")
+            {
+                PartsList.append((Key, Value))
+            }
+        }
+        var Name = ""
+        var OS = ""
+        var Version = ""
+        var Build = ""
+        var BuildTimeStamp = ""
+        var Copyright = ""
+        var BuildID = ""
+        var ProgramID = ""
+        for (Key, Value) in PartsList
+        {
+            switch Key
+            {
+            case "Name":
+                Name = Value
+                
+            case "OS":
+                OS = Value
+                
+            case "Version":
+                Version = Value
+                
+            case "Build":
+                Build = Value
+                
+            case "BuildTimeStamp":
+                BuildTimeStamp = Value
+                
+            case "Copyright":
+                Copyright = Value
+                
+            case "BuildID":
+                BuildID = Value
+                
+            case "ProgramID":
+                ProgramID = Value
+                
+            default:
+                print("Found unanticipated version key: \(Key)")
+            }
+        }
+        return (Name, OS, Version, Build, BuildTimeStamp, Copyright, BuildID, ProgramID)
     }
     
     //Format of command: command,address{,data}
@@ -586,14 +801,14 @@ class MessageHelper
     ///   - Parameters: List of parameter names.
     /// - Returns: String representing the client command returnable by multi-peer messaging.
     public static func MakeReturnCommandByIndex(Index: Int, Command: UUID, CommandName: String,
-                                                Description: String, Parameters: [String]) -> String
+                                                Description: String, ParameterCount: Int, Parameters: [String]) -> String
     {
-        let Cmd = MessageTypeIndicators[.CommandByIndex]!
+        let Cmd = "Id=\(MessageTypeIndicators[.CommandByIndex]!)"
         let SIndex = "Index=\(Index)"
         let CmdVal = "Command=\(Command.uuidString)"
         let CName = "Name=\(CommandName)"
         let CDesc = "Description=\(Description)"
-        let PCount = "ParameterCount=\(Parameters.count)"
+        let PCount = "ParameterCount=\(ParameterCount)"
         var PList = [String]()
         for Param in Parameters
         {
@@ -658,8 +873,10 @@ class MessageHelper
         let CommandList = Commands.MakeCommandList()
         let Cmd = MessageTypeIndicators[.AllClientCommandsReturned]!
         let CmdCount = "Count=\(CommandList.count)"
-        let Delimiter = GetUnusedDelimiter(From: [[Cmd, CmdCount], CommandList])
-        let Final = AssembleCommandsEx(FromParts: [[Cmd, CmdCount], CommandList], WithDelimiter: Delimiter)
+        let CDel = GetUnusedDelimiter(From: CommandList)
+        let FinalCommandList = AssembleCommand(FromParts: CommandList, WithDelimiter: CDel)
+        let Delimiter = GetUnusedDelimiter(From: [Cmd, CmdCount, FinalCommandList])
+        let Final = AssembleCommand(FromParts: [Cmd, CmdCount, FinalCommandList], WithDelimiter: Delimiter)
         return Final
     }
     
@@ -676,6 +893,35 @@ class MessageHelper
         let CmdID = "ID=\(WithID.uuidString)"
         let Delimiter = GetUnusedDelimiter(From: [Cmd, CmdID, Payload])
         let Final = AssembleCommand(FromParts: [Cmd, CmdID, Payload], WithDelimiter: Delimiter)
+        return Final
+    }
+    
+    /// Make a version push command string.
+    ///
+    /// - Parameters:
+    ///   - Name: Name of the program.
+    ///   - OS: OS under which the program runs.
+    ///   - Version: Version number.
+    ///   - Build: Build number.
+    ///   - BuildTimeStamp: Build time-stamp.
+    ///   - Copyright: Copyright string.
+    ///   - BuildID: Build ID.
+    ///   - ProgramID: ID that identifies a program.
+    /// - Returns: Command string that pushes program information to a peer.
+    public static func MakeSendVersionInfo(Name: String, OS: String, Version: String, Build: String, BuildTimeStamp: String,
+                                           Copyright: String, BuildID: String, ProgramID: UUID) -> String
+    {
+        let Cmd = MessageTypeIndicators[.PushVersionInformation]!
+        let Name = "Name=\(Name)"
+        let OS = "OS=\(OS)"
+        let Ver = "Version=\(Version)"
+        let Bld = "Build=\(Build)"
+        let BTS = "BuildTimeStamp=\(BuildTimeStamp)"
+        let Cpr = "Copyright=\(Copyright)"
+        let BID = "BuildID=\(BuildID)"
+        let PgmID = "ProgramID=\(ProgramID)"
+        let Delimiter = GetUnusedDelimiter(From: [Cmd, Name, OS, Ver, Bld, BTS, Cpr, BID, PgmID])
+        let Final = AssembleCommand(FromParts: [Cmd, Name, OS, Ver, Bld, BTS, Cpr, BID, PgmID], WithDelimiter: Delimiter)
         return Final
     }
     
@@ -759,6 +1005,7 @@ class MessageHelper
             MessageTypes.GetAllClientCommands: "582e3f52-a9ad-4ef3-8842-b8334a547500",
             MessageTypes.AllClientCommandsReturned: "6b3c2e18-879d-488e-b333-2d43eacb9c71",
             MessageTypes.IDEncapsulatedCommand: "c0e8487c-840a-4799-9d9d-906adb96f0a3",
+            MessageTypes.PushVersionInformation: "f6a18cea-5806-4e7b-853a-58e96224cd8d",
             MessageTypes.Unknown: "dfc5b2d5-521b-46a8-b459-a4947089312c",
     ]
     
@@ -821,6 +1068,7 @@ enum MessageTypes: Int
     case GetAllClientCommands = 15
     case AllClientCommandsReturned = 16
     case IDEncapsulatedCommand = 17
+    case PushVersionInformation = 18
     case Unknown = 10000
 }
 
