@@ -17,7 +17,24 @@ class PeerViewerUIWindow: NSWindowController
         {
             let VC = window!.contentViewController as? PeerViewerUICode
             VC?.Delegate = MainDelegate
-            //print("PeerViewerUIwindow: \(MainDelegate!)")
         }
+    }
+    
+    @IBAction func HandleConnectToClient(_ sender: Any)
+    {
+        let VC = window!.contentViewController as? PeerViewerUICode
+        VC?.HandleConnectButtonPressed()
+    }
+    
+    @IBAction func HandleDisconnectFromClient(_ sender: Any)
+    {
+        let VC = window!.contentViewController as? PeerViewerUICode
+        VC?.HandleDisconnectButtonPressed()
+    }
+    
+    @IBAction func HandleRefreshPeerList(_ sender: Any)
+    {
+        let VC = window!.contentViewController as? PeerViewerUICode
+        VC?.HandleRefreshButtonPressed()
     }
 }
