@@ -777,6 +777,7 @@ class MessageHelper
             .ConnectionRefused: "b32f179c-c1b4-40c3-8bb0-ad84a985bad4",
             .ConnectionClose: "70b6f26c-92fc-423f-9ea4-418d51cc0528",
             .Disconnected: "78dfa276-48f3-47bc-88bc-4f46bd9f74ce",
+            .DropAsClient: "dc430ff8-c1a3-4d01-8a0a-67997b59da31",
             .Unknown: "1f9e85e3-446b-4c93-b93d-ea8d6955f4bb",
     ]
 }
@@ -796,6 +797,7 @@ enum HandShakeCommands: Int
     case ConnectionRefused = 2
     case ConnectionClose = 3
     case Disconnected = 4
+    case DropAsClient = 5
     case Unknown = 10000
 }
 
