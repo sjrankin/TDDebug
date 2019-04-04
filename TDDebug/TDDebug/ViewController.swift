@@ -444,6 +444,8 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
     func HandlePushedVersionInformation(_ Raw: String)
     {
         let (Name, OS, Version, Build, BuildTimeStamp, Copyright, BuildID, ProgramID) = MessageHelper.DecodeVersionInfo(Raw)
+        print("Client name=\(Name), \(ProgramID)")
+        print("Client version data = \(Version), Build: \(Build).")
     }
     
     func ExecuteClientCommand(_ Command: ClientCommand)
@@ -465,6 +467,12 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
         let AllCommands = MessageHelper.MakeAllClientCommands(Commands: LocalCommands)
         let EncapsulatedReturn = MessageHelper.MakeEncapsulatedCommand(WithID: CommandID, Payload: AllCommands)
         MPMgr.SendPreformatted(Message: EncapsulatedReturn, To: Peer)
+    }
+    
+    func HandleConnectionHeartbeat(_ Raw: String, Peer: MCPeerID)
+    {
+        let (Sender, ReturnIn, SenderWaitTime, FailAfter, CumulativeCount) = MessageHelper.DecodeConnectionHeartbeat(Raw)
+        print("Received connection heartbeat from \(Sender).")
     }
     
     func ReceivedData(Manager: MultiPeerManager, Peer: MCPeerID, RawData: String,
@@ -517,6 +525,9 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
             
         case .PushVersionInformation:
             HandlePushedVersionInformation(RawData)
+            
+        case .ConnectionHeartbeat:
+            HandleConnectionHeartbeat(RawData, Peer: Peer)
             
         default:
             print("Unhandled message type: \(MessageType)")
