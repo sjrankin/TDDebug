@@ -2,17 +2,17 @@
   "images" : [
     {
       "idiom" : "universal",
-      "filename" : "TDDebug32x32@1x.png",
+      "filename" : "TDebug2000_2_32x32@2x.png",
       "scale" : "1x"
     },
     {
       "idiom" : "universal",
-      "filename" : "TDDebug32x32@2x.png",
+      "filename" : "TDebug2000_2_128x128@1x.png",
       "scale" : "2x"
     },
     {
       "idiom" : "universal",
-      "filename" : "TDDebug128x128@1x.png",
+      "filename" : "TDebug2000_2_512x512@1x.png",
       "scale" : "3x"
     }
   ],
