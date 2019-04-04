@@ -10,6 +10,21 @@
 		1704C5B4225311D400C49E91 /* SendToClientUIWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1704C5B3225311D400C49E91 /* SendToClientUIWindow.swift */; };
 		1704C5B62253123F00C49E91 /* SendToClientUICode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1704C5B52253123F00C49E91 /* SendToClientUICode.swift */; };
 		1704C5B82253244D00C49E91 /* ClientCommands.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1704C5B72253244D00C49E91 /* ClientCommands.swift */; };
+		171EB5EE2255C2250075C134 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 171EB5ED2255C2250075C134 /* Assets.xcassets */; };
+		171EB5F72255C2C30075C134 /* MultiPeer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1743C1472252032F003FE6B2 /* MultiPeer.swift */; };
+		171EB5F82255C2C60075C134 /* MultiPeerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1743C14B22520366003FE6B2 /* MultiPeerDelegate.swift */; };
+		171EB5F92255C2CA0075C134 /* MessageHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1743C1492252034E003FE6B2 /* MessageHelper.swift */; };
+		171EB5FA2255C2CD0075C134 /* ClientCommands.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1704C5B72253244D00C49E91 /* ClientCommands.swift */; };
+		171EB5FB2255C2D10075C134 /* OSColorExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1743C14D2252041B003FE6B2 /* OSColorExtensions.swift */; };
+		171EB5FC2255C2D80075C134 /* State.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1746B53C22520A7000E554EC /* State.swift */; };
+		171EB5FD2255C2DB0075C134 /* StateProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1746B53E22520A8D00E554EC /* StateProtocol.swift */; };
+		171EB5FE2255C2E00075C134 /* OSColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1772A2FA2253705C006D0A16 /* OSColor.swift */; };
+		171EB6032255C4250075C134 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 171EB6022255C4250075C134 /* Main.storyboard */; };
+		171EB6052255C42E0075C134 /* MainController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 171EB6042255C42E0075C134 /* MainController.swift */; };
+		171EB6092255C4510075C134 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 171EB6082255C4510075C134 /* AppDelegate.swift */; };
+		171EB60D2255C4670075C134 /* Versioning.swift in Sources */ = {isa = PBXBuildFile; fileRef = 171EB60C2255C4670075C134 /* Versioning.swift */; };
+		171EB60F2255C4750075C134 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 171EB60E2255C4750075C134 /* LaunchScreen.storyboard */; };
+		171EB6112255C47D0075C134 /* IDTableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 171EB6102255C47D0075C134 /* IDTableCell.swift */; };
 		172426D7225239C400E34282 /* PeerViewerUICode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 172426D6225239C400E34282 /* PeerViewerUICode.swift */; };
 		172426D92252488F00E34282 /* PeerViewerUIWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 172426D82252488F00E34282 /* PeerViewerUIWindow.swift */; };
 		1743C1372251DF9B003FE6B2 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1743C1362251DF9B003FE6B2 /* AppDelegate.swift */; };
@@ -27,6 +42,17 @@
 		1746B54622520C9F00E554EC /* MainProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1746B54522520C9F00E554EC /* MainProtocol.swift */; };
 		1746B54822520D4A00E554EC /* LogItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1746B54722520D4A00E554EC /* LogItem.swift */; };
 		1772A2FB2253705C006D0A16 /* OSColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1772A2FA2253705C006D0A16 /* OSColor.swift */; };
+		17B3EE8D2255CD35009988D3 /* SendToRemote.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 17B3EE8C2255CD35009988D3 /* SendToRemote.storyboard */; };
+		17B3EE8F2255CD40009988D3 /* SendToRemoteCode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17B3EE8E2255CD40009988D3 /* SendToRemoteCode.swift */; };
+		17B3EE912255CD48009988D3 /* ClientTestUI.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 17B3EE902255CD48009988D3 /* ClientTestUI.storyboard */; };
+		17B3EE932255CD53009988D3 /* ClientTestUICode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17B3EE922255CD53009988D3 /* ClientTestUICode.swift */; };
+		17B3EE952255CD5A009988D3 /* LogItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17B3EE942255CD5A009988D3 /* LogItem.swift */; };
+		17B3EE972255CD60009988D3 /* LogTableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17B3EE962255CD60009988D3 /* LogTableCell.swift */; };
+		17B3EE992255CD66009988D3 /* LogItemViewerCode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17B3EE982255CD66009988D3 /* LogItemViewerCode.swift */; };
+		17B3EE9B2255CD6B009988D3 /* LogItemProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17B3EE9A2255CD6B009988D3 /* LogItemProtocol.swift */; };
+		17B3EE9D2255CD72009988D3 /* LogItemViewer.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 17B3EE9C2255CD72009988D3 /* LogItemViewer.storyboard */; };
+		17B3EEA02255CD8D009988D3 /* MainProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17B3EE9F2255CD8D009988D3 /* MainProtocol.swift */; };
+		17B3EEA42255CDF4009988D3 /* KVPItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17B3EEA32255CDF3009988D3 /* KVPItem.swift */; };
 		17B68CCA225468CC00AEBE94 /* MainWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17B68CC9225468CC00AEBE94 /* MainWindow.swift */; };
 		17B68CCD2254713100AEBE94 /* AboutTDDebug.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 17B68CCC2254713100AEBE94 /* AboutTDDebug.storyboard */; };
 		17B68CCF2254731C00AEBE94 /* AboutTDDebugCode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17B68CCE2254731C00AEBE94 /* AboutTDDebugCode.swift */; };
@@ -37,6 +63,15 @@
 		1704C5B3225311D400C49E91 /* SendToClientUIWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SendToClientUIWindow.swift; sourceTree = "<group>"; };
 		1704C5B52253123F00C49E91 /* SendToClientUICode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SendToClientUICode.swift; sourceTree = "<group>"; };
 		1704C5B72253244D00C49E91 /* ClientCommands.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClientCommands.swift; sourceTree = "<group>"; };
+		171EB5E42255C2240075C134 /* TDebug.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TDebug.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		171EB5ED2255C2250075C134 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		171EB6022255C4250075C134 /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
+		171EB6042255C42E0075C134 /* MainController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainController.swift; sourceTree = "<group>"; };
+		171EB6082255C4510075C134 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		171EB60A2255C45C0075C134 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		171EB60C2255C4670075C134 /* Versioning.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Versioning.swift; sourceTree = "<group>"; };
+		171EB60E2255C4750075C134 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
+		171EB6102255C47D0075C134 /* IDTableCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IDTableCell.swift; sourceTree = "<group>"; };
 		172426D6225239C400E34282 /* PeerViewerUICode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeerViewerUICode.swift; sourceTree = "<group>"; };
 		172426D82252488F00E34282 /* PeerViewerUIWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeerViewerUIWindow.swift; sourceTree = "<group>"; };
 		1743C1332251DF9B003FE6B2 /* TDDebug.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TDDebug.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -57,6 +92,17 @@
 		1746B54522520C9F00E554EC /* MainProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainProtocol.swift; sourceTree = "<group>"; };
 		1746B54722520D4A00E554EC /* LogItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogItem.swift; sourceTree = "<group>"; };
 		1772A2FA2253705C006D0A16 /* OSColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OSColor.swift; sourceTree = "<group>"; };
+		17B3EE8C2255CD35009988D3 /* SendToRemote.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = SendToRemote.storyboard; sourceTree = "<group>"; };
+		17B3EE8E2255CD40009988D3 /* SendToRemoteCode.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SendToRemoteCode.swift; sourceTree = "<group>"; };
+		17B3EE902255CD48009988D3 /* ClientTestUI.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = ClientTestUI.storyboard; sourceTree = "<group>"; };
+		17B3EE922255CD53009988D3 /* ClientTestUICode.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ClientTestUICode.swift; sourceTree = "<group>"; };
+		17B3EE942255CD5A009988D3 /* LogItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LogItem.swift; sourceTree = "<group>"; };
+		17B3EE962255CD60009988D3 /* LogTableCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LogTableCell.swift; sourceTree = "<group>"; };
+		17B3EE982255CD66009988D3 /* LogItemViewerCode.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LogItemViewerCode.swift; sourceTree = "<group>"; };
+		17B3EE9A2255CD6B009988D3 /* LogItemProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LogItemProtocol.swift; sourceTree = "<group>"; };
+		17B3EE9C2255CD72009988D3 /* LogItemViewer.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = LogItemViewer.storyboard; sourceTree = "<group>"; };
+		17B3EE9F2255CD8D009988D3 /* MainProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainProtocol.swift; sourceTree = "<group>"; };
+		17B3EEA32255CDF3009988D3 /* KVPItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KVPItem.swift; sourceTree = "<group>"; };
 		17B68CC9225468CC00AEBE94 /* MainWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainWindow.swift; sourceTree = "<group>"; };
 		17B68CCC2254713100AEBE94 /* AboutTDDebug.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = AboutTDDebug.storyboard; sourceTree = "<group>"; };
 		17B68CCE2254731C00AEBE94 /* AboutTDDebugCode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutTDDebugCode.swift; sourceTree = "<group>"; };
@@ -64,6 +110,13 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		171EB5E12255C2240075C134 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		1743C1302251DF9B003FE6B2 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -83,6 +136,63 @@
 			path = SendToClient;
 			sourceTree = "<group>";
 		};
+		171EB5E52255C2240075C134 /* TDebug */ = {
+			isa = PBXGroup;
+			children = (
+				171EB5ED2255C2250075C134 /* Assets.xcassets */,
+				171EB60A2255C45C0075C134 /* Info.plist */,
+				171EB6082255C4510075C134 /* AppDelegate.swift */,
+				171EB6022255C4250075C134 /* Main.storyboard */,
+				171EB6042255C42E0075C134 /* MainController.swift */,
+				17B3EEA32255CDF3009988D3 /* KVPItem.swift */,
+				171EB6102255C47D0075C134 /* IDTableCell.swift */,
+				171EB60E2255C4750075C134 /* LaunchScreen.storyboard */,
+				171EB60C2255C4670075C134 /* Versioning.swift */,
+			);
+			path = TDebug;
+			sourceTree = "<group>";
+		};
+		171EB5F62255C24E0075C134 /* Common */ = {
+			isa = PBXGroup;
+			children = (
+				1743C14622520314003FE6B2 /* MultiPeer */,
+				1796A2D422521117004975D4 /* Extensions */,
+				1746B53B22520A5F00E554EC /* State */,
+				1772A2F92253704A006D0A16 /* OSColor */,
+			);
+			path = Common;
+			sourceTree = "<group>";
+		};
+		171EB5FF2255C3DB0075C134 /* ClientTest */ = {
+			isa = PBXGroup;
+			children = (
+				17B3EE902255CD48009988D3 /* ClientTestUI.storyboard */,
+				17B3EE922255CD53009988D3 /* ClientTestUICode.swift */,
+			);
+			path = ClientTest;
+			sourceTree = "<group>";
+		};
+		171EB6002255C3E80075C134 /* SendTo */ = {
+			isa = PBXGroup;
+			children = (
+				17B3EE8E2255CD40009988D3 /* SendToRemoteCode.swift */,
+				17B3EE8C2255CD35009988D3 /* SendToRemote.storyboard */,
+			);
+			path = SendTo;
+			sourceTree = "<group>";
+		};
+		171EB6012255C3F40075C134 /* LogDisplay */ = {
+			isa = PBXGroup;
+			children = (
+				17B3EE942255CD5A009988D3 /* LogItem.swift */,
+				17B3EE962255CD60009988D3 /* LogTableCell.swift */,
+				17B3EE9A2255CD6B009988D3 /* LogItemProtocol.swift */,
+				17B3EE982255CD66009988D3 /* LogItemViewerCode.swift */,
+				17B3EE9C2255CD72009988D3 /* LogItemViewer.storyboard */,
+			);
+			path = LogDisplay;
+			sourceTree = "<group>";
+		};
 		172426D32252398900E34282 /* PeerViewer */ = {
 			isa = PBXGroup;
 			children = (
@@ -95,11 +205,13 @@
 		1743C12A2251DF9A003FE6B2 = {
 			isa = PBXGroup;
 			children = (
+				171EB5F62255C24E0075C134 /* Common */,
 				1743C1352251DF9B003FE6B2 /* TDDebug */,
-				1746B53B22520A5F00E554EC /* State */,
-				1743C14622520314003FE6B2 /* MultiPeer */,
-				1772A2F92253704A006D0A16 /* OSColor */,
-				1796A2D422521117004975D4 /* Extensions */,
+				171EB5E52255C2240075C134 /* TDebug */,
+				171EB6002255C3E80075C134 /* SendTo */,
+				171EB5FF2255C3DB0075C134 /* ClientTest */,
+				171EB6012255C3F40075C134 /* LogDisplay */,
+				17B3EE9E2255CD81009988D3 /* Commands */,
 				1743C1342251DF9B003FE6B2 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -108,6 +220,7 @@
 			isa = PBXGroup;
 			children = (
 				1743C1332251DF9B003FE6B2 /* TDDebug.app */,
+				171EB5E42255C2240075C134 /* TDebug.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -169,6 +282,14 @@
 			path = Extensions;
 			sourceTree = "<group>";
 		};
+		17B3EE9E2255CD81009988D3 /* Commands */ = {
+			isa = PBXGroup;
+			children = (
+				17B3EE9F2255CD8D009988D3 /* MainProtocol.swift */,
+			);
+			path = Commands;
+			sourceTree = "<group>";
+		};
 		17B68CCB2254711800AEBE94 /* About */ = {
 			isa = PBXGroup;
 			children = (
@@ -182,6 +303,24 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		171EB5E32255C2240075C134 /* TDebug */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 171EB5F52255C2250075C134 /* Build configuration list for PBXNativeTarget "TDebug" */;
+			buildPhases = (
+				171EB5E02255C2240075C134 /* Sources */,
+				171EB5E12255C2240075C134 /* Frameworks */,
+				171EB5E22255C2240075C134 /* Resources */,
+				17B3EE8A2255C719009988D3 /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = TDebug;
+			productName = TDebug;
+			productReference = 171EB5E42255C2240075C134 /* TDebug.app */;
+			productType = "com.apple.product-type.application";
+		};
 		1743C1322251DF9B003FE6B2 /* TDDebug */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 1743C1432251DF9C003FE6B2 /* Build configuration list for PBXNativeTarget "TDDebug" */;
@@ -210,6 +349,9 @@
 				LastUpgradeCheck = 1020;
 				ORGANIZATIONNAME = "Stuart Rankin";
 				TargetAttributes = {
+					171EB5E32255C2240075C134 = {
+						CreatedOnToolsVersion = 10.2;
+					};
 					1743C1322251DF9B003FE6B2 = {
 						CreatedOnToolsVersion = 10.2;
 					};
@@ -229,11 +371,25 @@
 			projectRoot = "";
 			targets = (
 				1743C1322251DF9B003FE6B2 /* TDDebug */,
+				171EB5E32255C2240075C134 /* TDebug */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		171EB5E22255C2240075C134 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				17B3EE8D2255CD35009988D3 /* SendToRemote.storyboard in Resources */,
+				171EB5EE2255C2250075C134 /* Assets.xcassets in Resources */,
+				171EB60F2255C4750075C134 /* LaunchScreen.storyboard in Resources */,
+				17B3EE912255CD48009988D3 /* ClientTestUI.storyboard in Resources */,
+				17B3EE9D2255CD72009988D3 /* LogItemViewer.storyboard in Resources */,
+				171EB6032255C4250075C134 /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		1743C1312251DF9B003FE6B2 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -264,9 +420,53 @@
 			shellPath = /bin/sh;
 			shellScript = "/Users/Stuart/Documents/GitHub/TDDebug/TDDebug/VersionUpdater/VersionUpdater /Users/Stuart/Documents/GitHub/TDDebug/TDDebug/TDDebug/Versioning.swift\n";
 		};
+		17B3EE8A2255C719009988D3 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "/Users/Stuart/Documents/GitHub/TDDebug/TDDebug/VersionUpdater/VersionUpdater /Users/Stuart/Documents/GitHub/TDDebug/TDDebug/TDebug/Versioning.swift\n";
+		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		171EB5E02255C2240075C134 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				171EB6092255C4510075C134 /* AppDelegate.swift in Sources */,
+				17B3EE9B2255CD6B009988D3 /* LogItemProtocol.swift in Sources */,
+				171EB5FB2255C2D10075C134 /* OSColorExtensions.swift in Sources */,
+				171EB5FA2255C2CD0075C134 /* ClientCommands.swift in Sources */,
+				17B3EEA42255CDF4009988D3 /* KVPItem.swift in Sources */,
+				17B3EEA02255CD8D009988D3 /* MainProtocol.swift in Sources */,
+				17B3EE932255CD53009988D3 /* ClientTestUICode.swift in Sources */,
+				171EB5F82255C2C60075C134 /* MultiPeerDelegate.swift in Sources */,
+				17B3EE8F2255CD40009988D3 /* SendToRemoteCode.swift in Sources */,
+				171EB5FE2255C2E00075C134 /* OSColor.swift in Sources */,
+				17B3EE972255CD60009988D3 /* LogTableCell.swift in Sources */,
+				171EB5FD2255C2DB0075C134 /* StateProtocol.swift in Sources */,
+				171EB6052255C42E0075C134 /* MainController.swift in Sources */,
+				171EB5F72255C2C30075C134 /* MultiPeer.swift in Sources */,
+				17B3EE952255CD5A009988D3 /* LogItem.swift in Sources */,
+				171EB6112255C47D0075C134 /* IDTableCell.swift in Sources */,
+				17B3EE992255CD66009988D3 /* LogItemViewerCode.swift in Sources */,
+				171EB5F92255C2CA0075C134 /* MessageHelper.swift in Sources */,
+				171EB5FC2255C2D80075C134 /* State.swift in Sources */,
+				171EB60D2255C4670075C134 /* Versioning.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		1743C12F2251DF9B003FE6B2 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -309,6 +509,49 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
+		171EB5F32255C2250075C134 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 4BB235M4GL;
+				INFOPLIST_FILE = TDebug/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.2;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = Irorio.TDebug;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 2;
+			};
+			name = Debug;
+		};
+		171EB5F42255C2250075C134 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 4BB235M4GL;
+				INFOPLIST_FILE = TDebug/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.2;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = Irorio.TDebug;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 2;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
 		1743C1412251DF9C003FE6B2 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -467,6 +710,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		171EB5F52255C2250075C134 /* Build configuration list for PBXNativeTarget "TDebug" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				171EB5F32255C2250075C134 /* Debug */,
+				171EB5F42255C2250075C134 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		1743C12E2251DF9B003FE6B2 /* Build configuration list for PBXProject "TDDebug" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
