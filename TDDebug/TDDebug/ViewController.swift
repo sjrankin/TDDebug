@@ -443,7 +443,7 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
     
     func HandlePushedVersionInformation(_ Raw: String)
     {
-        let (Name, OS, Version, Build, BuildTimeStamp, Copyright, BuildID) = MessageHelper.DecodeVersionInfo(Raw)
+        let (Name, OS, Version, Build, BuildTimeStamp, Copyright, BuildID, ProgramID) = MessageHelper.DecodeVersionInfo(Raw)
     }
     
     func ExecuteClientCommand(_ Command: ClientCommand)
