@@ -1,6 +1,6 @@
 //
 //  MessageHelper.swift
-//  TDDebug
+//  T{D}Debug
 //
 //  Created by Stuart Rankin on 4/1/19.
 //  Copyright © 2019 Stuart Rankin. All rights reserved.
@@ -13,7 +13,7 @@ import AppKit
 import UIKit
 #endif
 
-/// Class that helps with encoding and decoding messages sent to and from TD{D}ebug instances.
+/// Class that helps with encoding and decoding messages sent to and from TD{D}ebug instances. Intended for use on iOS and macOS.
 class MessageHelper
 {
     /// Decode a key-value pair with the specified delimiter. The format is assumed to be: key=value.
