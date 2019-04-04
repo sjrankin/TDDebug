@@ -12,6 +12,7 @@ import AppKit
 #else
 import UIKit
 #endif
+import MultipeerConnectivity
 
 /// Class that helps with encoding and decoding messages sent to and from TD{D}ebug instances. Intended for use on iOS and macOS.
 class MessageHelper
@@ -62,10 +63,12 @@ class MessageHelper
         var LastPart = String(Parts[2])
         let LPDel = String(LastPart.first!)
         LastPart.removeFirst()
+        //print("LastPart=\(LastPart)")
         let CParts = LastPart.split(separator: String.Element(LPDel))
         
         for Part in CParts
         {
+            //print("Part=\(Part)")
             var SCmd = String(Part)
             let CmdDel = String(SCmd.first!)
             SCmd.removeFirst()
@@ -394,6 +397,85 @@ class MessageHelper
             }
         }
         return (Name, OS, Version, Build, BuildTimeStamp, Copyright, BuildID, ProgramID)
+    }
+    
+    /// Decode a connection heartbeat message.
+    ///
+    /// - Parameter Raw: Raw command string to decode.
+    /// - Returns: Tuple of information from the connection heartbeat command in the form
+    ///            (Sending Peer Name, Return Reciprocol Message in Seconds, Time the Sender
+    ///             Waited for the Pervious Message, Fail After Seconds, Cumulative Recieved Count).
+    public static func DecodeConnectionHeartbeat(_ Raw: String) -> (String, Int, Int, Int, Int)
+    {
+        let Delimiter = String(Raw.first!)
+        var Next = Raw
+        Next.removeFirst()
+        let Parts = Next.split(separator: String.Element(Delimiter))
+        var PartsList = [(String, String)]()
+        for Part in Parts
+        {
+            if let (Key, Value) = DecodeKVP(String(Part), Delimiter: "=")
+            {
+                PartsList.append((Key, Value))
+            }
+        }
+        var FS = ""
+        var RI = 0
+        var LR = 0
+        var FA = 0
+        var RC = 0
+        for (Key, Value) in PartsList
+        {
+            switch Key
+            {
+            case "From":
+                FS = Value
+                
+            case "ReturnIn":
+                if let RIx = Int(Value)
+                {
+                    RI = RIx
+                }
+                else
+                {
+                    fatalError("Error converting String to Int.")
+                }
+                
+            case "LastReturn":
+                if let LRx = Int(Value)
+                {
+                    LR = LRx
+                }
+                else
+                {
+                    fatalError("Error converting String to Int.")
+                }
+                
+            case "FailAfter":
+                if let FAx = Int(Value)
+                {
+                    FA = FAx
+                }
+                else
+                {
+                    fatalError("Error converting String to Int.")
+                }
+                
+            case "ReceivedCount":
+                if let RCx = Int(Value)
+                {
+                    RC = RCx
+                }
+                else
+                {
+                    fatalError("Error converting String to Int.")
+                }
+                
+            default:
+                print("Found unanticipated version key: \(Key) and value: \(Value)")
+            }
+        }
+        return (FS, RI, LR, FA, RC)
     }
     
     //Format of command: command,address{,data}
@@ -732,6 +814,14 @@ class MessageHelper
         return Final
     }
     
+    /// Make an echo message command.
+    ///
+    /// - Parameters:
+    ///   - Message: The text message to echo.
+    ///   - Delay: How long, in seconds, to delay before returning the `Message` back.
+    ///   - Count: Not currently used.
+    ///   - Host: The source of the echo - used by the peer to know where to send the echo.
+    /// - Returns: Command string for echoing a message.
     public static func MakeEchoMessage(Message: String, Delay: Int, Count: Int, Host: String) -> String
     {
         let Command = MessageTypeIndicators[.EchoMessage]!
@@ -744,6 +834,14 @@ class MessageHelper
         return Final
     }
     
+    /// Make a message to send a key-value pair to a peer. Key-value pairs are display in the peer's KVPTable. Use the
+    /// same `ID` to edit an existing key-value pair on the host.
+    ///
+    /// - Parameters:
+    ///   - ID: ID of the key-value pair. This is how values can be edited in the peer's KVPTable in place.
+    ///   - Key: The key name.
+    ///   - Value: The value of the key.
+    /// - Returns: Command string to set (or edit) a key-value pair.
     public static func MakeKVPMessage(ID: UUID, Key: String, Value: String) -> String
     {
         let Command = MessageTypeIndicators[.KVPData]!
@@ -755,7 +853,11 @@ class MessageHelper
         return Final
     }
     
-    public static func MakeSpcialCommand(_ Command: SpecialCommands) -> String
+    /// Make a special command. (Special commands are used to control the UI of the host.)
+    ///
+    /// - Parameter Command: The special command to send.
+    /// - Returns: Command string with the special command embedded in it.
+    public static func MakeSpecialCommand(_ Command: SpecialCommands) -> String
     {
         let Cmd = MessageTypeIndicators[.SpecialCommand]!
         let SCmd = SpecialCommmandIndicators[Command]!
@@ -764,6 +866,10 @@ class MessageHelper
         return Final
     }
     
+    /// Make a handshake command to negotiate host-client relationships.
+    ///
+    /// - Parameter Command: The command to send.
+    /// - Returns: Command string with the passed handshake command.
     public static func MakeHandShake(_ Command: HandShakeCommands) -> String
     {
         let Cmd = MessageTypeIndicators[.HandShake]!
@@ -773,6 +879,9 @@ class MessageHelper
         return Final
     }
     
+    /// Make a command to have a client return the number of commands.
+    ///
+    /// - Returns: Command string for retrieving the number of client commands.
     public static func MakeGetCommandCount() -> String
     {
         return MessageTypeIndicators[.RequestCommandCount]!
@@ -803,7 +912,7 @@ class MessageHelper
     public static func MakeReturnCommandByIndex(Index: Int, Command: UUID, CommandName: String,
                                                 Description: String, ParameterCount: Int, Parameters: [String]) -> String
     {
-        let Cmd = "Id=\(MessageTypeIndicators[.CommandByIndex]!)"
+        let Cmd = "ID=\(MessageTypeIndicators[.CommandByIndex]!)"
         let SIndex = "Index=\(Index)"
         let CmdVal = "Command=\(Command.uuidString)"
         let CName = "Name=\(CommandName)"
@@ -812,6 +921,10 @@ class MessageHelper
         var PList = [String]()
         for Param in Parameters
         {
+            if Param.isEmpty
+            {
+                break
+            }
             PList.append("Param=\(Param)")
         }
         let Delimiter = GetUnusedDelimiter(From: [[Cmd, SIndex, CmdVal, CName, CDesc, PCount], PList])
@@ -939,6 +1052,33 @@ class MessageHelper
             ProgramID: Versioning.ProgramIDAsUUID())
     }
     
+    /// Make a connection heartbeat message.
+    ///
+    /// - Parameters:
+    ///   - From: The name of the peer that is sending the connection heartbeat message.
+    ///   - ReturnIn: Number of seconds to wait before returning a reciprocol connection heartbeat.
+    ///   - LastReturn: The number of seconds the sender had to wait for the previous connection
+    ///                 heartbeat message.
+    ///   - FailAfter: Number of seconds to wait before declaring a communication failure. If this
+    ///                value is less than `ReturnIn`, this value is added to `ReturnIn` to create
+    ///                the resolved fail after time.
+    ///   - ReceiveCount: Cumulative count of received connection heartbeat messages.
+    /// - Returns: Connection heartbeat command message.
+    public static func MakeConnectionHeartbeat(From: MCPeerID, ReturnIn: Int,
+                                               LastReturn: Int, FailAfter: Int,
+                                               ReceiveCount: Int) -> String
+    {
+        let Cmd = MessageTypeIndicators[.ConnectionHeartbeat]!
+        let FS = "From=\(From)"
+        let RI = "ReturnIn=\(ReturnIn)"
+        let LR = "LastReturn=\(LastReturn)"
+        let FA = "FailAfter=\(FailAfter)"
+        let RC = "ReceivedCount=\(ReceiveCount)"
+        let Delimiter = GetUnusedDelimiter(From: [Cmd, FS, RI, LR, FA, RC])
+        let Final = AssembleCommand(FromParts: [Cmd, FS, RI, LR, FA, RC], WithDelimiter: Delimiter)
+        return Final
+    }
+    
     /// Assemble the list of string into a command that can be sent to another TDebug instance or other app that implements
     /// at least the MultiPeerManager.
     ///
@@ -999,6 +1139,7 @@ class MessageHelper
         return nil
     }
     
+    /// Command definition map for message commands.
     private static let MessageTypeIndicators: [MessageTypes: String] =
         [
             MessageTypes.TextMessage: "a8d8c35e-f638-47fe-8819-bd04d59c6989",
@@ -1020,9 +1161,11 @@ class MessageHelper
             MessageTypes.AllClientCommandsReturned: "6b3c2e18-879d-488e-b333-2d43eacb9c71",
             MessageTypes.IDEncapsulatedCommand: "c0e8487c-840a-4799-9d9d-906adb96f0a3",
             MessageTypes.PushVersionInformation: "f6a18cea-5806-4e7b-853a-58e96224cd8d",
+            MessageTypes.ConnectionHeartbeat: "4bdaa255-16b8-43a6-b263-689c7beb439b",
             MessageTypes.Unknown: "dfc5b2d5-521b-46a8-b459-a4947089312c",
     ]
     
+    /// Command definition map for special commands.
     private static let SpecialCommmandIndicators: [SpecialCommands: String] =
         [
             .ClearKVPList: "a1a4974c-ed8f-41bc-bdbf-49570f67cc03",
@@ -1031,6 +1174,7 @@ class MessageHelper
             .Unknown: "bbfb4205-d9f6-49cf-bd96-630641d4fb16",
     ]
     
+    /// Command definition map for handshake commands.
     private static let HandShakeIndicators: [HandShakeCommands: String] =
         [
             .RequestConnection: "6dc88b50-15c0-41e0-aa6f-c1c33d93303b",
@@ -1083,6 +1227,7 @@ enum MessageTypes: Int
     case AllClientCommandsReturned = 16
     case IDEncapsulatedCommand = 17
     case PushVersionInformation = 18
+    case ConnectionHeartbeat = 19
     case Unknown = 10000
 }
 
