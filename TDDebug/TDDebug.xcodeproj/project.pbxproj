@@ -103,6 +103,7 @@
 		17B3EE9C2255CD72009988D3 /* LogItemViewer.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = LogItemViewer.storyboard; sourceTree = "<group>"; };
 		17B3EE9F2255CD8D009988D3 /* MainProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainProtocol.swift; sourceTree = "<group>"; };
 		17B3EEA32255CDF3009988D3 /* KVPItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KVPItem.swift; sourceTree = "<group>"; };
+		17B3EEA52255E1D9009988D3 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = "<group>"; };
 		17B68CC9225468CC00AEBE94 /* MainWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainWindow.swift; sourceTree = "<group>"; };
 		17B68CCC2254713100AEBE94 /* AboutTDDebug.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = AboutTDDebug.storyboard; sourceTree = "<group>"; };
 		17B68CCE2254731C00AEBE94 /* AboutTDDebugCode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutTDDebugCode.swift; sourceTree = "<group>"; };
@@ -148,6 +149,10 @@
 				171EB6102255C47D0075C134 /* IDTableCell.swift */,
 				171EB60E2255C4750075C134 /* LaunchScreen.storyboard */,
 				171EB60C2255C4670075C134 /* Versioning.swift */,
+				171EB5FF2255C3DB0075C134 /* ClientTest */,
+				17B3EE9E2255CD81009988D3 /* Commands */,
+				171EB6012255C3F40075C134 /* LogDisplay */,
+				171EB6002255C3E80075C134 /* SendTo */,
 			);
 			path = TDebug;
 			sourceTree = "<group>";
@@ -205,13 +210,10 @@
 		1743C12A2251DF9A003FE6B2 = {
 			isa = PBXGroup;
 			children = (
+				17B3EEA52255E1D9009988D3 /* README.md */,
 				171EB5F62255C24E0075C134 /* Common */,
 				1743C1352251DF9B003FE6B2 /* TDDebug */,
 				171EB5E52255C2240075C134 /* TDebug */,
-				171EB6002255C3E80075C134 /* SendTo */,
-				171EB5FF2255C3DB0075C134 /* ClientTest */,
-				171EB6012255C3F40075C134 /* LogDisplay */,
-				17B3EE9E2255CD81009988D3 /* Commands */,
 				1743C1342251DF9B003FE6B2 /* Products */,
 			);
 			sourceTree = "<group>";
