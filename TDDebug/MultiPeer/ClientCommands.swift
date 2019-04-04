@@ -1,6 +1,6 @@
 //
 //  ClientCommands.swift
-//  TDDebug
+//  T{D}Debug
 //
 //  Created by Stuart Rankin on 4/2/19.
 //  Copyright © 2019 Stuart Rankin. All rights reserved.
