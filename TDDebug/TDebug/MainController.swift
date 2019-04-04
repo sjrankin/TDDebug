@@ -360,20 +360,21 @@ class MainController: UIViewController, UITableViewDelegate, UITableViewDataSour
     func HandleHandShakeCommand(_ Raw: String, Peer: MCPeerID)
     {
         let Command = MessageHelper.DecodeHandShakeCommand(Raw)
-        print("Handshake command: \(Command)")
         var PostConnect = ""
         OperationQueue.main.addOperation
             {
                 let ReturnMe = State.TransitionTo(NewState: Command)
+                print("Handshake command \(Command) resulted in \(ReturnMe)")
                 print("State result=\(ReturnMe), State.CurrentState=\(State.CurrentState)")
                 var ReturnState = ""
-                switch ReturnMe
+                switch Command
                 {
                 case .ConnectionClose:
                     break
                     
                 case .ConnectionGranted:
-                    let Item = LogItem(Text: "\(Peer.displayName) is debugee.")
+                    print(">>>>> At .ConnectionGranted")
+                    let Item = LogItem(Text: "\(Peer.displayName) is debuggee.")
                     self.AddLogMessage(Item: Item)
                     ReturnState = MessageHelper.MakeHandShake(ReturnMe)
                     PostConnect = MessageHelper.MakeSendVersionInfo()
@@ -396,6 +397,7 @@ class MainController: UIViewController, UITableViewDelegate, UITableViewDataSour
                 case .Unknown:
                     break
                 }
+                
                 if !ReturnState.isEmpty
                 {
                     self.MPMgr.SendPreformatted(Message: ReturnState, To: Peer)
@@ -403,6 +405,10 @@ class MainController: UIViewController, UITableViewDelegate, UITableViewDataSour
                     {
                         self.MPMgr.SendPreformatted(Message: PostConnect, To: Peer)
                     }
+                }
+                else
+                {
+                    print("Empty handshake return state.")
                 }
         }
     }
@@ -436,6 +442,12 @@ class MainController: UIViewController, UITableViewDelegate, UITableViewDataSour
         MPMgr.SendPreformatted(Message: EncapsulatedReturn, To: Peer)
     }
     
+    func HandleConnectionHeartbeat(_ Raw: String, Peer: MCPeerID)
+    {
+        let (Sender, ReturnIn, SenderWaitTime, FailAfter, CumulativeCount) = MessageHelper.DecodeConnectionHeartbeat(Raw)
+        print("Received connection heartbeat from \(Sender).")
+    }
+    
     func ReceivedData(Manager: MultiPeerManager, Peer: MCPeerID, RawData: String,
                       OverrideMessageType: MessageTypes? = nil, EncapsulatedID: UUID? = nil)
     {
@@ -446,7 +458,7 @@ class MainController: UIViewController, UITableViewDelegate, UITableViewDataSour
         }
         else
         {
-         MessageType = MessageHelper.GetMessageType(RawData)
+            MessageType = MessageHelper.GetMessageType(RawData)
         }
         switch MessageType
         {
@@ -479,6 +491,9 @@ class MainController: UIViewController, UITableViewDelegate, UITableViewDataSour
             
         case .GetAllClientCommands:
             SendClientCommandList(Peer: Peer, CommandID: EncapsulatedID!)
+            
+        case .ConnectionHeartbeat:
+            HandleConnectionHeartbeat(RawData, Peer: Peer)
             
         default:
             print("Unhandled message type: \(MessageType)")
