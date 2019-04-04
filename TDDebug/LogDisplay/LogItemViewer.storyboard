@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="ATi-PH-MPH">
+    <device id="ipad9_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--Log Item Viewer Code-->
+        <scene sceneID="PnX-E5-DGl">
+            <objects>
+                <viewController storyboardIdentifier="LogItemViewer" id="ATi-PH-MPH" customClass="LogItemViewerCode" customModule="TDebug" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="Pt6-o0-AMv">
+                        <rect key="frame" x="0.0" y="0.0" width="768" height="1024"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <navigationBar contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="AXj-5X-E46">
+                                <rect key="frame" x="0.0" y="14" width="768" height="50"/>
+                                <items>
+                                    <navigationItem title="Title" id="kbB-EC-xvm">
+                                        <barButtonItem key="leftBarButtonItem" title="Back" id="gZB-5G-GKW">
+                                            <connections>
+                                                <action selector="HandleBackButton:" destination="ATi-PH-MPH" id="ebV-zI-gJ8"/>
+                                            </connections>
+                                        </barButtonItem>
+                                    </navigationItem>
+                                </items>
+                            </navigationBar>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" preservesSuperviewLayoutMargins="YES" text="Time stamp" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DIl-eD-nxe">
+                                <rect key="frame" x="20" y="92" width="90" height="21"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="90" id="YOL-aO-y1T"/>
+                                </constraints>
+                                <viewLayoutGuide key="safeArea" id="YCy-3Q-tE9"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" preservesSuperviewLayoutMargins="YES" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="foL-jv-3p4">
+                                <rect key="frame" x="138" y="92" width="610" height="21"/>
+                                <viewLayoutGuide key="safeArea" id="U9j-7T-yEN"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="20"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" editable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aGY-5L-48H">
+                                <rect key="frame" x="20" y="177" width="728" height="786"/>
+                                <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="786" id="98v-MT-KTg"/>
+                                </constraints>
+                                <viewLayoutGuide key="safeArea" id="JI6-cq-V0k"/>
+                                <string key="text">Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda.</string>
+                                <fontDescription key="fontDescription" name="Courier" family="Courier" pointSize="16"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                            </textView>
+                            <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="hrk-li-TnY">
+                                <rect key="frame" x="0.0" y="980" width="768" height="44"/>
+                                <items>
+                                    <barButtonItem title="Font size" id="dvQ-ld-dLB">
+                                        <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    </barButtonItem>
+                                    <barButtonItem style="plain" id="Y0u-gC-5pe">
+                                        <stepper key="customView" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="16" minimumValue="9" maximumValue="96" id="jzT-uk-Mnx">
+                                            <rect key="frame" x="100" y="7.5" width="94" height="29"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <connections>
+                                                <action selector="HandleFontStepperChanged:" destination="ATi-PH-MPH" eventType="primaryActionTriggered" id="oqn-9X-V7O"/>
+                                            </connections>
+                                        </stepper>
+                                    </barButtonItem>
+                                    <barButtonItem width="42" style="plain" systemItem="fixedSpace" id="FBi-BW-4i4"/>
+                                    <barButtonItem title="16" id="ThZ-fm-8w1">
+                                        <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    </barButtonItem>
+                                </items>
+                            </toolbar>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Item ID" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XMA-39-Iek">
+                                <rect key="frame" x="20" y="135" width="55" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" preservesSuperviewLayoutMargins="YES" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2hT-Qk-Mrr">
+                                <rect key="frame" x="138" y="135" width="610" height="21"/>
+                                <viewLayoutGuide key="safeArea" id="2Lf-hv-21N"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="20"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="DIl-eD-nxe" firstAttribute="top" secondItem="AXj-5X-E46" secondAttribute="bottom" constant="28" id="4d7-cB-Iz5"/>
+                            <constraint firstItem="aGY-5L-48H" firstAttribute="centerX" secondItem="AXj-5X-E46" secondAttribute="centerX" id="5mG-wo-Mxm"/>
+                            <constraint firstItem="XMA-39-Iek" firstAttribute="leading" secondItem="DIl-eD-nxe" secondAttribute="leading" id="CFC-Yl-qMv"/>
+                            <constraint firstItem="hrk-li-TnY" firstAttribute="leading" secondItem="AXj-5X-E46" secondAttribute="leading" id="Dw1-Mh-4x6"/>
+                            <constraint firstItem="hrk-li-TnY" firstAttribute="bottom" secondItem="9uy-ds-uRY" secondAttribute="bottom" id="F9j-VA-tZU"/>
+                            <constraint firstItem="DIl-eD-nxe" firstAttribute="leading" secondItem="aGY-5L-48H" secondAttribute="leading" id="TVQ-cm-Z5g"/>
+                            <constraint firstItem="aGY-5L-48H" firstAttribute="centerX" secondItem="hrk-li-TnY" secondAttribute="centerX" id="XUZ-m8-mJV"/>
+                            <constraint firstItem="DIl-eD-nxe" firstAttribute="leading" secondItem="Pt6-o0-AMv" secondAttribute="leadingMargin" id="a5H-8U-gWL"/>
+                            <constraint firstItem="DIl-eD-nxe" firstAttribute="top" secondItem="foL-jv-3p4" secondAttribute="top" id="aml-Rm-LbV"/>
+                            <constraint firstItem="foL-jv-3p4" firstAttribute="trailing" secondItem="aGY-5L-48H" secondAttribute="trailing" id="cHR-IT-Rn1"/>
+                            <constraint firstItem="2hT-Qk-Mrr" firstAttribute="trailing" secondItem="foL-jv-3p4" secondAttribute="trailing" id="dlj-iR-Jhd"/>
+                            <constraint firstItem="foL-jv-3p4" firstAttribute="baseline" secondItem="DIl-eD-nxe" secondAttribute="firstBaseline" id="hzx-gK-5ZV"/>
+                            <constraint firstItem="DIl-eD-nxe" firstAttribute="top" secondItem="Pt6-o0-AMv" secondAttribute="top" constant="92" id="igd-sP-3nH"/>
+                            <constraint firstItem="2hT-Qk-Mrr" firstAttribute="leading" secondItem="foL-jv-3p4" secondAttribute="leading" id="jrP-Ek-2fP"/>
+                            <constraint firstItem="foL-jv-3p4" firstAttribute="leading" secondItem="DIl-eD-nxe" secondAttribute="trailing" constant="28" id="lLk-ZU-ojP"/>
+                            <constraint firstItem="foL-jv-3p4" firstAttribute="trailing" secondItem="Pt6-o0-AMv" secondAttribute="trailingMargin" id="n4X-mN-lau"/>
+                            <constraint firstItem="XMA-39-Iek" firstAttribute="top" secondItem="2hT-Qk-Mrr" secondAttribute="top" id="oky-rH-EwP"/>
+                            <constraint firstItem="aGY-5L-48H" firstAttribute="top" secondItem="XMA-39-Iek" secondAttribute="bottom" constant="21" id="rrV-SD-vkb"/>
+                            <constraint firstItem="hrk-li-TnY" firstAttribute="top" secondItem="aGY-5L-48H" secondAttribute="bottom" constant="17" id="sjR-mx-xzq"/>
+                            <constraint firstItem="hrk-li-TnY" firstAttribute="leading" secondItem="Pt6-o0-AMv" secondAttribute="leading" id="wHg-Lg-t4b"/>
+                            <constraint firstItem="2hT-Qk-Mrr" firstAttribute="baseline" secondItem="XMA-39-Iek" secondAttribute="firstBaseline" id="yhl-Yc-tAf"/>
+                            <constraint firstItem="aGY-5L-48H" firstAttribute="top" secondItem="DIl-eD-nxe" secondAttribute="bottom" constant="64" id="ynI-mE-3nH"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="9uy-ds-uRY"/>
+                    </view>
+                    <connections>
+                        <outlet property="FontSizeDisplay" destination="ThZ-fm-8w1" id="zYU-Hh-9cC"/>
+                        <outlet property="FontSizeStepper" destination="jzT-uk-Mnx" id="CXu-Zj-dOI"/>
+                        <outlet property="ItemIDLabel" destination="2hT-Qk-Mrr" id="zzD-I5-d63"/>
+                        <outlet property="TextBox" destination="aGY-5L-48H" id="7Ft-yY-dN9"/>
+                        <outlet property="TimeStampLabel" destination="foL-jv-3p4" id="6cW-0a-wbw"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="X59-s7-7Wq" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1131.25" y="53.90625"/>
+        </scene>
+    </scenes>
+</document>
