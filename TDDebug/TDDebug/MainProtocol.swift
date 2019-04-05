@@ -14,4 +14,9 @@ protocol MainProtocol: class
     var MPManager: MultiPeerManager {get}
     var ConnectedClient: MCPeerID? {get set}
     var ClientCommandList: [ClientCommand] {get}
+    func GetFilterObject() -> FilterObject?
+    func SetFilterObject(Canceled: Bool, _ NewObject: FilterObject?)
+    func SetFilterTest(_ TestObject: FilterObject?)
+    func UndoFilterTest()
+    func GetFilterSourceList() -> [String]
 }
