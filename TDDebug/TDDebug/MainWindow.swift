@@ -48,4 +48,11 @@ class MainWindow: NSWindowController
     @IBAction func HandleCustomizeButtonPress(_ sender: Any)
     {
     }
+    
+    @IBOutlet weak var FilterButton: NSToolbarItem!
+    @IBAction func HandleFilterButtonPress(_ sender: Any)
+    {
+        let VC = window!.contentViewController as? ViewController
+        VC?.DoRunLogFilter()
+    }
 }
