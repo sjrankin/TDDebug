@@ -502,13 +502,13 @@ class ClientTestUICode: UIViewController, UITableViewDelegate, UITableViewDataSo
         switch Action.title
         {
         case "Reset Idiot Lights":
-            Message = MessageHelper.MakeSpcialCommand(.ClearIdiotLights)
+            Message = MessageHelper.MakeSpecialCommand(.ClearIdiotLights)
             
         case "Clear KVP List":
-            Message = MessageHelper.MakeSpcialCommand(.ClearKVPList)
+            Message = MessageHelper.MakeSpecialCommand(.ClearKVPList)
             
         case "Clear Log List":
-            Message = MessageHelper.MakeSpcialCommand(.ClearLogList)
+            Message = MessageHelper.MakeSpecialCommand(.ClearLogList)
             
         default:
             break
