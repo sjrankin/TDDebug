@@ -11,7 +11,7 @@ import UIKit
 import MultipeerConnectivity
 
 class MainController: UIViewController, UITableViewDelegate, UITableViewDataSource,
-    MultiPeerDelegate, MainProtocol, StateProtocol
+      MultiPeerDelegate, MainProtocol, StateProtocol, MessageHandlerDelegate
 {
     var HostNames: [String]? = nil
     
@@ -19,6 +19,7 @@ class MainController: UIViewController, UITableViewDelegate, UITableViewDataSour
     let LogTableTag = 300
     var MPMgr: MultiPeerManager!
     var LocalCommands: ClientCommands!
+    var MsgHandler: MessageHandler!
     
     override func viewDidLoad()
     {
@@ -28,6 +29,7 @@ class MainController: UIViewController, UITableViewDelegate, UITableViewDataSour
         
         MPMgr = MultiPeerManager()
         MPMgr.Delegate = self
+        MsgHandler = MessageHandler(self)
         
         LocalCommands = ClientCommands()
         
@@ -64,6 +66,23 @@ class MainController: UIViewController, UITableViewDelegate, UITableViewDataSour
         EnableIdiotLight("C", 1, false)
         EnableIdiotLight("C", 2, false)
         EnableIdiotLight("C", 3, false)
+    }
+    
+    // MARK: MessageHandler delegate functions.
+    
+    func Message(_ Handler: MessageHandler, KVPData: (UUID, String, String))
+    {
+    }
+    
+    func Message(_ Handler: MessageHandler, Execute: ClientCommand)
+    {
+        
+    }
+    
+    func Message(_ Handler: MessageHandler, IdiotLightCommand: IdiotLightCommands, Address: String,
+                 Text: String?, FGColor: OSColor?, BGColor: OSColor?)
+    {
+        
     }
     
     func StateChanged(NewState: States, HandShake: HandShakeCommands)
@@ -360,12 +379,13 @@ class MainController: UIViewController, UITableViewDelegate, UITableViewDataSour
     func HandleHandShakeCommand(_ Raw: String, Peer: MCPeerID)
     {
         let Command = MessageHelper.DecodeHandShakeCommand(Raw)
-        var PostConnect = ""
+        var PostConnect1 = ""
+        var PostConnect2 = ""
         OperationQueue.main.addOperation
             {
                 let ReturnMe = State.TransitionTo(NewState: Command)
-                print("Handshake command \(Command) resulted in \(ReturnMe)")
-                print("State result=\(ReturnMe), State.CurrentState=\(State.CurrentState)")
+                //print("Handshake command \(Command) resulted in \(ReturnMe)")
+                //print("State result=\(ReturnMe), State.CurrentState=\(State.CurrentState)")
                 var ReturnState = ""
                 switch Command
                 {
@@ -373,11 +393,12 @@ class MainController: UIViewController, UITableViewDelegate, UITableViewDataSour
                     break
                     
                 case .ConnectionGranted:
-                    print(">>>>> At .ConnectionGranted")
+                    //print(">>>>> At .ConnectionGranted")
                     let Item = LogItem(Text: "\(Peer.displayName) is debuggee.")
                     self.AddLogMessage(Item: Item)
                     ReturnState = MessageHelper.MakeHandShake(ReturnMe)
-                    PostConnect = MessageHelper.MakeSendVersionInfo()
+                    PostConnect1 = MessageHelper.MakeSendVersionInfo()
+                    PostConnect2 = MessageHelper.MakeRequestConnectionHeartbeat(From: self.MPMgr.SelfPeer)
                     
                 case .ConnectionRefused:
                     let Item = LogItem(Text: "Connection refused by \(Peer.displayName)")
@@ -391,6 +412,8 @@ class MainController: UIViewController, UITableViewDelegate, UITableViewDataSour
                     break
                     
                 case .DropAsClient:
+                    let Item = LogItem(Text: "Dropped as client by \(Peer.displayName)")
+                    self.AddLogMessage(Item: Item)
                     State.TransitionTo(NewState: .Disconnected)
                     break
                     
@@ -401,9 +424,13 @@ class MainController: UIViewController, UITableViewDelegate, UITableViewDataSour
                 if !ReturnState.isEmpty
                 {
                     self.MPMgr.SendPreformatted(Message: ReturnState, To: Peer)
-                    if !PostConnect.isEmpty
+                    if !PostConnect1.isEmpty
                     {
-                        self.MPMgr.SendPreformatted(Message: PostConnect, To: Peer)
+                        self.MPMgr.SendPreformatted(Message: PostConnect1, To: Peer)
+                    }
+                    if !PostConnect2.isEmpty
+                    {
+                        self.MPMgr.SendPreformatted(Message: PostConnect2, To: Peer)
                     }
                 }
                 else
@@ -446,6 +473,18 @@ class MainController: UIViewController, UITableViewDelegate, UITableViewDataSour
     {
         let (Sender, ReturnIn, SenderWaitTime, FailAfter, CumulativeCount) = MessageHelper.DecodeConnectionHeartbeat(Raw)
         print("Received connection heartbeat from \(Sender).")
+    }
+    
+    func HandleConnectionHeartbeatRequest(_ Raw: String, Peer: MCPeerID)
+    {
+        print("Received connection heartbeat request from \(Peer.displayName).")
+    }
+    
+    func HandlePushedVersionInformation(_ Raw: String)
+    {
+        let (Name, OS, Version, Build, BuildTimeStamp, Copyright, BuildID, ProgramID) = MessageHelper.DecodeVersionInfo(Raw)
+        print("Client name=\(Name), \(ProgramID)")
+        print("Client version data = \(Version), Build: \(Build).")
     }
     
     func ReceivedData(Manager: MultiPeerManager, Peer: MCPeerID, RawData: String,
@@ -495,8 +534,14 @@ class MainController: UIViewController, UITableViewDelegate, UITableViewDataSour
         case .ConnectionHeartbeat:
             HandleConnectionHeartbeat(RawData, Peer: Peer)
             
+        case .RequestConnectionHeartbeat:
+            HandleConnectionHeartbeatRequest(RawData, Peer: Peer)
+            
+        case .PushVersionInformation:
+            HandlePushedVersionInformation(RawData)
+            
         default:
-            print("Unhandled message type: \(MessageType)")
+            print("Unhandled message type: \(MessageType), Raw=\(RawData)")
             break
         }
     }
