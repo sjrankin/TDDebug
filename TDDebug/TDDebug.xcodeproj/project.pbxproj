@@ -25,8 +25,18 @@
 		171EB60D2255C4670075C134 /* Versioning.swift in Sources */ = {isa = PBXBuildFile; fileRef = 171EB60C2255C4670075C134 /* Versioning.swift */; };
 		171EB60F2255C4750075C134 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 171EB60E2255C4750075C134 /* LaunchScreen.storyboard */; };
 		171EB6112255C47D0075C134 /* IDTableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 171EB6102255C47D0075C134 /* IDTableCell.swift */; };
+		1722346A22572D2C00518601 /* Filterer.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1722346922572D2C00518601 /* Filterer.storyboard */; };
+		1722346C22572E3F00518601 /* FiltererWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1722346B22572E3F00518601 /* FiltererWindow.swift */; };
+		1722346E22572E5300518601 /* FiltererUICode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1722346D22572E5300518601 /* FiltererUICode.swift */; };
+		1722347022573D7D00518601 /* FilterObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1722346F22573D7D00518601 /* FilterObject.swift */; };
+		17223472225754EA00518601 /* KVPItems.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17223471225754EA00518601 /* KVPItems.swift */; };
+		1722347422576E9A00518601 /* LogItemList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1722347322576E9A00518601 /* LogItemList.swift */; };
 		172426D7225239C400E34282 /* PeerViewerUICode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 172426D6225239C400E34282 /* PeerViewerUICode.swift */; };
 		172426D92252488F00E34282 /* PeerViewerUIWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 172426D82252488F00E34282 /* PeerViewerUIWindow.swift */; };
+		173366A0225708BE00438E66 /* MessageHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1733669F225708BE00438E66 /* MessageHandler.swift */; };
+		173366A222570A0400438E66 /* MessageHandlerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 173366A122570A0400438E66 /* MessageHandlerDelegate.swift */; };
+		173366A322570BD500438E66 /* MessageHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1733669F225708BE00438E66 /* MessageHandler.swift */; };
+		173366A422570BD800438E66 /* MessageHandlerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 173366A122570A0400438E66 /* MessageHandlerDelegate.swift */; };
 		1743C1372251DF9B003FE6B2 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1743C1362251DF9B003FE6B2 /* AppDelegate.swift */; };
 		1743C1392251DF9B003FE6B2 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1743C1382251DF9B003FE6B2 /* ViewController.swift */; };
 		1743C13B2251DF9C003FE6B2 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1743C13A2251DF9C003FE6B2 /* Assets.xcassets */; };
@@ -72,8 +82,16 @@
 		171EB60C2255C4670075C134 /* Versioning.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Versioning.swift; sourceTree = "<group>"; };
 		171EB60E2255C4750075C134 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
 		171EB6102255C47D0075C134 /* IDTableCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IDTableCell.swift; sourceTree = "<group>"; };
+		1722346922572D2C00518601 /* Filterer.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Filterer.storyboard; sourceTree = "<group>"; };
+		1722346B22572E3F00518601 /* FiltererWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FiltererWindow.swift; sourceTree = "<group>"; };
+		1722346D22572E5300518601 /* FiltererUICode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FiltererUICode.swift; sourceTree = "<group>"; };
+		1722346F22573D7D00518601 /* FilterObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterObject.swift; sourceTree = "<group>"; };
+		17223471225754EA00518601 /* KVPItems.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KVPItems.swift; sourceTree = "<group>"; };
+		1722347322576E9A00518601 /* LogItemList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogItemList.swift; sourceTree = "<group>"; };
 		172426D6225239C400E34282 /* PeerViewerUICode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeerViewerUICode.swift; sourceTree = "<group>"; };
 		172426D82252488F00E34282 /* PeerViewerUIWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeerViewerUIWindow.swift; sourceTree = "<group>"; };
+		1733669F225708BE00438E66 /* MessageHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageHandler.swift; sourceTree = "<group>"; };
+		173366A122570A0400438E66 /* MessageHandlerDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageHandlerDelegate.swift; sourceTree = "<group>"; };
 		1743C1332251DF9B003FE6B2 /* TDDebug.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TDDebug.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1743C1362251DF9B003FE6B2 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		1743C1382251DF9B003FE6B2 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -160,6 +178,7 @@
 		171EB5F62255C24E0075C134 /* Common */ = {
 			isa = PBXGroup;
 			children = (
+				1733669E225708A700438E66 /* MessageHandler */,
 				1743C14622520314003FE6B2 /* MultiPeer */,
 				1796A2D422521117004975D4 /* Extensions */,
 				1746B53B22520A5F00E554EC /* State */,
@@ -198,6 +217,17 @@
 			path = LogDisplay;
 			sourceTree = "<group>";
 		};
+		1722346822572D0D00518601 /* Filter */ = {
+			isa = PBXGroup;
+			children = (
+				1722346922572D2C00518601 /* Filterer.storyboard */,
+				1722346B22572E3F00518601 /* FiltererWindow.swift */,
+				1722346D22572E5300518601 /* FiltererUICode.swift */,
+				1722346F22573D7D00518601 /* FilterObject.swift */,
+			);
+			path = Filter;
+			sourceTree = "<group>";
+		};
 		172426D32252398900E34282 /* PeerViewer */ = {
 			isa = PBXGroup;
 			children = (
@@ -205,6 +235,15 @@
 				172426D82252488F00E34282 /* PeerViewerUIWindow.swift */,
 			);
 			path = PeerViewer;
+			sourceTree = "<group>";
+		};
+		1733669E225708A700438E66 /* MessageHandler */ = {
+			isa = PBXGroup;
+			children = (
+				1733669F225708BE00438E66 /* MessageHandler.swift */,
+				173366A122570A0400438E66 /* MessageHandlerDelegate.swift */,
+			);
+			path = MessageHandler;
 			sourceTree = "<group>";
 		};
 		1743C12A2251DF9A003FE6B2 = {
@@ -237,10 +276,13 @@
 				17B68CC9225468CC00AEBE94 /* MainWindow.swift */,
 				1746B54522520C9F00E554EC /* MainProtocol.swift */,
 				1746B54722520D4A00E554EC /* LogItem.swift */,
+				1722347322576E9A00518601 /* LogItemList.swift */,
 				1746B54322520C6700E554EC /* KVPItem.swift */,
+				17223471225754EA00518601 /* KVPItems.swift */,
 				1746B54022520AB900E554EC /* Versioning.swift */,
 				1743C13F2251DF9C003FE6B2 /* Info.plist */,
 				1743C1402251DF9C003FE6B2 /* TDDebug.entitlements */,
+				1722346822572D0D00518601 /* Filter */,
 				17B68CCB2254711800AEBE94 /* About */,
 				1704C5B222530FA800C49E91 /* SendToClient */,
 				172426D32252398900E34282 /* PeerViewer */,
@@ -399,6 +441,7 @@
 				1743C13B2251DF9C003FE6B2 /* Assets.xcassets in Resources */,
 				17B68CCD2254713100AEBE94 /* AboutTDDebug.storyboard in Resources */,
 				1743C13E2251DF9C003FE6B2 /* Main.storyboard in Resources */,
+				1722346A22572D2C00518601 /* Filterer.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -447,6 +490,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				171EB6092255C4510075C134 /* AppDelegate.swift in Sources */,
+				173366A422570BD800438E66 /* MessageHandlerDelegate.swift in Sources */,
 				17B3EE9B2255CD6B009988D3 /* LogItemProtocol.swift in Sources */,
 				171EB5FB2255C2D10075C134 /* OSColorExtensions.swift in Sources */,
 				171EB5FA2255C2CD0075C134 /* ClientCommands.swift in Sources */,
@@ -465,6 +509,7 @@
 				17B3EE992255CD66009988D3 /* LogItemViewerCode.swift in Sources */,
 				171EB5F92255C2CA0075C134 /* MessageHelper.swift in Sources */,
 				171EB5FC2255C2D80075C134 /* State.swift in Sources */,
+				173366A322570BD500438E66 /* MessageHandler.swift in Sources */,
 				171EB60D2255C4670075C134 /* Versioning.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -475,17 +520,24 @@
 			files = (
 				1743C1392251DF9B003FE6B2 /* ViewController.swift in Sources */,
 				1746B54822520D4A00E554EC /* LogItem.swift in Sources */,
+				173366A0225708BE00438E66 /* MessageHandler.swift in Sources */,
 				1746B53F22520A8D00E554EC /* StateProtocol.swift in Sources */,
 				1772A2FB2253705C006D0A16 /* OSColor.swift in Sources */,
 				1743C1372251DF9B003FE6B2 /* AppDelegate.swift in Sources */,
 				1743C14E2252041B003FE6B2 /* OSColorExtensions.swift in Sources */,
 				1746B54422520C6700E554EC /* KVPItem.swift in Sources */,
+				1722346E22572E5300518601 /* FiltererUICode.swift in Sources */,
+				1722347422576E9A00518601 /* LogItemList.swift in Sources */,
 				1704C5B82253244D00C49E91 /* ClientCommands.swift in Sources */,
+				1722347022573D7D00518601 /* FilterObject.swift in Sources */,
+				173366A222570A0400438E66 /* MessageHandlerDelegate.swift in Sources */,
 				1743C1482252032F003FE6B2 /* MultiPeer.swift in Sources */,
 				1704C5B4225311D400C49E91 /* SendToClientUIWindow.swift in Sources */,
+				1722346C22572E3F00518601 /* FiltererWindow.swift in Sources */,
 				17B68CCA225468CC00AEBE94 /* MainWindow.swift in Sources */,
 				1704C5B62253123F00C49E91 /* SendToClientUICode.swift in Sources */,
 				1746B54122520AB900E554EC /* Versioning.swift in Sources */,
+				17223472225754EA00518601 /* KVPItems.swift in Sources */,
 				1743C14C22520366003FE6B2 /* MultiPeerDelegate.swift in Sources */,
 				17B68CCF2254731C00AEBE94 /* AboutTDDebugCode.swift in Sources */,
 				172426D92252488F00E34282 /* PeerViewerUIWindow.swift in Sources */,
