@@ -1079,6 +1079,15 @@ class MessageHelper
         return Final
     }
     
+    public static func MakeRequestConnectionHeartbeat(From: MCPeerID) -> String
+    {
+        let Cmd = MessageTypeIndicators[.RequestConnectionHeartbeat]!
+        let FromS = "From=\(From.displayName)"
+        let Delimiter = GetUnusedDelimiter(From: [Cmd, FromS])
+        let Final = AssembleCommand(FromParts: [Cmd, FromS], WithDelimiter: Delimiter)
+        return Final
+    }
+    
     /// Assemble the list of string into a command that can be sent to another TDebug instance or other app that implements
     /// at least the MultiPeerManager.
     ///
@@ -1162,6 +1171,7 @@ class MessageHelper
             MessageTypes.IDEncapsulatedCommand: "c0e8487c-840a-4799-9d9d-906adb96f0a3",
             MessageTypes.PushVersionInformation: "f6a18cea-5806-4e7b-853a-58e96224cd8d",
             MessageTypes.ConnectionHeartbeat: "4bdaa255-16b8-43a6-b263-689c7beb439b",
+            MessageTypes.RequestConnectionHeartbeat: "e8b711c9-8672-4ffb-a9b0-230630bd9d7c",
             MessageTypes.Unknown: "dfc5b2d5-521b-46a8-b459-a4947089312c",
     ]
     
@@ -1228,6 +1238,7 @@ enum MessageTypes: Int
     case IDEncapsulatedCommand = 17
     case PushVersionInformation = 18
     case ConnectionHeartbeat = 19
+    case RequestConnectionHeartbeat = 20
     case Unknown = 10000
 }
 
