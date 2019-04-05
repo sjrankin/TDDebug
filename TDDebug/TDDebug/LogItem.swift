@@ -88,6 +88,9 @@ class LogItem
         BGAnimateColorDuration = 2.0
     }
     
+    /// ID of the item instance.
+    public let ItemID: UUID = UUID()
+    
     private var _ID: UUID? = nil
     /// Get or set the ID of the log item.
     public var ID: UUID?
