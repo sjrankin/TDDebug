@@ -12,12 +12,14 @@ import AppKit
 import MultipeerConnectivity
 
 /// Code to run the main view controller for TDDebug.
-class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSource, MultiPeerDelegate, MainProtocol, StateProtocol
+class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSource,
+      MultiPeerDelegate, MainProtocol, StateProtocol, MessageHandlerDelegate
 {
     let KVPTableTag = 100
     let LogTableTag = 200
     var MPMgr: MultiPeerManager!
     var LocalCommands: ClientCommands!
+    var MsgHandler: MessageHandler!
     
     override func viewDidLoad()
     {
@@ -30,6 +32,7 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
         
         MPMgr = MultiPeerManager()
         MPMgr.Delegate = self
+        MsgHandler = MessageHandler(self)
         
         LocalCommands = ClientCommands()
         
@@ -64,6 +67,25 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
     
     var IdiotLights = [String: (NSView, NSTextField)]()
     
+    // MARK: MessageHandler delegate functions.
+    
+    func Message(_ Handler: MessageHandler, KVPData: (UUID, String, String))
+    {
+    }
+    
+    func Message(_ Handler: MessageHandler, Execute: ClientCommand)
+    {
+        
+    }
+    
+    func Message(_ Handler: MessageHandler, IdiotLightCommand: IdiotLightCommands, Address: String,
+                 Text: String?, FGColor: OSColor?, BGColor: OSColor?)
+    {
+        
+    }
+    
+    // MARK: MainProtocol implementation.
+    
     var MPManager: MultiPeerManager
     {
         get
@@ -79,6 +101,63 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
         {
             return _ClientCommandList
         }
+    }
+    
+    private var CurrentFilterObject: FilterObject? = nil
+    
+    func GetFilterObject() -> FilterObject?
+    {
+        if CurrentFilterObject == nil
+        {
+            CurrentFilterObject = FilterObject()
+            let SourceList = GetFilterSourceList()
+            for Source in SourceList
+            {
+                CurrentFilterObject?.SourceList.append((Source, true))
+            }
+        }
+        return CurrentFilterObject
+    }
+    
+    func GetFilterSourceList() -> [String]
+    {
+        let CurrentPeers = MPMgr.GetPeerList()
+        var Results = [String]()
+        for Peer in CurrentPeers
+        {
+            Results.append(Peer.displayName)
+        }
+        Results.append("{unknown}")
+        Results.append("{blank}")
+        return Results
+    }
+    
+    func SetFilterObject(Canceled: Bool, _ NewObject: FilterObject?)
+    {
+        if Canceled
+        {
+            print("Filter canceled.")
+            LogItems.Filter = FilterForCancel
+            FilterForCancel = nil
+            LogTable.reloadData()
+            return
+        }
+        FilterForCancel = nil
+        CurrentFilterObject = NewObject
+        LogItems.Filter = NewObject
+        LogTable.reloadData()
+    }
+    
+    func SetFilterTest(_ TestObject: FilterObject?)
+    {
+        LogItems.Filter = TestObject
+        LogTable.reloadData()
+    }
+    
+    func UndoFilterTest()
+    {
+        LogItems.Filter = FilterForCancel
+        LogTable.reloadData()
     }
     
     override var representedObject: Any?
@@ -111,7 +190,7 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
     {
         OperationQueue.main.addOperation
             {
-                self.LogItems.append(Item)
+                self.LogItems.Add(Item)
                 self.LogTable.reloadData()
                 self.LogTable.scrollToEndOfDocument(self)
         }
@@ -318,7 +397,7 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
                     self.KVPTable.reloadData()
                     
                 case .ClearLogList:
-                    self.LogItems.removeAll()
+                    self.LogItems.Clear()
                     self.LogTable.reloadData()
                     
                 default:
@@ -374,11 +453,13 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
     func HandleHandShakeCommand(_ Raw: String, Peer: MCPeerID)
     {
         let Command = MessageHelper.DecodeHandShakeCommand(Raw)
-        print("Handshake command: \(Command)")
+        //print("Handshake command: \(Command)")
+        var PostConnect1 = ""
+        var PostConnect2 = ""
         OperationQueue.main.addOperation
             {
                 let ReturnMe = State.TransitionTo(NewState: Command)
-                print("State result=\(ReturnMe), State.CurrentState=\(State.CurrentState)")
+                //print("State result=\(ReturnMe), State.CurrentState=\(State.CurrentState)")
                 var ReturnState = ""
                 switch ReturnMe
                 {
@@ -391,6 +472,8 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
                     Item.HostName = "TDDebug"
                     self.AddLogMessage(Item: Item)
                     ReturnState = MessageHelper.MakeHandShake(ReturnMe)
+                    PostConnect1 = MessageHelper.MakeSendVersionInfo()
+                    PostConnect2 = MessageHelper.MakeRequestConnectionHeartbeat(From: self.MPMgr.SelfPeer)
                     
                 case .ConnectionRefused:
                     let Item = LogItem(Text: "Connection refused by \(Peer.displayName)")
@@ -415,6 +498,20 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
                 if !ReturnState.isEmpty
                 {
                     self.MPMgr!.SendPreformatted(Message: ReturnState, To: Peer)
+                    if !PostConnect1.isEmpty
+                    {
+                                                print("Sending \(PostConnect1) to peer.")
+                        self.MPMgr.SendPreformatted(Message: PostConnect1, To: Peer)
+                    }
+                    if !PostConnect2.isEmpty
+                    {
+                        print("Sending \(PostConnect2) to peer.")
+                        self.MPMgr.SendPreformatted(Message: PostConnect2, To: Peer)
+                    }
+                }
+                else
+                {
+                    print("Empty handshake return state.")
                 }
         }
     }
@@ -475,6 +572,11 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
         print("Received connection heartbeat from \(Sender).")
     }
     
+    func HandleConnectionHeartbeatRequest(_ Raw: String, Peer: MCPeerID)
+    {
+        print("Received connection heartbeat request from \(Peer.displayName).")
+    }
+    
     func ReceivedData(Manager: MultiPeerManager, Peer: MCPeerID, RawData: String,
                       OverrideMessageType: MessageTypes? = nil, EncapsulatedID: UUID? = nil)
     {
@@ -529,8 +631,11 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
         case .ConnectionHeartbeat:
             HandleConnectionHeartbeat(RawData, Peer: Peer)
             
+        case .RequestConnectionHeartbeat:
+            HandleConnectionHeartbeatRequest(RawData, Peer: Peer)
+            
         default:
-            print("Unhandled message type: \(MessageType)")
+            print("Unhandled message type: \(MessageType), Raw=\(RawData)")
             break
         }
     }
@@ -638,8 +743,9 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
         InitializeKVPTable()
         InitializeLogTable()
     }
-    
-    var LogItems = [LogItem]()
+  
+    var LogItems = LogItemList()
+//    var LogItems = [LogItem]()
     var KVPItems = [KVPItem]()
     
     func PopulateTuple(ItemCount: Int) -> (String?, String?, String?, String?)
@@ -690,6 +796,18 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
         LogTable.reloadData()
     }
     
+    func LogCountWithFilter() -> Int
+    {
+        if LogItems.Filter == nil
+        {
+            return LogItems.List.count
+        }
+        else
+        {
+        return LogItems.FilteredCount
+        }
+    }
+    
     func numberOfRows(in tableView: NSTableView) -> Int
     {
         switch tableView.tag
@@ -698,7 +816,7 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
             return KVPItems.count
             
         case LogTableTag:
-            return LogItems.count
+            return LogCountWithFilter()
             
         default:
             return 0
@@ -904,6 +1022,30 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
     @IBAction func AboutTDDebug(_ sender: Any)
     {
         DoShowAbout()
+    }
+    
+    var FilterController: NSWindowController? = nil
+    
+    func DoRunLogFilter()
+    {
+        if FilterController == nil
+        {
+            let Storyboard = NSStoryboard(name: "Filterer", bundle: nil)
+            FilterController = Storyboard.instantiateController(withIdentifier: "FiltererWindow") as? FiltererWindow
+        }
+        if let FVC = FilterController as? FiltererWindow
+        {
+            FilterForCancel = LogItems.Filter
+            FVC.MainDelegate = self
+            FVC.showWindow(nil)
+        }
+    }
+    
+    var FilterForCancel: FilterObject? = nil
+    
+    @IBAction func RunLogFilter(_ sender: Any)
+    {
+        DoRunLogFilter()
     }
     
     @IBOutlet weak var A1View: NSView!
