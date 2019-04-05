@@ -61,6 +61,15 @@ class MultiPeerManager: NSObject, MCNearbyServiceAdvertiserDelegate, MCNearbySer
         ServiceBrower.stopBrowsingForPeers()
     }
     
+    /// Get the Peer ID of the instance.
+    public var SelfPeer: MCPeerID
+    {
+        get
+        {
+            return PeerID
+        }
+    }
+    
     private var _IsDebugHost: Bool = false
     /// Get or set the debug host flag.
     public var IsDebugHost: Bool
