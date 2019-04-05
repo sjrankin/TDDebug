@@ -5,7 +5,7 @@ Project that generates two binaries, one for iOS and one for macOS. Each binary 
 # Handshaking
 The process for one peer to become the client of another is done by sending a series of messages to each other. This handshaking consists of the following flow:
 
-#Connecting
+# Connecting
 Client Peer                                 Host Peer
 Sends Handshake.RequestConnection
                                             Returns:
@@ -17,7 +17,7 @@ If received:
     B) Handshake.ConnectionRefused,
        puts client peer into disconnected state
 
-#Disconnecting
+# Disconnecting
 Client Peer                                 Host Peer
 Sends Handshake.ConnectionClose              
                                              Sets its state to disconnected
