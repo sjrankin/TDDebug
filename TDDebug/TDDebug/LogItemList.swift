@@ -172,6 +172,7 @@ class LogItemList
         if (_Filter?.ByText)!
         {
             SatisfiesText = (_Filter?.TextMatchesMask(Item.Message))!
+            //print("SatisfiesText=\(SatisfiesText)")
         }
         if (_Filter?.BySource)!
         {
