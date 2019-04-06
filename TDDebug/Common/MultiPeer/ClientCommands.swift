@@ -20,14 +20,14 @@ class ClientCommands
     /// Creates common, basic commands.
     private func InitializeBasicCommands()
     {
-        _Basic[ClientCommandIDs[.SendText]!] =
-            ClientCommand(ClientCommandIDs[.SendText]!, "Send", "Send text message", 0, "Message")
-        _Basic[ClientCommandIDs[.Reset]!] =
-            ClientCommand(ClientCommandIDs[.Reset]!, "Reset", "Reset client state", 1)
-        _Basic[ClientCommandIDs[.ShutDown]!] =
-            ClientCommand(ClientCommandIDs[.ShutDown]!, "ShutDown", "Shuts down the client", 2)
-        _Basic[ClientCommandIDs[.ClientVersion]!] =
-            ClientCommand(ClientCommandIDs[.ClientVersion]!, "Version", "Get client version info", 0)
+        _Basic[ClientCommandIDList[.SendText]!] =
+            ClientCommand(ClientCommandIDList[.SendText]!, "Send", "Send text message", 0, "Message")
+        _Basic[ClientCommandIDList[.Reset]!] =
+            ClientCommand(ClientCommandIDList[.Reset]!, "Reset", "Reset client state", 1)
+        _Basic[ClientCommandIDList[.ShutDown]!] =
+            ClientCommand(ClientCommandIDList[.ShutDown]!, "ShutDown", "Shuts down the client", 2)
+        _Basic[ClientCommandIDList[.ClientVersion]!] =
+            ClientCommand(ClientCommandIDList[.ClientVersion]!, "Version", "Get client version info", 0)
     }
     
     private var _Basic: [UUID: ClientCommand] = [UUID: ClientCommand]()
@@ -82,12 +82,12 @@ class ClientCommands
     }
     
     /// IDs for basic/command commands.
-    let ClientCommandIDs: [ClientCommandIDs: UUID] =
+    let ClientCommandIDList: [ClientCommandIDs: UUID] =
         [
-            .SendText: UUID(uuidString: "08a5db94-b53c-4a31-9764-f31cd0043e3b")!,
-            .Reset: UUID(uuidString: "2a89b0b1-2d87-47c7-89da-12c6036ef2fd")!,
-            .ShutDown: UUID(uuidString: "0418c4c5-c476-4413-a13c-0997972dbb34")!,
-            .ClientVersion: UUID(uuidString: "414653aa-0b12-4e66-87a3-bb8cc6c3aed5")!,
+            .SendText: UUID(uuidString: ClientCommandIDs.SendText.rawValue)!,
+            .Reset: UUID(uuidString: ClientCommandIDs.Reset.rawValue)!,
+            .ShutDown: UUID(uuidString: ClientCommandIDs.ShutDown.rawValue)!,
+            .ClientVersion: UUID(uuidString: ClientCommandIDs.ClientVersion.rawValue)!,
     ]
     
     /// Determines if the passed command ID is within the current set of all commands.
@@ -134,17 +134,18 @@ class ClientCommands
     }
 }
 
-/// Client commands.
+/// Client commands. The raw value is the string representation of a UUID and is used to send commands.
 ///
 /// - SendText: Send text to the client.
 /// - Reset: Reset the client to a known state.
 /// - ShutDown: Shut down the client.
-enum ClientCommandIDs: Int
+/// - ClientVersion: Return versioning information to the caller.
+enum ClientCommandIDs: String, CaseIterable
 {
-    case SendText = 0
-    case Reset = 1
-    case ShutDown = 2
-    case ClientVersion = 3
+    case SendText = "08a5db94-b53c-4a31-9764-f31cd0043e3b"
+    case Reset = "2a89b0b1-2d87-47c7-89da-12c6036ef2fd"
+    case ShutDown = "0418c4c5-c476-4413-a13c-0997972dbb34"
+    case ClientVersion = "414653aa-0b12-4e66-87a3-bb8cc6c3aed5"
 }
 
 /// Describes a client command.
@@ -230,6 +231,25 @@ class ClientCommand
         {
             _ID = newValue
         }
+    }
+    
+    /// Returns the command type of the command.
+    ///
+    /// - Note: Uses the case iterable protocol to loop through the `ClientCommandIDs` enum to determine the associated
+    ///         `ClientCommandIDs` base on the `ID` set (hopefully) before calling this function.
+    ///
+    /// - Returns: Command type of the command. Nil if unknown. In general, if nil is returned, the instance is assumed
+    ///            to be unstable and should not be used.
+    public func GetCommandType() -> ClientCommandIDs?
+    {
+        for Command in ClientCommandIDs.allCases
+        {
+            if UUID(uuidString: Command.rawValue) == ID
+            {
+                return Command
+            }
+        }
+        return nil
     }
     
     private var _Name: String = ""
