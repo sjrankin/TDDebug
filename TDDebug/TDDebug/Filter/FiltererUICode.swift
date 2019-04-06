@@ -25,19 +25,29 @@ class FiltererUICode: NSViewController, NSTableViewDelegate, NSTableViewDataSour
     {
         super.viewDidLoad()
         FilterBy = FilterObject()
-        //SourceTable.delegate = self
-        //SourceTable.dataSource = self
         SetUI()
         UpdateUI()
     }
     
     func SetUI()
     {
+        switch (FilterBy?.FilterTextAs)!
+        {
+        case .Word:
+            TextFilterSegment.selectedSegment = 0
+            
+        case .List:
+            TextFilterSegment.selectedSegment = 1
+            
+        case .Regex:
+            TextFilterSegment.selectedSegment = 2
+        }
+        ShowTextFilterLabelFor(TextFilterSegment.selectedSegment)
         ContainingSegment.selectedSegment = (FilterBy?.TextMustContain)! ? 0 : 1
         EnableFilteringCheck.state = (FilterBy?.EnableFiltering)! ? .on : .off
         SourceColumnContainsCheck.state = (FilterBy?.BySource)! ? .on : .off
         TextContainsCheck.state = (FilterBy?.ByText)! ? .on : .off
-        TextMask.stringValue = (FilterBy?.TextRegularExpression)!
+        TextMask.stringValue = (FilterBy?.TextToFind)!
         AndOrSegment.selectedSegment = (FilterBy?.CombineLogicalOperator)! == .And ? 0 : 1
         FilterBy?.SourceList.sort{$0.0 < $1.0}
         SourceTable.deselectAll(self)
@@ -78,7 +88,7 @@ class FiltererUICode: NSViewController, NSTableViewDelegate, NSTableViewDataSour
     func tableView(_ tableView: NSTableView, viewFor tableColumn: NSTableColumn?, row: Int) -> NSView?
     {
         let Content = (FilterBy?.SourceList[row].0)!
-        print("row(\(row))=\(Content)")
+        //print("row(\(row))=\(Content)")
         let Cell = tableView.makeView(withIdentifier: NSUserInterfaceItemIdentifier(rawValue: "SourceColumn"), owner: self) as? NSTableCellView
         Cell?.textField?.stringValue = Content
         return Cell
@@ -115,6 +125,8 @@ class FiltererUICode: NSViewController, NSTableViewDelegate, NSTableViewDataSour
             ReloadSourceButton.isEnabled = SourceColumnContainsCheck.state == .on
             TextMask.isEnabled = TextContainsCheck.state == .on
             ContainingSegment.isEnabled = TextContainsCheck.state == .on
+            TextFilterSegment.isEnabled = TextContainsCheck.state == .on
+            TextFilterLabel.isEnabled = TextContainsCheck.state == .on
             TestFilterButton.isEnabled = true
         }
     }
@@ -133,6 +145,8 @@ class FiltererUICode: NSViewController, NSTableViewDelegate, NSTableViewDataSour
     
     func GatherFilterData()
     {
+        FilterBy?.TextToFind = TextMask.stringValue
+        FilterBy?.FilterTextAs = [.Word, .List, .Regex][TextFilterSegment.selectedSegment]
         FilterBy?.EnableFiltering = EnableFilteringCheck.state == .on
         let BySource = SourceColumnContainsCheck.state == .on
         let ByText = TextContainsCheck.state == .on
@@ -148,7 +162,7 @@ class FiltererUICode: NSViewController, NSTableViewDelegate, NSTableViewDataSour
         for Row in SelectedRows
         {
             FilterBy?.SourceList[Row] = ((FilterBy?.SourceList[Row].0)!, true)
-            print("Selected[\(Row)]: \((FilterBy?.SourceList[Row].0)!)")
+            //print("Selected[\(Row)]: \((FilterBy?.SourceList[Row].0)!)")
         }
     }
     
@@ -174,9 +188,11 @@ class FiltererUICode: NSViewController, NSTableViewDelegate, NSTableViewDataSour
     {
         SourceColumnContainsCheck.state = .on
         TextContainsCheck.state = .on
-        TextMask.stringValue = "*"
+        TextMask.stringValue = ""
         AndOrSegment.selectedSegment = 0
         SourceTable.selectAll(self)
+        ContainingSegment.selectedSegment = 0
+        TextFilterSegment.selectedSegment = 0
     }
     
     @IBAction func HandleReloadSourceButtonPressed(_ sender: Any)
@@ -196,12 +212,37 @@ class FiltererUICode: NSViewController, NSTableViewDelegate, NSTableViewDataSour
         Delegate?.UndoFilterTest()
     }
     
+    func ShowTextFilterLabelFor(_ Index: Int)
+    {
+        switch Index
+        {
+        case 0:
+            TextFilterLabel.stringValue = ""
+            
+        case 1:
+            TextFilterLabel.stringValue = "Comma-separated list of words/phrases. Any word match is a success."
+            
+        case 2:
+            TextFilterLabel.stringValue = "Enter regex to filter text."
+            
+        default:
+            TextFilterLabel.stringValue = ""
+        }
+    }
+    
+    @IBAction func HandleTextFilterChanged(_ sender: Any)
+    {
+        ShowTextFilterLabelFor(TextFilterSegment.selectedSegment)
+    }
+    
     @IBAction func HandleCancelPressed(_ sender: Any)
     {
         Delegate?.SetFilterObject(Canceled: true, nil)
         self.view.window!.performClose(sender)
     }
     
+    @IBOutlet weak var TextFilterLabel: NSTextField!
+    @IBOutlet weak var TextFilterSegment: NSSegmentedControl!
     @IBOutlet weak var UndoTestButton: NSButton!
     @IBOutlet weak var ContainingSegment: NSSegmentedControl!
     @IBOutlet weak var ReloadSourceButton: NSButton!
