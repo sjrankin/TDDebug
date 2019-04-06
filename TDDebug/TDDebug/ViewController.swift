@@ -13,7 +13,7 @@ import MultipeerConnectivity
 
 /// Code to run the main view controller for TDDebug.
 class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSource,
-      MultiPeerDelegate, MainProtocol, StateProtocol, MessageHandlerDelegate
+    MultiPeerDelegate, MainProtocol, StateProtocol, MessageHandlerDelegate
 {
     let KVPTableTag = 100
     let LogTableTag = 200
@@ -127,6 +127,7 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
         {
             Results.append(Peer.displayName)
         }
+        Results.append("TDDebug")
         Results.append("{unknown}")
         Results.append("{blank}")
         return Results
@@ -138,6 +139,14 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
         {
             print("Filter canceled.")
             LogItems.Filter = FilterForCancel
+            if FilterForCancel == nil
+            {
+                ShowFilteringIndicator(false)
+            }
+            else
+            {
+                ShowFilteringIndicator((FilterForCancel?.EnableFiltering)!)
+            }
             FilterForCancel = nil
             LogTable.reloadData()
             return
@@ -146,18 +155,43 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
         CurrentFilterObject = NewObject
         LogItems.Filter = NewObject
         LogTable.reloadData()
+        ShowFilteringIndicator((NewObject?.EnableFiltering)!)
     }
     
     func SetFilterTest(_ TestObject: FilterObject?)
     {
         LogItems.Filter = TestObject
         LogTable.reloadData()
+        ShowFilteringIndicator((TestObject?.EnableFiltering)!)
     }
     
     func UndoFilterTest()
     {
         LogItems.Filter = FilterForCancel
         LogTable.reloadData()
+        if FilterForCancel == nil
+        {
+            ShowFilteringIndicator(false)
+        }
+        else
+        {
+            ShowFilteringIndicator((FilterForCancel?.EnableFiltering)!)
+        }
+    }
+    
+    @IBOutlet weak var LogTableContainer: NSScrollView!
+    func ShowFilteringIndicator(_ Show: Bool)
+    {
+        if Show
+        {
+            LogTableContainer.layer?.borderColor = NSColor(named: "Pistachio")!.cgColor
+            LogTableContainer.layer?.borderWidth = 3.0
+        }
+        else
+        {
+            LogTableContainer.layer?.borderColor = OSColor.clear.cgColor
+            LogTableContainer.layer?.borderWidth = 0.0
+        }
     }
     
     override var representedObject: Any?
@@ -230,8 +264,8 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
     {
         OperationQueue.main.addOperation
             {
-        self.KVPItems.removeAll(where: {$0.ID == ItemID})
-        self.KVPTable.reloadData()
+                self.KVPItems.removeAll(where: {$0.ID == ItemID})
+                self.KVPTable.reloadData()
         }
     }
     
@@ -239,16 +273,16 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
     {
         OperationQueue.main.addOperation
             {
-        self.KVPItems.removeAll()
-        self.KVPTable.reloadData()
+                self.KVPItems.removeAll()
+                self.KVPTable.reloadData()
         }
-        }
+    }
     
     func ConnectedDeviceChanged(Manager: MultiPeerManager, ConnectedDevices: [MCPeerID], Changed: MCPeerID, NewState: MCSessionState)
     {
         let StateDescription = ["Not Connected", "Connecting", "Connected"][NewState.rawValue]
         let Item = LogItem(Text: "Device \(Changed.displayName) is \(StateDescription)")
-        Item.HostName = "TDDump"
+        Item.HostName = "TDDebug"
         AddLogMessage(Item: Item)
         if Changed == _ConnectedClient && NewState == .notConnected
         {
@@ -500,7 +534,7 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
                     self.MPMgr!.SendPreformatted(Message: ReturnState, To: Peer)
                     if !PostConnect1.isEmpty
                     {
-                                                print("Sending \(PostConnect1) to peer.")
+                        print("Sending \(PostConnect1) to peer.")
                         self.MPMgr.SendPreformatted(Message: PostConnect1, To: Peer)
                     }
                     if !PostConnect2.isEmpty
@@ -541,8 +575,9 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
     func HandlePushedVersionInformation(_ Raw: String)
     {
         let (Name, OS, Version, Build, BuildTimeStamp, Copyright, BuildID, ProgramID) = MessageHelper.DecodeVersionInfo(Raw)
-        print("Client name=\(Name), \(ProgramID)")
-        print("Client version data = \(Version), Build: \(Build).")
+        print("Client name=\(Name), \(ProgramID), Intended OS: \(OS)")
+        print("Client version data = \(Version), Build: \(Build), Build time-stamp: \(BuildTimeStamp)")
+        print("Copyright: \(Copyright)")
     }
     
     func ExecuteClientCommand(_ Command: ClientCommand)
@@ -575,6 +610,52 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
     func HandleConnectionHeartbeatRequest(_ Raw: String, Peer: MCPeerID)
     {
         print("Received connection heartbeat request from \(Peer.displayName).")
+    }
+    
+    /// Exit the application.
+    ///
+    /// - Note: This is non-standard and will cause Apple Store rejections if submitted.
+    func HCF() -> Never
+    {
+        exit(0)
+    }
+    
+    func ExecuteCommandFromPeer(_ Command: ClientCommand, Peer: MCPeerID)
+    {
+        let SentCommand: ClientCommandIDs = Command.GetCommandType()!
+        switch SentCommand
+        {
+        case ClientCommandIDs.ClientVersion:
+            //Send the version.
+            let VerInfo = MessageHelper.MakeSendVersionInfo()
+            MPMgr.SendPreformatted(Message: VerInfo, To: Peer)
+            
+        case ClientCommandIDs.Reset:
+            //Reset
+            break
+            
+        case ClientCommandIDs.SendText:
+            //Received text to display.
+            let Item = LogItem(TimeStamp: MessageHelper.MakeTimeStamp(FromDate: Date()), Host: Peer.displayName,
+                               Text: Command.ParameterValues[0], ShowInitialAnimation: true,
+                               FinalBG: OSColor.white)
+            self.AddLogMessage(Item: Item)
+            
+        case ClientCommandIDs.ShutDown:
+            //Shut down.
+            HCF()
+        }
+    }
+    
+    func HandleReceivedClientCommand(_ Raw: String, Peer: MCPeerID)
+    {
+        if let ExecuteMe = MessageHelper.DecodeClientCommand(Raw)
+        {
+            OperationQueue.main.addOperation
+                {
+                    self.ExecuteCommandFromPeer(ExecuteMe, Peer: Peer)
+            }
+        }
     }
     
     func ReceivedData(Manager: MultiPeerManager, Peer: MCPeerID, RawData: String,
@@ -633,6 +714,9 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
             
         case .RequestConnectionHeartbeat:
             HandleConnectionHeartbeatRequest(RawData, Peer: Peer)
+            
+        case .SendCommandToClient:
+            HandleReceivedClientCommand(RawData, Peer: Peer)
             
         default:
             print("Unhandled message type: \(MessageType), Raw=\(RawData)")
@@ -743,9 +827,9 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
         InitializeKVPTable()
         InitializeLogTable()
     }
-  
+    
     var LogItems = LogItemList()
-//    var LogItems = [LogItem]()
+    //    var LogItems = [LogItem]()
     var KVPItems = [KVPItem]()
     
     func PopulateTuple(ItemCount: Int) -> (String?, String?, String?, String?)
@@ -804,7 +888,7 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
         }
         else
         {
-        return LogItems.FilteredCount
+            return LogItems.FilteredCount
         }
     }
     
@@ -983,7 +1067,7 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
         State.TransitionTo(NewState: .Disconnected)
         SetIdiotLightA1(ToState: .PeersFound)
         let Item = LogItem(Text: "Dropped \(DroppedClientName) as debug client.")
-        Item.HostName = "TDDump"
+        Item.HostName = "TDDebug"
         AddLogMessage(Item: Item)
     }
     
@@ -1046,6 +1130,35 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
     @IBAction func RunLogFilter(_ sender: Any)
     {
         DoRunLogFilter()
+    }
+    
+    func DoClearLogFilter()
+    {
+        CurrentFilterObject = nil
+        LogItems.Filter = CurrentFilterObject
+        LogTable.reloadData()
+    }
+    
+    @IBAction func ClearLogFilter(_ sender: Any)
+    {
+        DoClearLogFilter()
+    }
+    
+    func DoResetConnection()
+    {
+        MPMgr.Shutdown()
+        MPMgr = nil
+        MPMgr = MultiPeerManager()
+                MPMgr.Delegate = self
+        let Item = LogItem(Text: "Reset peer connection - please wait while peers are discovered.")
+        Item.HostName = "TDDebug"
+        AddLogMessage(Item: Item)
+        LogTable.reloadData()
+    }
+    
+    @IBAction func ResetConnection(_ sender: Any)
+    {
+        DoResetConnection()
     }
     
     @IBOutlet weak var A1View: NSView!
