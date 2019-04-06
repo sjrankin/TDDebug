@@ -32,6 +32,12 @@ class PeerViewerUIWindow: NSWindowController
         VC?.HandleDisconnectButtonPressed()
     }
     
+    @IBAction func HandleToggleAllPeers(_ sender: Any)
+    {
+        let VC = window!.contentViewController as? PeerViewerUICode
+        VC?.ToggleAllPeers(sender) 
+    }
+    
     @IBAction func HandleRefreshPeerList(_ sender: Any)
     {
         let VC = window!.contentViewController as? PeerViewerUICode
