@@ -173,7 +173,7 @@ Gw
                                 <constraints>
                                     <constraint firstAttribute="height" constant="95" id="WPC-pt-San"/>
                                 </constraints>
-                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" borderStyle="bezel" placeholderString="*" drawsBackground="YES" id="FET-YS-9ht">
+                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" borderStyle="bezel" drawsBackground="YES" id="FET-YS-9ht">
                                     <font key="font" metaFont="system" size="20"/>
                                     <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                     <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -213,7 +213,7 @@ Gw
                                 </segmentedCell>
                             </segmentedControl>
                             <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="CMn-jM-qAv">
-                                <rect key="frame" x="616" y="93" width="102" height="32"/>
+                                <rect key="frame" x="616" y="66" width="102" height="32"/>
                                 <buttonCell key="cell" type="push" title="Undo Test" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="ZUN-bH-Lv2">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                     <font key="font" metaFont="system"/>
@@ -223,7 +223,7 @@ Gw
                                 </connections>
                             </button>
                             <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="ayH-Rd-8h9">
-                                <rect key="frame" x="444" y="93" width="100" height="32"/>
+                                <rect key="frame" x="444" y="66" width="100" height="32"/>
                                 <buttonCell key="cell" type="push" title="Test Filter" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="54j-SN-Op0">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                     <font key="font" metaFont="system"/>
@@ -232,6 +232,30 @@ Gw
                                     <action selector="HandleTestFilter:" target="Osb-aW-7ab" id="Uuq-oL-Bxo"/>
                                 </connections>
                             </button>
+                            <segmentedControl verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="AsW-RU-w0c">
+                                <rect key="frame" x="448" y="148" width="266" height="24"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                <segmentedCell key="cell" borderStyle="border" alignment="left" style="rounded" trackingMode="selectOne" id="uuA-Th-w7f">
+                                    <font key="font" metaFont="system"/>
+                                    <segments>
+                                        <segment label="Word" width="86" selected="YES"/>
+                                        <segment label="List" width="86" tag="1"/>
+                                        <segment label="Regex" width="86"/>
+                                    </segments>
+                                </segmentedCell>
+                                <connections>
+                                    <action selector="HandleTextFilterChanged:" target="Osb-aW-7ab" id="9PC-ao-ZyN"/>
+                                </connections>
+                            </segmentedControl>
+                            <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="dqv-0y-LXv">
+                                <rect key="frame" x="448" y="102" width="266" height="40"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <textFieldCell key="cell" selectable="YES" title="Multiline Label" id="UEs-MZ-9tx">
+                                    <font key="font" metaFont="system"/>
+                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                </textFieldCell>
+                            </textField>
                         </subviews>
                         <constraints>
                             <constraint firstItem="b5E-F2-DJC" firstAttribute="top" secondItem="qau-63-Ub4" secondAttribute="top" constant="64" id="1x2-ho-HBb"/>
@@ -247,8 +271,8 @@ Gw
                             <constraint firstItem="gjQ-cN-yFk" firstAttribute="trailing" secondItem="MX1-WP-e6l" secondAttribute="trailing" id="DYR-U0-x5F"/>
                             <constraint firstItem="mn1-4G-d5T" firstAttribute="centerX" secondItem="qau-63-Ub4" secondAttribute="centerX" id="E8Y-Ms-tEV"/>
                             <constraint firstItem="oyE-CN-EPq" firstAttribute="top" secondItem="qau-63-Ub4" secondAttribute="top" constant="20" symbolic="YES" id="JRc-3B-Xp4"/>
-                            <constraint firstItem="ayH-Rd-8h9" firstAttribute="top" secondItem="MX1-WP-e6l" secondAttribute="bottom" constant="58" id="JeP-eL-9dg"/>
-                            <constraint firstItem="LmH-1V-vIa" firstAttribute="top" secondItem="ayH-Rd-8h9" secondAttribute="bottom" constant="59" id="LfJ-NE-ijC"/>
+                            <constraint firstItem="ayH-Rd-8h9" firstAttribute="top" secondItem="MX1-WP-e6l" secondAttribute="bottom" constant="85" id="JeP-eL-9dg"/>
+                            <constraint firstItem="LmH-1V-vIa" firstAttribute="top" secondItem="ayH-Rd-8h9" secondAttribute="bottom" constant="32" id="LfJ-NE-ijC"/>
                             <constraint firstItem="OgP-Wa-Q15" firstAttribute="top" secondItem="F6x-cO-AIB" secondAttribute="bottom" constant="17" id="NCm-6K-oIx"/>
                             <constraint firstItem="OgP-Wa-Q15" firstAttribute="leading" secondItem="qau-63-Ub4" secondAttribute="leading" constant="132" id="NdZ-0b-7cV"/>
                             <constraint firstAttribute="trailing" secondItem="MX1-WP-e6l" secondAttribute="trailing" constant="20" symbolic="YES" id="Rg2-ti-ule"/>
@@ -280,6 +304,8 @@ Gw
                         <outlet property="SourceTable" destination="c7n-RD-tef" id="Vh9-Zq-PEc"/>
                         <outlet property="TestFilterButton" destination="ayH-Rd-8h9" id="iRt-Qf-mt2"/>
                         <outlet property="TextContainsCheck" destination="b5E-F2-DJC" id="2Q2-ln-KJa"/>
+                        <outlet property="TextFilterLabel" destination="dqv-0y-LXv" id="abP-6f-9GN"/>
+                        <outlet property="TextFilterSegment" destination="AsW-RU-w0c" id="NnJ-4k-X5m"/>
                         <outlet property="TextMask" destination="MX1-WP-e6l" id="iVf-Ez-Zgc"/>
                         <outlet property="UndoTestButton" destination="CMn-jM-qAv" id="fI2-DW-q82"/>
                     </connections>
