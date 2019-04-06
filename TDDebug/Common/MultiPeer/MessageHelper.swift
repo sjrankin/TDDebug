@@ -174,8 +174,13 @@ class MessageHelper
         let Delimiter = String(Raw.first!)
         var Next = Raw
         Next.removeFirst()
-        var Parts = Next.split(separator: String.Element(Delimiter))
-        Parts.removeFirst()
+        var Parts0 = Next.split(separator: String.Element(Delimiter))
+        Parts0.removeFirst()
+        var Parts = [String]()
+        for Part in Parts0
+        {
+            Parts.append(String(Part))
+        }
         var PartsList = [(String, String)]()
         for Part in Parts
         {
@@ -1197,6 +1202,12 @@ class MessageHelper
     ]
 }
 
+/// Special UI-infrastructure commands.
+///
+/// - ClearKVPList: Clear the contents of the KVP list.
+/// - ClearLogList: Clear the contents of the log item list.
+/// - ClearIdiotLights: Reset all idiot lights (except for A1, which is reserved for the local instance).
+/// - Unknown: Unknown special command - if explicitly used, ignored.
 enum SpecialCommands: Int
 {
     case ClearKVPList = 0
@@ -1205,6 +1216,15 @@ enum SpecialCommands: Int
     case Unknown = 10000
 }
 
+/// Sub-commands related to handshakes between two peers when netogiating who is the server and who is the client.
+///
+/// - RequestConnection: Peer requests the target to be the server.
+/// - ConnectionGranted: Sent when an instance becomes the server - sent to the peer that requested a connection.
+/// - ConnectionRefused: Sent when the instance is not able to be the server.
+/// - ConnectionClose: Sent by the client to close the connection to the server.
+/// - Disconnected: Sent by the server to the client when it closes the connection.
+/// - DropAsClient: Sent by the server asynchronously when it closes the connection for any reason.
+/// - Unknown: Unknown command - if explicitly used, ignored.
 enum HandShakeCommands: Int
 {
     case RequestConnection = 0
@@ -1216,6 +1236,30 @@ enum HandShakeCommands: Int
     case Unknown = 10000
 }
 
+/// Types of messages that may be sent or received from other peers.
+///
+/// - TextMessage: Send a text message.
+/// - CommandMessage: Send a command message.
+/// - ControlIdiotLight: Control an idiot light.
+/// - EchoMessage: Echo the passed message.
+/// - Acknowledge: Acknowledge an operation.
+/// - Heartbeat: App-level heartbeat message.
+/// - KVPData: Set KVP data in the KVP list.
+/// - EchoReturn: Contains a returned echo message.
+/// - SpecialCommand: Special UI command.
+/// - HandShake: Handshake command (see `HandShakeCommands` for sub-commands).
+/// - RequestCommandCount: Requests the number of client commands. NOT USED.
+/// - GetCommand: Get a command from the client. NOT USED.
+/// - CommandByIndex: Return a command by the command index. NOT USED.
+/// - SendCommandToClient: Send a command to a client. NOT USED.
+/// - ClientCommandResult: Returns the result of a client command.
+/// - GetAllClientCommands: Get all client commands.
+/// - AllClientCommandsReturned: All client commands returned to the peer that requested them.
+/// - IDEncapsulatedCommand: Sends a command encapsulated in an ID - useful for asynchronous returns.
+/// - PushVersionInformation: Send version information to another peer.
+/// - ConnectionHeartbeat: Connection heartbeat command - used to monitor connection status.
+/// - RequestConnectionHeartbeat: Request a heartbeat command to be sent from the selected peer.
+/// - Unknown: Unknown command - if explicitly used, it will be ignored.
 enum MessageTypes: Int
 {
     case TextMessage = 0
@@ -1242,12 +1286,25 @@ enum MessageTypes: Int
     case Unknown = 10000
 }
 
+/// Describes states of UI features.
+///
+/// - Disabled: Disabled state.
+/// - Enabled: Enabled state.
 enum UIFeatureStates: Int
 {
     case Disabled = 0
     case Enabled = 1
 }
 
+/// Commands for idiot lights.
+///
+/// - Disable: Disable the specified idiot light. This resets all attributes so you will need to set them again if
+///            you re-enable the same idiot light.
+/// - Enable: Enable the specified idiot light.
+/// - SetText: Set the text of the specified idiot light.
+/// - SetFGColor: Set the foreground (text) color.
+/// - SetBGColor: Set the background color.
+/// - Unknown: Unknown command. Ignored if you explicitly use it.
 enum IdiotLightCommands: Int
 {
     case Disable = 0
