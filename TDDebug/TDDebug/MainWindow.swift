@@ -55,4 +55,11 @@ class MainWindow: NSWindowController
         let VC = window!.contentViewController as? ViewController
         VC?.DoRunLogFilter()
     }
+    
+    @IBOutlet weak var ResetConnectionButton: NSToolbarItem!
+    @IBAction func HandleResetConnectionButtonPressed(_ sender: Any)
+    {
+        let VC = window!.contentViewController as? ViewController
+        VC?.DoResetConnection()
+    }
 }
