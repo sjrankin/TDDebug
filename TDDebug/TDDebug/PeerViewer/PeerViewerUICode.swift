@@ -40,7 +40,7 @@ class PeerViewerUICode: NSViewController, NSTableViewDelegate, NSTableViewDataSo
     {
         if HaveDelegate
         {
-            PeerList = Delegate.MPManager.GetPeerList()
+            PeerList = Delegate.MPManager.GetPeerList(IncludingSelf: ShowSelf)
             PeerTable.reloadData()
         }
     }
@@ -73,27 +73,25 @@ class PeerViewerUICode: NSViewController, NSTableViewDelegate, NSTableViewDataSo
             Contents = PeerList[row].displayName
             Identifier = "PeerColumn"
         }
-        var IsDebugClient = false
+        var TextColor = OSColor.black
         if tableColumn == tableView.tableColumns[1]
         {
+            Contents = "connected"
             if PeerList[row] == Delegate.ConnectedClient
             {
                 Contents = "debug client"
-                IsDebugClient = true
+                TextColor = OSColor.blue
             }
-            else
+            if PeerList[row] == Delegate.MPManager.SelfPeer
             {
-                Contents = "connected"
-                IsDebugClient = false
+                Contents = "this instance"
+                TextColor = OSColor.purple
             }
             Identifier = "StateColumn"
         }
         let Cell = tableView.makeView(withIdentifier: NSUserInterfaceItemIdentifier(rawValue: Identifier), owner: self) as? NSTableCellView
         Cell?.textField?.stringValue = Contents
-        if IsDebugClient
-        {
-            Cell?.textField?.textColor = OSColor.blue
-        }
+        Cell?.textField?.textColor = TextColor
         return Cell
     }
     
@@ -126,7 +124,7 @@ class PeerViewerUICode: NSViewController, NSTableViewDelegate, NSTableViewDataSo
         }
         if PeerList[SelectedRow] != Delegate.ConnectedClient
         {
-                        print("\((Delegate.ConnectedClient?.displayName)!) is not connected as client")
+            print("\((Delegate.ConnectedClient?.displayName)!) is not connected as client")
             return
         }
         Delegate.ConnectedClient = nil
@@ -137,4 +135,27 @@ class PeerViewerUICode: NSViewController, NSTableViewDelegate, NSTableViewDataSo
     {
         RefreshPeerList()
     }
+    
+    func ToggleAllPeers(_ sender: Any)
+    {
+        let Button = sender as? NSToolbarItem
+        ShowSelf = !ShowSelf
+        if ShowSelf
+        {
+            ShowAllStatus.stringValue = "Showing all speers (including self)."
+            PeerList = Delegate.MPManager.GetPeerList(IncludingSelf: true)
+            Button?.image = NSImage(named: "AllOfSomething")
+        }
+        else
+        {
+            ShowAllStatus.stringValue = "Not showing self."
+            PeerList = Delegate.MPManager.GetPeerList(IncludingSelf: false)
+            Button?.image = NSImage(named: "NotAllOfSomething")
+        }
+        PeerTable.reloadData()
+    }
+    
+    var ShowSelf: Bool = false
+    
+    @IBOutlet weak var ShowAllStatus: NSTextField!
 }
