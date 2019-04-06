@@ -10,7 +10,8 @@ import Foundation
 import AppKit
 import MultipeerConnectivity
 
-class SendToClientUICode: NSViewController, NSTableViewDelegate, NSTableViewDataSource, NSWindowDelegate
+class SendToClientUICode: NSViewController, NSTableViewDelegate, NSTableViewDataSource,
+    NSWindowDelegate
 {
     let CommandTableTag = 100
     
@@ -30,6 +31,8 @@ class SendToClientUICode: NSViewController, NSTableViewDelegate, NSTableViewData
         
         CommandTable.delegate = self
         CommandTable.dataSource = self
+        
+        SendCommandTo.stringValue = "No connected peer - cannot send."
     }
     
     override func viewDidLayout()
@@ -56,6 +59,12 @@ class SendToClientUICode: NSViewController, NSTableViewDelegate, NSTableViewData
     {
         if HaveDelegate
         {
+            if Delegate.ConnectedClient == nil
+            {
+                SendCommandTo.stringValue = "No client found"
+                return
+            }
+            SendCommandTo.stringValue = "Send command to " + Delegate.ConnectedClient!.displayName
             ClientCommandList = Delegate.ClientCommandList
             print("Found \(ClientCommandList.count) client commands.")
             CommandTable.reloadData()
@@ -114,6 +123,7 @@ class SendToClientUICode: NSViewController, NSTableViewDelegate, NSTableViewData
     {
         if notification.name.rawValue == "NSTableViewSelectionDidChangeNotification"
         {
+            GatherText()
             CurrentCommandIndex = CommandTable.selectedRow
             PopulateOperandTable()
         }
@@ -149,19 +159,39 @@ class SendToClientUICode: NSViewController, NSTableViewDelegate, NSTableViewData
     
     @IBAction func SendButton(_ sender: Any)
     {
+        if Delegate.ConnectedClient == nil
+        {
+            SendCommandTo.stringValue = "No connected client."
+        }
+        GatherText()
         var Parameters = [(String, String)]()
+        //let v: String = OperandTable[0]!.1.stringValue
         for Index in 0 ..< ClientCommandList[CurrentCommandIndex].ParameterCount
         {
-            Parameters.append((ClientCommandList[CurrentCommandIndex].Parameters[Index],
-                               ClientCommandList[CurrentCommandIndex].ParameterValues[Index]))
+            let NewParam = (ClientCommandList[CurrentCommandIndex].Parameters[Index],
+                            ClientCommandList[CurrentCommandIndex].ParameterValues[Index])
+            Parameters.append(NewParam)
         }
         let Command = MessageHelper.MakeCommandForClient(CommandID: ClientCommandList[CurrentCommandIndex].ID, Parameters: Parameters)
-        print("Command=\(Command)")
+        Delegate.MPManager.SendPreformatted(Message: Command, To: Delegate.ConnectedClient!)
     }
     
     @IBAction func CloseButton(_ sender: Any)
     {
         self.view.window!.performClose(sender)
+    }
+    
+    func GatherText()
+    {
+        if CurrentCommandIndex < 0
+        {
+            return
+        }
+        for Index in 0 ..< ClientCommandList[CurrentCommandIndex].ParameterCount
+        {
+            let SomeOperand = OperandTable[Index]!.1.stringValue
+            ClientCommandList[CurrentCommandIndex].ParameterValues[Index] = SomeOperand
+        }
     }
     
     @IBAction func HandleTextEntry(_ sender: Any)
@@ -198,6 +228,7 @@ class SendToClientUICode: NSViewController, NSTableViewDelegate, NSTableViewData
     
     @IBOutlet weak var CommandTable: NSTableView!
     
+    @IBOutlet weak var SendCommandTo: NSTextField!
     @IBOutlet weak var Operand1Label: NSTextField!
     @IBOutlet weak var Operand2Label: NSTextField!
     @IBOutlet weak var Operand3Label: NSTextField!
