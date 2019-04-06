@@ -483,8 +483,55 @@ class MainController: UIViewController, UITableViewDelegate, UITableViewDataSour
     func HandlePushedVersionInformation(_ Raw: String)
     {
         let (Name, OS, Version, Build, BuildTimeStamp, Copyright, BuildID, ProgramID) = MessageHelper.DecodeVersionInfo(Raw)
-        print("Client name=\(Name), \(ProgramID)")
-        print("Client version data = \(Version), Build: \(Build).")
+        print("Client name=\(Name), \(ProgramID), Intended OS: \(OS)")
+        print("Client version data = \(Version), Build: \(Build), Build ID: \(BuildID).")
+        print("Build time-stamp: \(BuildTimeStamp), Copyright: \(Copyright)")
+    }
+    
+    /// Exit the application.
+    ///
+    /// - Note: This is non-standard and will cause Apple Store rejections if submitted.
+    func HCF() -> Never
+    {
+        exit(0)
+    }
+    
+    func ExecuteCommandFromPeer(_ Command: ClientCommand, Peer: MCPeerID)
+    {
+        let SentCommand: ClientCommandIDs = Command.GetCommandType()!
+        switch SentCommand
+        {
+        case ClientCommandIDs.ClientVersion:
+            //Send the version.
+            let VerInfo = MessageHelper.MakeSendVersionInfo()
+            MPMgr.SendPreformatted(Message: VerInfo, To: Peer)
+            
+        case ClientCommandIDs.Reset:
+            //Reset
+            break
+            
+        case ClientCommandIDs.SendText:
+            //Received text to display.
+            let Item = LogItem(TimeStamp: MessageHelper.MakeTimeStamp(FromDate: Date()), Host: Peer.displayName,
+                               Text: Command.ParameterValues[0], ShowInitialAnimation: true,
+                               FinalBG: UIColor.white)
+            self.AddLogMessage(Item: Item)
+            
+        case ClientCommandIDs.ShutDown:
+            //Shut down.
+            HCF()
+        }
+    }
+    
+    func HandleReceivedClientCommand(_ Raw: String, Peer: MCPeerID)
+    {
+        if let ExecuteMe = MessageHelper.DecodeClientCommand(Raw)
+        {
+            OperationQueue.main.addOperation
+                {
+                self.ExecuteCommandFromPeer(ExecuteMe, Peer: Peer)
+            }
+        }
     }
     
     func ReceivedData(Manager: MultiPeerManager, Peer: MCPeerID, RawData: String,
@@ -539,6 +586,9 @@ class MainController: UIViewController, UITableViewDelegate, UITableViewDataSour
             
         case .PushVersionInformation:
             HandlePushedVersionInformation(RawData)
+            
+        case .SendCommandToClient:
+            HandleReceivedClientCommand(RawData, Peer: Peer)
             
         default:
             print("Unhandled message type: \(MessageType), Raw=\(RawData)")
