@@ -14,7 +14,7 @@ class FilterObject
     func Reset()
     {
         _EnableFiltering = true
-        _TextRegularExpression = "*"
+        _TextToFind = "*"
         _CombineLogicalOperator = .And
         _FilterByText = true
         _FilterBySource = true
@@ -52,16 +52,36 @@ class FilterObject
         }
     }
     
-    private var _TextRegularExpression: String = "*"
-    public var TextRegularExpression: String
+    enum FilterTextTypes
+    {
+        case Word
+        case List
+        case Regex
+    }
+    
+    private var _FilterTextAs: FilterTextTypes = .Word
+    public var FilterTextAs: FilterTextTypes
     {
         get
         {
-            return _TextRegularExpression
+            return _FilterTextAs
         }
         set
         {
-            _TextRegularExpression = newValue
+            _FilterTextAs = newValue
+        }
+    }
+    
+    private var _TextToFind: String = ""
+    public var TextToFind: String
+    {
+        get
+        {
+            return _TextToFind
+        }
+        set
+        {
+            _TextToFind = newValue
         }
     }
     
@@ -126,7 +146,7 @@ class FilterObject
         return false
     }
     
-    private var _TextMustContain: Bool = false
+    private var _TextMustContain: Bool = true
     public var TextMustContain: Bool
     {
         get
@@ -139,32 +159,75 @@ class FilterObject
         }
     }
     
+    private func ParseList(_ Raw: String) -> [String]
+    {
+        var Result = [String]()
+        let Parts = Raw.split(separator: ",")
+        for Part in Parts
+        {
+            Result.append(String(Part).trimmingCharacters(in: CharacterSet.whitespacesAndNewlines))
+        }
+        return Result
+    }
+    
     public func TextMatchesMask(_ Text: String) -> Bool
     {
-        #if true
-        return Text.contains(TextRegularExpression)
-        #else
-        var MatchCount = 0
-        do
+        switch FilterTextAs
         {
-        let Regex = try NSRegularExpression(pattern: TextRegularExpression, options: [])
-            MatchCount = Regex.numberOfMatches(in: Text,
-                                  options: NSRegularExpression.MatchingOptions.anchored,
-                                  range: NSMakeRange(0, Text.count))
-        }
-        catch
-        {
-            print("Regex threw exception: \(error.localizedDescription)")
+        case .Word:
+            let Found = Text.contains(TextToFind)
+            if TextMustContain
+            {
+                return Found
+            }
+            else
+            {
+                return !Found
+            }
+            
+        case .List:
+            let Words = ParseList(TextToFind)
+            var Found = false
+            for Word in Words
+            {
+                Found = Text.contains(Word)
+                if Found
+                {
+                    break
+                }
+            }
+            if TextMustContain
+            {
+                return Found
+            }
+            else
+            {
+                return !Found
+            }
+            
+        case .Regex:
+            #if false
+            var MatchCount = 0
+            do
+            {
+                let Regex = try NSRegularExpression(pattern: TextToFind, options: [])
+                MatchCount = Regex.numberOfMatches(in: Text,
+                                                   options: NSRegularExpression.MatchingOptions.anchored,
+                                                   range: NSMakeRange(0, Text.count))
+            }
+            catch
+            {
+                print("Regex threw exception: \(error.localizedDescription)")
+                return false
+            }
+            return MatchCount > 0
+            #endif
             return false
         }
-        return MatchCount > 0
-        #endif
     }
     
     public func PredicatesMatchFilter(SourceOK: Bool, TextOK: Bool) -> Bool
     {
-        print("FilterByText=\(ByText), TextOK=\(TextOK)")
-        print("FilterBySource=\(BySource), SourceOK=\(SourceOK)")
         if !ByText && !BySource
         {
             return false
