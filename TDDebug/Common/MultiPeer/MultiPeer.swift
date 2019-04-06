@@ -182,10 +182,15 @@ class MultiPeerManager: NSObject, MCNearbyServiceAdvertiserDelegate, MCNearbySer
     
     /// Return the list of connected peers.
     ///
+    /// - Parameter IncludingSelf: Include the self instance in the list.
     /// - Returns: List of connected peers. May change over time so call periodically.
-    func GetPeerList() -> [MCPeerID]
+    func GetPeerList(IncludingSelf: Bool = false) -> [MCPeerID]
     {
-        let PeerList: [MCPeerID] = Session.connectedPeers
+        var PeerList: [MCPeerID] = Session.connectedPeers
+        if IncludingSelf
+        {
+            PeerList.append(SelfPeer)
+        }
         return PeerList
     }
     
