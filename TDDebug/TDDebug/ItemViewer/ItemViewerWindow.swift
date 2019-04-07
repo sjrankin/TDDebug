@@ -19,4 +19,22 @@ class ItemViewerWindow: NSWindowController
             VC?.Delegate = MainDelegate
         }
     }
+    
+    @IBAction func HandlePrintButtonPress(_ sender: Any)
+    {
+        let VC = window!.contentViewController as? ItemViewerUICode
+        VC?.HandlePrintButton(sender)
+    }
+    
+    @IBAction func HandleColorButtonPress(_ sender: Any)
+    {
+        let VC = window!.contentViewController as? ItemViewerUICode
+        VC?.HandleColorButton(sender) 
+    }
+    
+    @IBAction func HandleFontButtonPress(_ sender: Any)
+    {
+        let VC = window!.contentViewController as? ItemViewerUICode
+        VC?.HandleFontButton(sender)
+    }
 }
