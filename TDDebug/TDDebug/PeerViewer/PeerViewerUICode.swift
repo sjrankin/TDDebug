@@ -10,7 +10,8 @@ import Foundation
 import AppKit
 import MultipeerConnectivity
 
-class PeerViewerUICode: NSViewController, NSTableViewDelegate, NSTableViewDataSource
+class PeerViewerUICode: NSViewController, NSTableViewDelegate, NSTableViewDataSource,
+    ConnectionNotificationProtocol
 {
     var HaveDelegate = false
     weak var Delegate: MainProtocol!
@@ -19,6 +20,7 @@ class PeerViewerUICode: NSViewController, NSTableViewDelegate, NSTableViewDataSo
         {
             HaveDelegate = true
             RefreshPeerList()
+            Delegate.SetProtocol(ForType: .PeerViewer, Delegate: self)
         }
     }
     
@@ -34,6 +36,38 @@ class PeerViewerUICode: NSViewController, NSTableViewDelegate, NSTableViewDataSo
                                             userInfo: nil,
                                             repeats: true)
         #endif
+    }
+    
+    override func viewWillDisappear()
+    {
+        if HaveDelegate
+        {
+            Delegate.CloseProtocol(ForType: .PeerViewer)
+        }
+        super.viewWillDisappear()
+    }
+    
+    func LostConnectionTo(Peer: MCPeerID)
+    {
+        PeerList = Delegate.MPManager.GetPeerList(IncludingSelf: ShowSelf)
+        PeerTable.reloadData()
+    }
+    
+    func LostConnectionToClient()
+    {
+        PeerList = Delegate.MPManager.GetPeerList(IncludingSelf: ShowSelf)
+        PeerTable.reloadData()
+    }
+    
+    func ConnectionChanged(ConnectionList: [MCPeerID])
+    {
+        PeerList = Delegate.MPManager.GetPeerList(IncludingSelf: ShowSelf)
+        PeerTable.reloadData()
+    }
+    
+    func ConnectedToClient(ClientID: MCPeerID)
+    {
+        
     }
     
     @objc func RefreshPeerList()
