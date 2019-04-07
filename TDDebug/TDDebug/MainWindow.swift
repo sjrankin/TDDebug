@@ -57,6 +57,12 @@ class MainWindow: NSWindowController, NSToolbarItemValidation
     {
     }
     
+    @IBOutlet weak var ColorsButton: NSToolbarItem!
+    @IBAction func HandleColorsButtonPress(_ sender: Any)
+    {
+    }
+    
+    
     @IBOutlet weak var CustomizeButton: NSToolbarItem!
     @IBAction func HandleCustomizeButtonPress(_ sender: Any)
     {
@@ -74,5 +80,12 @@ class MainWindow: NSWindowController, NSToolbarItemValidation
     {
         let VC = window!.contentViewController as? ViewController
         VC?.DoResetConnection()
+    }
+    
+    @IBOutlet weak var PrinterButton: NSToolbarItem!
+    @IBAction func HandlePrinterButtonPressed(_ sender: Any)
+    {
+        let VC = window!.contentViewController as? ViewController
+        VC?.HandleFilePrint(sender)
     }
 }
