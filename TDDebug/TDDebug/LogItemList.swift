@@ -9,7 +9,7 @@
 import Foundation
 import AppKit
 
-
+/// Manages a list of log items.
 class LogItemList
 {
     private var _Filter: FilterObject? = nil
