@@ -1017,7 +1017,6 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
             return LogCountWithFilter()
             
         case VersionTableTag:
-            print("VersionKVP.count=\(VersionKVP.count)")
             return VersionKVP.count
             
         default:
@@ -1227,6 +1226,51 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
     }
     
     @IBAction func RunCustomization(_ sender: Any)
+    {
+        
+    }
+    
+    func DoSelectAFont()
+    {
+        
+    }
+    
+    @IBAction func SelectAFont(_ sender: Any)
+    {
+        DoSelectAFont()
+    }
+    
+    func DoSelectAColor()
+    {
+        
+    }
+    
+    @IBAction func SelectAColor(_ sender: Any)
+    {
+        DoSelectAColor()
+    }
+    
+    @IBAction func HandleCopy(_ sender: Any)
+    {
+        
+    }
+    
+    @IBAction func HandleSelectAll(_ sender: Any)
+    {
+        
+    }
+    
+    @IBAction func HandleFileSave(_ sender: Any)
+    {
+        
+    }
+    
+    @IBAction func HandlePageSetup(_ sender: Any)
+    {
+        
+    }
+    
+    @IBAction func HandleFilePrint(_ sender: Any)
     {
         
     }
