@@ -15,6 +15,39 @@
                         <rect key="contentRect" x="490" y="534" width="480" height="270"/>
                         <rect key="screenRect" x="0.0" y="0.0" width="2880" height="1597"/>
                         <value key="minSize" type="size" width="640" height="400"/>
+                        <toolbar key="toolbar" implicitIdentifier="3A8F251D-C069-465C-9C26-E6B1EBBFEEE4" displayMode="iconAndLabel" sizeMode="regular" id="WPP-CI-xEd">
+                            <allowedToolbarItems>
+                                <toolbarItem implicitItemIdentifier="NSToolbarSpaceItem" id="V7v-iP-ygH"/>
+                                <toolbarItem implicitItemIdentifier="NSToolbarFlexibleSpaceItem" id="3tM-or-BQS"/>
+                                <toolbarItem implicitItemIdentifier="45A25F47-9C52-4018-800E-BE12BC4A3328" label="Fonts" paletteLabel="Font Picker" toolTip="Select a font for the selected control." tag="-1" image="Font" id="Yaq-Vm-8BZ">
+                                    <size key="minSize" width="24" height="24"/>
+                                    <size key="maxSize" width="24" height="24"/>
+                                    <connections>
+                                        <action selector="HandleFontButtonPress:" target="0AD-ix-5Dv" id="AEj-sP-D6t"/>
+                                    </connections>
+                                </toolbarItem>
+                                <toolbarItem implicitItemIdentifier="F0775396-6041-4DEB-8EE4-DB9255B77D4A" label="Print" paletteLabel="Toolbar Item" toolTip="Print the log item." tag="-1" image="Printer" id="aW2-9c-Cgp">
+                                    <size key="minSize" width="24" height="24"/>
+                                    <size key="maxSize" width="24" height="24"/>
+                                    <connections>
+                                        <action selector="HandlePrintButtonPress:" target="0AD-ix-5Dv" id="gxt-YW-tTb"/>
+                                    </connections>
+                                </toolbarItem>
+                                <toolbarItem implicitItemIdentifier="2A96D8B3-2789-480D-B686-FCD4379351C3" label="Colors" paletteLabel="Color Picker" toolTip="Change the color for the select control." tag="-1" image="ColorRing" id="J8d-Gf-kWa">
+                                    <size key="minSize" width="24" height="24"/>
+                                    <size key="maxSize" width="24" height="24"/>
+                                    <connections>
+                                        <action selector="HandleColorButtonPress:" target="0AD-ix-5Dv" id="oMb-OO-WBY"/>
+                                    </connections>
+                                </toolbarItem>
+                            </allowedToolbarItems>
+                            <defaultToolbarItems>
+                                <toolbarItem reference="Yaq-Vm-8BZ"/>
+                                <toolbarItem reference="J8d-Gf-kWa"/>
+                                <toolbarItem reference="3tM-or-BQS"/>
+                                <toolbarItem reference="aW2-9c-Cgp"/>
+                            </defaultToolbarItems>
+                        </toolbar>
                         <connections>
                             <outlet property="delegate" destination="0AD-ix-5Dv" id="WV5-7f-0SK"/>
                         </connections>
@@ -50,8 +83,8 @@
                                 <constraints>
                                     <constraint firstAttribute="height" constant="232" id="2Ce-Ns-Kba"/>
                                 </constraints>
-                                <textFieldCell key="cell" selectable="YES" borderStyle="border" title="Multiline Label" id="1vI-JP-cGB">
-                                    <font key="font" metaFont="system"/>
+                                <textFieldCell key="cell" selectable="YES" borderStyle="border" title="Multiline Label" allowsEditingTextAttributes="YES" id="1vI-JP-cGB">
+                                    <font key="font" metaFont="system" size="16"/>
                                     <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                     <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                 </textFieldCell>
@@ -187,4 +220,9 @@
             <point key="canvasLocation" x="-245.5" y="791"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="ColorRing" width="24" height="24"/>
+        <image name="Font" width="24" height="24"/>
+        <image name="Printer" width="24" height="24"/>
+    </resources>
 </document>
