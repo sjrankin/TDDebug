@@ -19,4 +19,17 @@ protocol MainProtocol: class
     func SetFilterTest(_ TestObject: FilterObject?)
     func UndoFilterTest()
     func GetFilterSourceList() -> [String]
+    func CloseProtocol(ForType: ConnectionProtocolTypes)
+    func SetProtocol(ForType: ConnectionProtocolTypes, Delegate: ConnectionNotificationProtocol)
+    func LastSelectedLogItem() -> LogItem?
+}
+
+/// Types of windows that implement connection protocols.
+///
+/// - SendTo: The sent do client window.
+/// - PeerViewer: The peer viewer window.
+enum ConnectionProtocolTypes
+{
+    case SendTo
+    case PeerViewer
 }
