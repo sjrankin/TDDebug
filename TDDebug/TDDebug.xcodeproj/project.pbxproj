@@ -33,6 +33,12 @@
 		1722347422576E9A00518601 /* LogItemList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1722347322576E9A00518601 /* LogItemList.swift */; };
 		172426D7225239C400E34282 /* PeerViewerUICode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 172426D6225239C400E34282 /* PeerViewerUICode.swift */; };
 		172426D92252488F00E34282 /* PeerViewerUIWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 172426D82252488F00E34282 /* PeerViewerUIWindow.swift */; };
+		172E7F612259A757009E4768 /* ConnectionNotificationProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 172E7F602259A757009E4768 /* ConnectionNotificationProtocol.swift */; };
+		172E7F632259C9CA009E4768 /* ViewStateManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 172E7F622259C9CA009E4768 /* ViewStateManager.swift */; };
+		172E7F662259C9F5009E4768 /* ViewState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 172E7F652259C9F5009E4768 /* ViewState.swift */; };
+		172E7F692259E5FB009E4768 /* ItemViewer.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 172E7F682259E5FB009E4768 /* ItemViewer.storyboard */; };
+		172E7F6B2259E72D009E4768 /* ItemViewerWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 172E7F6A2259E72D009E4768 /* ItemViewerWindow.swift */; };
+		172E7F6D2259E739009E4768 /* ItemViewerUICode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 172E7F6C2259E739009E4768 /* ItemViewerUICode.swift */; };
 		173366A0225708BE00438E66 /* MessageHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1733669F225708BE00438E66 /* MessageHandler.swift */; };
 		173366A222570A0400438E66 /* MessageHandlerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 173366A122570A0400438E66 /* MessageHandlerDelegate.swift */; };
 		173366A322570BD500438E66 /* MessageHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1733669F225708BE00438E66 /* MessageHandler.swift */; };
@@ -90,6 +96,12 @@
 		1722347322576E9A00518601 /* LogItemList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogItemList.swift; sourceTree = "<group>"; };
 		172426D6225239C400E34282 /* PeerViewerUICode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeerViewerUICode.swift; sourceTree = "<group>"; };
 		172426D82252488F00E34282 /* PeerViewerUIWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeerViewerUIWindow.swift; sourceTree = "<group>"; };
+		172E7F602259A757009E4768 /* ConnectionNotificationProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectionNotificationProtocol.swift; sourceTree = "<group>"; };
+		172E7F622259C9CA009E4768 /* ViewStateManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewStateManager.swift; sourceTree = "<group>"; };
+		172E7F652259C9F5009E4768 /* ViewState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewState.swift; sourceTree = "<group>"; };
+		172E7F682259E5FB009E4768 /* ItemViewer.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = ItemViewer.storyboard; sourceTree = "<group>"; };
+		172E7F6A2259E72D009E4768 /* ItemViewerWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemViewerWindow.swift; sourceTree = "<group>"; };
+		172E7F6C2259E739009E4768 /* ItemViewerUICode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemViewerUICode.swift; sourceTree = "<group>"; };
 		1733669F225708BE00438E66 /* MessageHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageHandler.swift; sourceTree = "<group>"; };
 		173366A122570A0400438E66 /* MessageHandlerDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageHandlerDelegate.swift; sourceTree = "<group>"; };
 		1743C1332251DF9B003FE6B2 /* TDDebug.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TDDebug.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -237,6 +249,25 @@
 			path = PeerViewer;
 			sourceTree = "<group>";
 		};
+		172E7F642259C9DC009E4768 /* ViewStates */ = {
+			isa = PBXGroup;
+			children = (
+				172E7F622259C9CA009E4768 /* ViewStateManager.swift */,
+				172E7F652259C9F5009E4768 /* ViewState.swift */,
+			);
+			path = ViewStates;
+			sourceTree = "<group>";
+		};
+		172E7F672259E5D9009E4768 /* ItemViewer */ = {
+			isa = PBXGroup;
+			children = (
+				172E7F682259E5FB009E4768 /* ItemViewer.storyboard */,
+				172E7F6A2259E72D009E4768 /* ItemViewerWindow.swift */,
+				172E7F6C2259E739009E4768 /* ItemViewerUICode.swift */,
+			);
+			path = ItemViewer;
+			sourceTree = "<group>";
+		};
 		1733669E225708A700438E66 /* MessageHandler */ = {
 			isa = PBXGroup;
 			children = (
@@ -274,15 +305,18 @@
 				1743C1382251DF9B003FE6B2 /* ViewController.swift */,
 				1743C13C2251DF9C003FE6B2 /* Main.storyboard */,
 				17B68CC9225468CC00AEBE94 /* MainWindow.swift */,
-				1746B54522520C9F00E554EC /* MainProtocol.swift */,
 				1746B54722520D4A00E554EC /* LogItem.swift */,
 				1722347322576E9A00518601 /* LogItemList.swift */,
 				1746B54322520C6700E554EC /* KVPItem.swift */,
 				17223471225754EA00518601 /* KVPItems.swift */,
 				1746B54022520AB900E554EC /* Versioning.swift */,
+				1746B54522520C9F00E554EC /* MainProtocol.swift */,
+				172E7F602259A757009E4768 /* ConnectionNotificationProtocol.swift */,
 				1743C13F2251DF9C003FE6B2 /* Info.plist */,
 				1743C1402251DF9C003FE6B2 /* TDDebug.entitlements */,
+				172E7F642259C9DC009E4768 /* ViewStates */,
 				1722346822572D0D00518601 /* Filter */,
+				172E7F672259E5D9009E4768 /* ItemViewer */,
 				17B68CCB2254711800AEBE94 /* About */,
 				1704C5B222530FA800C49E91 /* SendToClient */,
 				172426D32252398900E34282 /* PeerViewer */,
@@ -438,6 +472,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				172E7F692259E5FB009E4768 /* ItemViewer.storyboard in Resources */,
 				1743C13B2251DF9C003FE6B2 /* Assets.xcassets in Resources */,
 				17B68CCD2254713100AEBE94 /* AboutTDDebug.storyboard in Resources */,
 				1743C13E2251DF9C003FE6B2 /* Main.storyboard in Resources */,
@@ -518,6 +553,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				172E7F632259C9CA009E4768 /* ViewStateManager.swift in Sources */,
 				1743C1392251DF9B003FE6B2 /* ViewController.swift in Sources */,
 				1746B54822520D4A00E554EC /* LogItem.swift in Sources */,
 				173366A0225708BE00438E66 /* MessageHandler.swift in Sources */,
@@ -527,13 +563,17 @@
 				1743C14E2252041B003FE6B2 /* OSColorExtensions.swift in Sources */,
 				1746B54422520C6700E554EC /* KVPItem.swift in Sources */,
 				1722346E22572E5300518601 /* FiltererUICode.swift in Sources */,
+				172E7F6B2259E72D009E4768 /* ItemViewerWindow.swift in Sources */,
 				1722347422576E9A00518601 /* LogItemList.swift in Sources */,
 				1704C5B82253244D00C49E91 /* ClientCommands.swift in Sources */,
 				1722347022573D7D00518601 /* FilterObject.swift in Sources */,
 				173366A222570A0400438E66 /* MessageHandlerDelegate.swift in Sources */,
 				1743C1482252032F003FE6B2 /* MultiPeer.swift in Sources */,
 				1704C5B4225311D400C49E91 /* SendToClientUIWindow.swift in Sources */,
+				172E7F6D2259E739009E4768 /* ItemViewerUICode.swift in Sources */,
+				172E7F612259A757009E4768 /* ConnectionNotificationProtocol.swift in Sources */,
 				1722346C22572E3F00518601 /* FiltererWindow.swift in Sources */,
+				172E7F662259C9F5009E4768 /* ViewState.swift in Sources */,
 				17B68CCA225468CC00AEBE94 /* MainWindow.swift in Sources */,
 				1704C5B62253123F00C49E91 /* SendToClientUICode.swift in Sources */,
 				1746B54122520AB900E554EC /* Versioning.swift in Sources */,
