@@ -38,6 +38,24 @@ class PeerViewerUIWindow: NSWindowController
         VC?.ToggleAllPeers(sender) 
     }
     
+    @IBAction func HandleColorButtonPressed(_ sender: Any)
+    {
+        let VC = window!.contentViewController as? PeerViewerUICode
+        VC?.HandleColorButton(sender) 
+    }
+    
+    @IBAction func HandleFontButtonPressed(_ sender: Any)
+    {
+        let VC = window!.contentViewController as? PeerViewerUICode
+        VC?.HandleFontButton(sender)
+    }
+    
+    @IBAction func HandlePrintButtonPressed(_ sender: Any)
+    {
+        let VC = window!.contentViewController as? PeerViewerUICode
+        VC?.HandlePrintButton (sender)
+    }
+    
     @IBAction func HandleRefreshPeerList(_ sender: Any)
     {
         let VC = window!.contentViewController as? PeerViewerUICode
