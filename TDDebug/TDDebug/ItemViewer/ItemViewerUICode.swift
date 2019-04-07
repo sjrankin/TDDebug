@@ -79,6 +79,20 @@ class ItemViewerUICode: NSViewController, NSTableViewDelegate, NSTableViewDataSo
         return Cell
     }
     
+    func HandleFontButton(_ sender: Any)
+    {
+        print("Fonts not yet enabled.")
+    }
+    
+    func HandlePrintButton(_ sender: Any)
+    {
+        print("Printing not yet enabled.")
+    }
+    
+    func HandleColorButton(_ sender: Any)
+    {
+        print("Colors not yet enabled - everything is black and white.")
+    }
     
     @IBOutlet weak var ItemHeaderTable: NSTableView!
     @IBOutlet weak var MessageContents: NSTextField!
