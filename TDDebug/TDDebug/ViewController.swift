@@ -17,6 +17,7 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
 {
     let KVPTableTag = 100
     let LogTableTag = 200
+    let VersionTableTag = 300
     var MPMgr: MultiPeerManager!
     var LocalCommands: ClientCommands!
     var MsgHandler: MessageHandler!
@@ -36,9 +37,7 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
         
         LocalCommands = ClientCommands()
         
-        AddKVPData("Program", Versioning.ApplicationName)
-        AddKVPData("Version", Versioning.MakeVersionString())
-        AddKVPData("Build", "\(Versioning.Build)")
+        ShowInstanceVersion()
     }
     
     override func viewDidLayout()
@@ -63,6 +62,19 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
         EnableIdiotLight("C1", false)
         EnableIdiotLight("C2", false)
         EnableIdiotLight("C3", false)
+        
+        SetSendEnableState(To: false)
+    }
+    
+    func ShowInstanceVersion()
+    {
+        AddVersionData(Order: 0, Name: "Program", Value: Versioning.ApplicationName)
+        AddVersionData(Order: 1, Name: "Version", Value: Versioning.MakeVersionString(IncludeVersionSuffix: true, IncludeVersionPrefix: false))
+        AddVersionData(Order: 2, Name: "Build", Value: "\(Versioning.Build)")
+        AddVersionData(Order: 3, Name: "Built", Value: Versioning.BuildDate + " " + Versioning.BuildTime)
+        AddVersionData(Order: 4, Name: "Build ID", Value: Versioning.BuildID)
+        AddVersionData(Order: 5, Name: "Copyright", Value: Versioning.CopyrightText())
+        AddVersionData(Order: 6, Name: "Program ID", Value: Versioning.ProgramID)
     }
     
     var IdiotLights = [String: (NSView, NSTextField)]()
@@ -179,18 +191,35 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
         }
     }
     
+    private var _LastSelectedLogItem: LogItem? = nil
+    func LastSelectedLogItem() -> LogItem?
+    {
+        return _LastSelectedLogItem
+    }
+    
     @IBOutlet weak var LogTableContainer: NSScrollView!
     func ShowFilteringIndicator(_ Show: Bool)
     {
-        if Show
-        {
-            LogTableContainer.layer?.borderColor = NSColor(named: "Pistachio")!.cgColor
-            LogTableContainer.layer?.borderWidth = 3.0
-        }
-        else
-        {
-            LogTableContainer.layer?.borderColor = OSColor.clear.cgColor
-            LogTableContainer.layer?.borderWidth = 0.0
+        OperationQueue.main.addOperation
+            {
+                if Show
+                {
+                    self.LogTableContainer.layer?.borderColor = NSColor(named: "Pistachio")!.cgColor
+                    self.LogTableContainer.layer?.borderWidth = 3.0
+                    if let Window = self.view.window?.windowController as? MainWindow
+                    {
+                        Window.FilterButton.image = NSImage(named: "Filter")
+                    }
+                }
+                else
+                {
+                    self.LogTableContainer.layer?.borderColor = OSColor.clear.cgColor
+                    self.LogTableContainer.layer?.borderWidth = 0.0
+                    if let Window = self.view.window?.windowController as? MainWindow
+                    {
+                        Window.FilterButton.image = NSImage(named: "NotFiltered")
+                    }
+                }
         }
     }
     
@@ -278,6 +307,21 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
         }
     }
     
+    func ClearVersionList()
+    {
+        VersionKVP.removeAll()
+        VersionTable.reloadData()
+    }
+    
+    func AddVersionData(Order: Int, Name: String, Value: String)
+    {
+        VersionKVP.append((Order, Name, Value))
+        VersionKVP.sort{$0.0 < $1.0}
+        VersionTable.reloadData()
+    }
+    
+    var VersionKVP = [(Int, String, String)]()
+    
     func ConnectedDeviceChanged(Manager: MultiPeerManager, ConnectedDevices: [MCPeerID], Changed: MCPeerID, NewState: MCSessionState)
     {
         let StateDescription = ["Not Connected", "Connecting", "Connected"][NewState.rawValue]
@@ -297,6 +341,48 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
         else
         {
             SetIdiotLightA1(ToState: .PeersFound)
+        }
+        if Changed == _ConnectedClient && NewState == .notConnected
+        {
+            for (_, Delegate) in NotificationDictionary
+            {
+                Delegate?.LostConnectionToClient()
+            }
+        }
+        if NewState == .notConnected
+        {
+            for (_, Delegate) in NotificationDictionary
+            {
+                Delegate?.LostConnectionTo(Peer: Changed)
+            }
+        }
+        for (_, Delegate) in NotificationDictionary
+        {
+            Delegate?.ConnectionChanged(ConnectionList: ConnectedDevices)
+        }
+        if ConnectedDevices.count < 1
+        {
+            SetSendEnableState(To: false)
+            for (_, Delegate) in NotificationDictionary
+            {
+                Delegate?.LostConnectionToClient()
+            }
+        }
+        else
+        {
+            SetSendEnableState(To: true)
+        }
+    }
+    
+    func SetSendEnableState(To: Bool)
+    {
+        OperationQueue.main.addOperation
+            {
+                if let Window = self.view.window?.windowController as? MainWindow
+                {
+                    Window.EnableSend = To
+                    Window.SendButton.isEnabled = To
+                }
         }
     }
     
@@ -868,17 +954,45 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
     
     func InitializeKVPTable()
     {
-        KVPTable.delegate = self
-        KVPTable.dataSource = self
+//        KVPTable.delegate = self
+//        KVPTable.dataSource = self
         KVPTable.reloadData()
     }
     
     func InitializeLogTable()
     {
-        LogTable.delegate = self
-        LogTable.dataSource = self
+//        LogTable.delegate = self
+//        LogTable.dataSource = self
         LogTable.reloadData()
+        LogTable.doubleAction = #selector(HandleLogDoubleClick(_:))
     }
+    
+    @objc func HandleLogDoubleClick(_ sender: Any)
+    {
+        let Row = LogTable.selectedRow
+        guard Row >= 0 else
+        {
+            return
+        }
+        _LastSelectedLogItem = LogItems[Row]
+        if _LastSelectedLogItem == nil
+        {
+            return
+        }
+        
+        if ItemViewerController == nil
+        {
+            let Storyboard = NSStoryboard(name: "ItemViewer", bundle: nil)
+            ItemViewerController = Storyboard.instantiateController(withIdentifier: "ItemViewerWindow") as? ItemViewerWindow
+        }
+        if let IVC = ItemViewerController as? ItemViewerWindow
+        {
+            IVC.MainDelegate = self
+            IVC.showWindow(nil)
+        }
+    }
+    
+    var ItemViewerController: NSWindowController? = nil
     
     func LogCountWithFilter() -> Int
     {
@@ -902,6 +1016,10 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
         case LogTableTag:
             return LogCountWithFilter()
             
+        case VersionTableTag:
+            print("VersionKVP.count=\(VersionKVP.count)")
+            return VersionKVP.count
+            
         default:
             return 0
         }
@@ -923,6 +1041,23 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
             {
                 CellIdentifier = "ValueColumn"
                 CellContents = KVPItems[row].Value
+            }
+            let Cell = tableView.makeView(withIdentifier: NSUserInterfaceItemIdentifier(rawValue: CellIdentifier), owner: self) as? NSTableCellView
+            Cell?.textField?.stringValue = CellContents
+            return Cell
+            
+        case VersionTableTag:
+            var CellContents = ""
+            var CellIdentifier = ""
+            if tableColumn == tableView.tableColumns[0]
+            {
+                CellIdentifier = "NameColumn"
+                CellContents = VersionKVP[row].1
+            }
+            if tableColumn == tableView.tableColumns[1]
+            {
+                CellIdentifier = "ValueColumn"
+                CellContents = VersionKVP[row].2
             }
             let Cell = tableView.makeView(withIdentifier: NSUserInterfaceItemIdentifier(rawValue: CellIdentifier), owner: self) as? NSTableCellView
             Cell?.textField?.stringValue = CellContents
@@ -969,7 +1104,7 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
     
     func InitializeIdiotLights()
     {
-        IdiotLightContainer.fillColor = NSColor.clear
+        IdiotLightContainer.fillColor = NSColor(calibratedRed: 0.9, green: 0.9, blue: 0.9, alpha: 1.0)
         
         InitializeIdiotLight(A1View, A1Text, IsA1: true)
         InitializeIdiotLight(A2View, A2Text)
@@ -1149,7 +1284,7 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
         MPMgr.Shutdown()
         MPMgr = nil
         MPMgr = MultiPeerManager()
-                MPMgr.Delegate = self
+        MPMgr.Delegate = self
         let Item = LogItem(Text: "Reset peer connection - please wait while peers are discovered.")
         Item.HostName = "TDDebug"
         AddLogMessage(Item: Item)
@@ -1160,6 +1295,22 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
     {
         DoResetConnection()
     }
+    
+    func CloseProtocol(ForType: ConnectionProtocolTypes)
+    {
+        NotificationDictionary[ForType] = nil
+    }
+    
+    func SetProtocol(ForType: ConnectionProtocolTypes, Delegate: ConnectionNotificationProtocol)
+    {
+        NotificationDictionary[ForType] = Delegate
+    }
+    
+    var NotificationDictionary: [ConnectionProtocolTypes: ConnectionNotificationProtocol?] =
+        [
+            ConnectionProtocolTypes.SendTo: nil,
+            ConnectionProtocolTypes.PeerViewer: nil
+    ]
     
     @IBOutlet weak var A1View: NSView!
     @IBOutlet weak var A2View: NSView!
@@ -1184,6 +1335,7 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
     @IBOutlet weak var LogTableHeader: NSTableHeaderView!
     @IBOutlet weak var KVPTable: NSTableView!
     @IBOutlet weak var KVPTableHeader: NSTableHeaderView!
+    @IBOutlet weak var VersionTable: NSTableView!
     
     @IBOutlet weak var IdiotLightContainer: NSBox!
 }
