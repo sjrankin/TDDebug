@@ -11,7 +11,7 @@ import AppKit
 import MultipeerConnectivity
 
 class SendToClientUICode: NSViewController, NSTableViewDelegate, NSTableViewDataSource,
-    NSWindowDelegate
+    NSWindowDelegate, ConnectionNotificationProtocol
 {
     let CommandTableTag = 100
     
@@ -22,6 +22,7 @@ class SendToClientUICode: NSViewController, NSTableViewDelegate, NSTableViewData
         {
             HaveDelegate = true
             UpdateClientCommandList()
+            Delegate.SetProtocol(ForType: .SendTo, Delegate: self)
         }
     }
     
@@ -51,6 +52,39 @@ class SendToClientUICode: NSViewController, NSTableViewDelegate, NSTableViewData
             Label.alphaValue = 0.0
             Text.alphaValue = 0.0
         }
+    }
+    
+    override func viewWillDisappear()
+    {
+        if HaveDelegate
+        {
+            Delegate.CloseProtocol(ForType: .SendTo)
+        }
+        super.viewWillDisappear()
+    }
+    
+    func LostConnectionTo(Peer: MCPeerID)
+    {
+        
+    }
+    
+    func LostConnectionToClient()
+    {
+        SendCommandTo.stringValue = "Lost connection to client."
+        ClientCommandList.removeAll()
+        CommandTable.reloadData()
+        CurrentCommandIndex = -1
+        PopulateOperandTable()
+    }
+    
+    func ConnectionChanged(ConnectionList: [MCPeerID])
+    {
+        
+    }
+    
+    func ConnectedToClient(ClientID: MCPeerID)
+    {
+        
     }
     
     var OperandTable = [Int: (NSTextField, NSTextField)]()
@@ -136,6 +170,11 @@ class SendToClientUICode: NSViewController, NSTableViewDelegate, NSTableViewData
         print("CurrentCommandIndex=\(CurrentCommandIndex)")
         if CurrentCommandIndex < 0
         {
+            for (_, (Text, TextBox)) in OperandTable
+            {
+                Text.alphaValue = 0.0
+                TextBox.alphaValue = 0.0
+            }
             return
         }
         for Index in 0 ..< ClientCommandList[CurrentCommandIndex].ParameterCount
