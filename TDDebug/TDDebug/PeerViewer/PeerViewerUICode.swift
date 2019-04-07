@@ -170,6 +170,21 @@ class PeerViewerUICode: NSViewController, NSTableViewDelegate, NSTableViewDataSo
         RefreshPeerList()
     }
     
+    func HandleColorButton(_ sender: Any)
+    {
+        
+    }
+    
+    func HandlePrintButton(_ sender: Any)
+    {
+        
+    }
+    
+    func HandleFontButton(_ sender: Any)
+    {
+        
+    }
+    
     func ToggleAllPeers(_ sender: Any)
     {
         let Button = sender as? NSToolbarItem
