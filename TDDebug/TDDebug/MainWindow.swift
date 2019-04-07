@@ -9,7 +9,7 @@
 import Foundation
 import AppKit
 
-class MainWindow: NSWindowController
+class MainWindow: NSWindowController, NSToolbarItemValidation
 {
     @IBOutlet weak var DisconnectButton: NSToolbarItem!
     @IBAction func HandleDisconnectButton(_ sender: Any)
@@ -23,6 +23,19 @@ class MainWindow: NSWindowController
     {
         let VC = window!.contentViewController as? ViewController
         VC?.DoShowHelp()
+    }
+    
+    /// Flag that determines whether the Send to button should be validated (eg, enabled) or not.
+    var EnableSend: Bool = false
+    
+    /// Validate toolbar items. We only care about the Send to button.
+    func validateToolbarItem(_ item: NSToolbarItem) -> Bool
+    {
+        if item.itemIdentifier.rawValue == "SendButton"
+        {
+            return EnableSend
+        }
+        return true
     }
     
     @IBOutlet weak var SendButton: NSToolbarItem!
