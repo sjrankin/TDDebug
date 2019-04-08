@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="14490.70"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--Window Controller-->
+        <scene sceneID="l2Y-nN-BHA">
+            <objects>
+                <windowController storyboardIdentifier="ConnectionConfirmWindow" id="0vH-uv-5vZ" sceneMemberID="viewController">
+                    <window key="window" title="Window" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" frameAutosaveName="" animationBehavior="default" id="5yU-3H-vGc">
+                        <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
+                        <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
+                        <rect key="contentRect" x="490" y="534" width="480" height="270"/>
+                        <rect key="screenRect" x="0.0" y="0.0" width="2880" height="1597"/>
+                        <connections>
+                            <outlet property="delegate" destination="0vH-uv-5vZ" id="Daz-kV-Ner"/>
+                        </connections>
+                    </window>
+                    <connections>
+                        <segue destination="xkz-qK-Mxw" kind="relationship" relationship="window.shadowedContentViewController" id="kCH-LR-2CB"/>
+                    </connections>
+                </windowController>
+                <customObject id="xQG-AN-22N" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="344" y="122"/>
+        </scene>
+        <!--Confirm ConnectionUI Code-->
+        <scene sceneID="qGO-Yo-v5j">
+            <objects>
+                <viewController storyboardIdentifier="ConnectionConfirmUI" id="xkz-qK-Mxw" customClass="ConfirmConnectionUICode" customModule="TDDebug" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" id="0dK-zh-qmy">
+                        <rect key="frame" x="0.0" y="0.0" width="480" height="148"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <subviews>
+                            <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="xuK-4f-lZf">
+                                <rect key="frame" x="18" y="56" width="402" height="72"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <textFieldCell key="cell" selectable="YES" borderStyle="border" title="The peer {some peer name} wants to connect so it can send debug information. Accept this connection?" drawsBackground="YES" id="ABU-rq-XRr">
+                                    <font key="font" metaFont="system" size="15"/>
+                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                </textFieldCell>
+                            </textField>
+                            <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="EC9-vh-hkb">
+                                <rect key="frame" x="326" y="7" width="71" height="32"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                <buttonCell key="cell" type="push" title="Deny" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="MoF-Dq-9Hf">
+                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                    <font key="font" metaFont="system"/>
+                                </buttonCell>
+                                <connections>
+                                    <action selector="HandleDenyButtonPress:" target="xkz-qK-Mxw" id="Lkf-rJ-meo"/>
+                                </connections>
+                            </button>
+                            <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="X0M-ix-sn1">
+                                <rect key="frame" x="96" y="7" width="83" height="32"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                <buttonCell key="cell" type="push" title="Accept" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="zLk-JT-rgS">
+                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                    <font key="font" metaFont="system"/>
+                                </buttonCell>
+                                <connections>
+                                    <action selector="HandleAcceptButtonPress:" target="xkz-qK-Mxw" id="jVT-oI-O9O"/>
+                                </connections>
+                            </button>
+                            <progressIndicator wantsLayer="YES" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" maxValue="100" bezeled="NO" style="spinning" translatesAutoresizingMaskIntoConstraints="NO" id="ut7-it-CV2">
+                                <rect key="frame" x="428" y="96" width="32" height="32"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                            </progressIndicator>
+                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="3ac-E3-Fj5">
+                                <rect key="frame" x="423" y="80" width="42" height="8"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <textFieldCell key="cell" lineBreakMode="clipping" title="Auto Accept" id="Gri-ew-8Jj">
+                                    <font key="font" metaFont="system" size="6"/>
+                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                </textFieldCell>
+                            </textField>
+                        </subviews>
+                    </view>
+                    <connections>
+                        <outlet property="AutoAcceptIndicator" destination="ut7-it-CV2" id="U1c-A1-50r"/>
+                        <outlet property="Message" destination="xuK-4f-lZf" id="546-9S-2iV"/>
+                    </connections>
+                </viewController>
+                <customObject id="GrI-g8-VDi" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="344" y="555"/>
+        </scene>
+    </scenes>
+</document>
