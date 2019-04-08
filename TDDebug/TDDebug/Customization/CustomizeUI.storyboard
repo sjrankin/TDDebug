@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="14490.70"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--Window Controller-->
+        <scene sceneID="q12-o1-GYy">
+            <objects>
+                <windowController storyboardIdentifier="CustomizeWindow" id="9Lp-tc-caB" sceneMemberID="viewController">
+                    <window key="window" title="TDDebug Settings" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" frameAutosaveName="" animationBehavior="default" id="WwI-nf-KfD">
+                        <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
+                        <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
+                        <rect key="contentRect" x="490" y="534" width="480" height="270"/>
+                        <rect key="screenRect" x="0.0" y="0.0" width="2880" height="1597"/>
+                        <connections>
+                            <outlet property="delegate" destination="9Lp-tc-caB" id="bmR-11-Y7Q"/>
+                        </connections>
+                    </window>
+                    <connections>
+                        <segue destination="pmR-3f-6oX" kind="relationship" relationship="window.shadowedContentViewController" id="h7Z-Xp-yTf"/>
+                    </connections>
+                </windowController>
+                <customObject id="Ng8-0s-bKx" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-334" y="80"/>
+        </scene>
+        <!--Tab View Controller-->
+        <scene sceneID="N2H-4j-Oo4">
+            <objects>
+                <tabViewController id="pmR-3f-6oX" sceneMemberID="viewController">
+                    <tabViewItems>
+                        <tabViewItem identifier="" id="gLX-v7-EZd"/>
+                        <tabViewItem identifier="" id="TDt-cp-1CA"/>
+                    </tabViewItems>
+                    <tabView key="tabView" type="noTabsNoBorder" id="oXS-m8-OdK">
+                        <rect key="frame" x="0.0" y="0.0" width="450" height="300"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <font key="font" metaFont="message"/>
+                        <connections>
+                            <outlet property="delegate" destination="pmR-3f-6oX" id="hM2-Sz-35K"/>
+                        </connections>
+                    </tabView>
+                    <connections>
+                        <outlet property="tabView" destination="oXS-m8-OdK" id="2dZ-KF-ZmS"/>
+                        <segue destination="8wT-SI-3aj" kind="relationship" relationship="tabItems" id="xNh-Hw-Avy"/>
+                        <segue destination="Med-2Y-oge" kind="relationship" relationship="tabItems" id="Il6-Vt-w4w"/>
+                    </connections>
+                </tabViewController>
+                <customObject id="LX4-qP-lDh" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-69" y="686"/>
+        </scene>
+        <!--Connections-->
+        <scene sceneID="bnM-Q9-i1k">
+            <objects>
+                <viewController title="Connections" id="8wT-SI-3aj" customClass="CustomizeConnectionsUICode" customModule="TDDebug" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" id="tGi-q4-yEq">
+                        <rect key="frame" x="0.0" y="0.0" width="450" height="300"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <subviews>
+                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="8Yb-5q-xcQ">
+                                <rect key="frame" x="18" y="263" width="128" height="17"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <textFieldCell key="cell" lineBreakMode="clipping" title="Connection Settings" id="LAH-Ve-ujV">
+                                    <font key="font" usesAppearanceFont="YES"/>
+                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                </textFieldCell>
+                            </textField>
+                            <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="haB-AV-xPz">
+                                <rect key="frame" x="18" y="226" width="295" height="18"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                <buttonCell key="cell" type="check" title="Always accept incoming connection requests" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="WT9-AM-EXt">
+                                    <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                                    <font key="font" metaFont="system"/>
+                                </buttonCell>
+                            </button>
+                            <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="gKv-HL-EVz">
+                                <rect key="frame" x="190" y="13" width="72" height="32"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                <buttonCell key="cell" type="push" title="Done" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="hfR-PH-QmO">
+                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                    <font key="font" metaFont="system"/>
+                                </buttonCell>
+                                <connections>
+                                    <action selector="HandleDoneButton:" target="8wT-SI-3aj" id="TLf-Hb-DWf"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                    </view>
+                </viewController>
+                <customObject id="B0i-aO-HZk" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-340" y="1193"/>
+        </scene>
+        <!--Colors/Fonts-->
+        <scene sceneID="DaK-Yd-Yg9">
+            <objects>
+                <viewController title="Colors/Fonts" id="Med-2Y-oge" customClass="CustomizeColorsFontsUICode" customModule="TDDebug" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" id="1Ua-ms-CFY">
+                        <rect key="frame" x="0.0" y="0.0" width="450" height="300"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <subviews>
+                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="y1C-TZ-y4m">
+                                <rect key="frame" x="18" y="263" width="107" height="17"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <textFieldCell key="cell" lineBreakMode="clipping" title="Colors and Fonts" id="Yik-26-rjK">
+                                    <font key="font" usesAppearanceFont="YES"/>
+                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                </textFieldCell>
+                            </textField>
+                            <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="TUG-HH-A0T">
+                                <rect key="frame" x="189" y="13" width="72" height="32"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                <buttonCell key="cell" type="push" title="Done" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="Rvl-BY-Ybu">
+                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                    <font key="font" metaFont="system"/>
+                                </buttonCell>
+                                <connections>
+                                    <action selector="HandleDoneButton:" target="Med-2Y-oge" id="wzh-6Z-ps3"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                    </view>
+                </viewController>
+                <customObject id="pZf-mQ-nsf" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="290" y="1193"/>
+        </scene>
+    </scenes>
+</document>
