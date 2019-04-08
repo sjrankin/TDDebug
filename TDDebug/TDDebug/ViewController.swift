@@ -68,6 +68,7 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
     
     func ShowInstanceVersion()
     {
+        ClearVersionList()
         AddVersionData(Order: 0, Name: "Program", Value: Versioning.ApplicationName)
         AddVersionData(Order: 1, Name: "Version", Value: Versioning.MakeVersionString(IncludeVersionSuffix: true, IncludeVersionPrefix: false))
         AddVersionData(Order: 2, Name: "Build", Value: "\(Versioning.Build)")
@@ -75,6 +76,40 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
         AddVersionData(Order: 4, Name: "Build ID", Value: Versioning.BuildID)
         AddVersionData(Order: 5, Name: "Copyright", Value: Versioning.CopyrightText())
         AddVersionData(Order: 6, Name: "Program ID", Value: Versioning.ProgramID)
+    }
+    
+    func ShowClientVersion(ProgramName: String? = nil, Version: String? = nil, Build: String? = nil, Built: String? = nil,
+                           BuildID: String? = nil, Copyright: String? = nil, ProgramID: String? = nil)
+    {
+        ClearVersionList()
+        if let ProgramName = ProgramName
+        {
+            AddVersionData(Order: 0, Name: "Program", Value: ProgramName)
+        }
+        if let Version = Version
+        {
+            AddVersionData(Order: 1, Name: "Version", Value: Version)
+        }
+        if let Build = Build
+        {
+            AddVersionData(Order: 2, Name: "Build", Value: Build)
+        }
+        if let Built = Built
+        {
+            AddVersionData(Order: 3, Name: "Built", Value: Built)
+        }
+        if let BuildID = BuildID
+        {
+            AddVersionData(Order: 4, Name: "Build ID", Value: BuildID)
+        }
+        if let Copyright = Copyright
+        {
+            AddVersionData(Order: 5, Name: "Copyright", Value: Copyright)
+        }
+        if let ProgramID = ProgramID
+        {
+            AddVersionData(Order: 6, Name: "Program ID", Value: ProgramID)
+        }
     }
     
     var IdiotLights = [String: (NSView, NSTextField)]()
@@ -309,15 +344,21 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
     
     func ClearVersionList()
     {
-        VersionKVP.removeAll()
-        VersionTable.reloadData()
+        OperationQueue.main.addOperation
+            {
+                self.VersionKVP.removeAll()
+                self.VersionTable.reloadData()
+        }
     }
     
     func AddVersionData(Order: Int, Name: String, Value: String)
     {
-        VersionKVP.append((Order, Name, Value))
-        VersionKVP.sort{$0.0 < $1.0}
-        VersionTable.reloadData()
+        OperationQueue.main.addOperation
+            {
+                self.VersionKVP.append((Order, Name, Value))
+                self.VersionKVP.sort{$0.0 < $1.0}
+                self.VersionTable.reloadData()
+        }
     }
     
     var VersionKVP = [(Int, String, String)]()
@@ -570,16 +611,74 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
         }
     }
     
+    func HandleAcceptDenyConnection(DoAccept: Bool, To Peer: MCPeerID)
+    {
+        OperationQueue.main.addOperation
+            {
+            var ReturnMe = HandShakeCommands.ConnectionGranted
+            var PostConnect1 = ""
+            var PostConnect2 = ""
+            var ReturnState = ""
+            if DoAccept
+            {
+                self._ConnectedClient = Peer
+                let Item = LogItem(Text: "\(Peer.displayName) is debug client.")
+                Item.HostName = "TDDebug"
+                self.AddLogMessage(Item: Item)
+                ReturnState = MessageHelper.MakeHandShake(ReturnMe)
+                PostConnect1 = MessageHelper.MakeSendVersionInfo()
+                PostConnect2 = MessageHelper.MakeRequestConnectionHeartbeat(From: self.MPMgr.SelfPeer)
+            }
+            else
+            {
+                let Item = LogItem(Text: "User denied connection request from \(Peer.displayName)")
+                Item.HostName = "TDDebug"
+                self.AddLogMessage(Item: Item)
+                ReturnMe = State.TransitionTo(NewState: .Disconnected)
+            }
+            if !ReturnState.isEmpty
+            {
+                self.MPMgr!.SendPreformatted(Message: ReturnState, To: Peer)
+                if !PostConnect1.isEmpty
+                {
+                    self.MPMgr.SendPreformatted(Message: PostConnect1, To: Peer)
+                }
+                if !PostConnect2.isEmpty
+                {
+                    self.MPMgr.SendPreformatted(Message: PostConnect2, To: Peer)
+                }
+            }
+            else
+            {
+                print("Empty handshake return state.")
+            }
+        }
+    }
+    
+    func AcceptClientConnection(From Peer: MCPeerID)
+    {
+        let Storyboard = NSStoryboard(name: "ConfirmConnection", bundle: nil)
+        let ACC = Storyboard.instantiateController(withIdentifier: "ConnectionConfirmWindow") as? NSWindowController
+        let ConfirmWindow = ACC?.window
+        let ConfirmView = ConfirmWindow?.contentViewController as? ConfirmConnectionUICode
+        ConfirmView!.Peer = Peer
+        self.view.window?.beginSheet(ConfirmWindow!,
+                                     completionHandler:
+            {
+                (response) in
+                self.HandleAcceptDenyConnection(DoAccept: response.rawValue == 1000, To: Peer)
+        })
+    }
+    
     func HandleHandShakeCommand(_ Raw: String, Peer: MCPeerID)
     {
         let Command = MessageHelper.DecodeHandShakeCommand(Raw)
-        //print("Handshake command: \(Command)")
+        print("Handshake command: \(MessageHelper.MakeSymbolic(Command: Raw))")
         var PostConnect1 = ""
         var PostConnect2 = ""
         OperationQueue.main.addOperation
             {
-                let ReturnMe = State.TransitionTo(NewState: Command)
-                //print("State result=\(ReturnMe), State.CurrentState=\(State.CurrentState)")
+                var ReturnMe = State.TransitionTo(NewState: Command)
                 var ReturnState = ""
                 switch ReturnMe
                 {
@@ -587,13 +686,14 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
                     break
                     
                 case .ConnectionGranted:
-                    self._ConnectedClient = Peer
-                    let Item = LogItem(Text: "\(Peer.displayName) is debug client.")
+                    //Whether we accept or deny the connection request depends on the user's response to a dialog called
+                    //in AcceptClientConnection. Because of that, we have no commands to send to the client at this point
+                    //because we don't know what the user will do.
+                    self.AcceptClientConnection(From: Peer)
+                    let Item = LogItem(Text: "Waiting for user to respond: \(ReturnMe)")
                     Item.HostName = "TDDebug"
                     self.AddLogMessage(Item: Item)
-                    ReturnState = MessageHelper.MakeHandShake(ReturnMe)
-                    PostConnect1 = MessageHelper.MakeSendVersionInfo()
-                    PostConnect2 = MessageHelper.MakeRequestConnectionHeartbeat(From: self.MPMgr.SelfPeer)
+                    return
                     
                 case .ConnectionRefused:
                     let Item = LogItem(Text: "Connection refused by \(Peer.displayName)")
@@ -601,8 +701,12 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
                     ReturnState = MessageHelper.MakeHandShake(ReturnMe)
                     
                 case .Disconnected:
+                    let Item = LogItem(Text: "\(self._ConnectedClient!.displayName) disconnected.")
+                    Item.HostName = "TDDebug"
+                    self.AddLogMessage(Item: Item)
                     self._ConnectedClient = nil
                     ReturnState = MessageHelper.MakeHandShake(ReturnMe)
+                    self.ShowInstanceVersion()
                     
                 case .RequestConnection:
                     break
@@ -660,10 +764,9 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
     
     func HandlePushedVersionInformation(_ Raw: String)
     {
+        print("Handling pushed version: \(MessageHelper.MakeSymbolic(Command: Raw))")
         let (Name, OS, Version, Build, BuildTimeStamp, Copyright, BuildID, ProgramID) = MessageHelper.DecodeVersionInfo(Raw)
-        print("Client name=\(Name), \(ProgramID), Intended OS: \(OS)")
-        print("Client version data = \(Version), Build: \(Build), Build time-stamp: \(BuildTimeStamp)")
-        print("Copyright: \(Copyright)")
+        ShowClientVersion(ProgramName: Name, Version: Version, Build: Build, Built: BuildTimeStamp, BuildID: BuildID, Copyright: Copyright, ProgramID: ProgramID)
     }
     
     func ExecuteClientCommand(_ Command: ClientCommand)
@@ -954,15 +1057,15 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
     
     func InitializeKVPTable()
     {
-//        KVPTable.delegate = self
-//        KVPTable.dataSource = self
+        //        KVPTable.delegate = self
+        //        KVPTable.dataSource = self
         KVPTable.reloadData()
     }
     
     func InitializeLogTable()
     {
-//        LogTable.delegate = self
-//        LogTable.dataSource = self
+        //        LogTable.delegate = self
+        //        LogTable.dataSource = self
         LogTable.reloadData()
         LogTable.doubleAction = #selector(HandleLogDoubleClick(_:))
     }
@@ -993,6 +1096,8 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
     }
     
     var ItemViewerController: NSWindowController? = nil
+    
+    // MARK: Table-handling functions.
     
     func LogCountWithFilter() -> Int
     {
@@ -1048,6 +1153,7 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
         case VersionTableTag:
             var CellContents = ""
             var CellIdentifier = ""
+            var ValueColor = OSColor.black
             if tableColumn == tableView.tableColumns[0]
             {
                 CellIdentifier = "NameColumn"
@@ -1057,9 +1163,14 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
             {
                 CellIdentifier = "ValueColumn"
                 CellContents = VersionKVP[row].2
+                if VersionKVP[row].2 == "TDDebug"
+                {
+                    ValueColor = OSColor.blue
+                }
             }
             let Cell = tableView.makeView(withIdentifier: NSUserInterfaceItemIdentifier(rawValue: CellIdentifier), owner: self) as? NSTableCellView
             Cell?.textField?.stringValue = CellContents
+            Cell?.textField?.textColor = ValueColor
             return Cell
             
         case LogTableTag:
@@ -1222,12 +1333,14 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
     
     func DoCustomize()
     {
-        
+        let Storyboard = NSStoryboard(name: "CustomizeUI", bundle: nil)
+        let CustomizeController = Storyboard.instantiateController(withIdentifier: "CustomizeWindow") as? NSWindowController
+        CustomizeController?.showWindow(nil)
     }
     
     @IBAction func RunCustomization(_ sender: Any)
     {
-        
+        DoCustomize()
     }
     
     func DoSelectAFont()
