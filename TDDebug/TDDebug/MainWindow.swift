@@ -66,6 +66,8 @@ class MainWindow: NSWindowController, NSToolbarItemValidation
     @IBOutlet weak var CustomizeButton: NSToolbarItem!
     @IBAction func HandleCustomizeButtonPress(_ sender: Any)
     {
+        let VC = window!.contentViewController as? ViewController
+        VC?.DoCustomize()
     }
     
     @IBOutlet weak var FilterButton: NSToolbarItem!
