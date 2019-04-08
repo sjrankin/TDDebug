@@ -81,18 +81,36 @@ class ItemViewerUICode: NSViewController, NSTableViewDelegate, NSTableViewDataSo
     
     func HandleFontButton(_ sender: Any)
     {
-        print("Fonts not yet enabled.")
+        RunSelectorWindow(Title: "Select control to apply new font to:")
     }
     
     func HandlePrintButton(_ sender: Any)
     {
-        print("Printing not yet enabled.")
+        RunSelectorWindow(Title: "Select control whose contents will be printed:")
     }
     
     func HandleColorButton(_ sender: Any)
     {
-        print("Colors not yet enabled - everything is black and white.")
+        RunSelectorWindow(Title: "Select control to apply new color to:")
     }
+    
+    func RunSelectorWindow(Title: String)
+    {
+        let Storyboard = NSStoryboard(name: "ItemViewer", bundle: nil)
+        let IVC = Storyboard.instantiateController(withIdentifier: "SelectorWindow") as? SelectorWindow
+        let SelectorWindow = IVC?.window
+        let SelectorView = SelectorWindow?.contentViewController as? SelectorWindowUI
+
+        SelectorView!.MainMessage = Title
+        self.view.window?.beginSheet(SelectorWindow!,
+                                     completionHandler:
+            {
+                (response)  in
+                print("\(response)")
+        })
+    }
+    
+    var ModalWindow: SelectorWindow? = nil
     
     @IBOutlet weak var ItemHeaderTable: NSTableView!
     @IBOutlet weak var MessageContents: NSTextField!
