@@ -1156,50 +1156,85 @@ class MessageHelper
     /// Command definition map for message commands.
     private static let MessageTypeIndicators: [MessageTypes: String] =
         [
-            MessageTypes.TextMessage: "a8d8c35e-f638-47fe-8819-bd04d59c6989",
-            MessageTypes.CommandMessage: "a11cac68-6298-4d21-bb84-8746ee544a7b",
-            MessageTypes.ControlIdiotLight: "76d9f217-d2b8-4b65-93b4-182e4b38eab2",
-            MessageTypes.EchoMessage: "9a904bd0-117b-4548-b31f-da2b4c3807dd",
-            MessageTypes.Acknowledge: "73783e04-cad4-42a4-a3b3-449efcabf592",
-            MessageTypes.Heartbeat: "5d8a38fd-878a-458f-aa80-62d810e520c1",
-            MessageTypes.KVPData: "4c2805b8-d5ad-4c68-a5f8-1f554a90671a",
-            MessageTypes.EchoReturn: "970bac64-f399-499d-8db6-c65e508ae40d",
-            MessageTypes.SpecialCommand: "e83a5588-b285-49ee-b2fe-95f803f073b7",
-            MessageTypes.HandShake: "52c4be7a-b84f-4812-880e-98b4c67543fb",
-            MessageTypes.RequestCommandCount: "7eea42d3-7cda-4c4d-bb06-39b52f2cbac9",
-            MessageTypes.GetCommand: "ec0d895a-2648-4db8-8d67-20be849edb32",
-            MessageTypes.CommandByIndex: "37b02db4-f425-48a8-b6e7-7bbced7a0990",
-            MessageTypes.SendCommandToClient: "9cfc1d01-f1f0-4d26-bb38-300ff3df0c92",
-            MessageTypes.ClientCommandResult: "79726762-3eeb-450f-8c29-4701857a5073",
-            MessageTypes.GetAllClientCommands: "582e3f52-a9ad-4ef3-8842-b8334a547500",
-            MessageTypes.AllClientCommandsReturned: "6b3c2e18-879d-488e-b333-2d43eacb9c71",
-            MessageTypes.IDEncapsulatedCommand: "c0e8487c-840a-4799-9d9d-906adb96f0a3",
-            MessageTypes.PushVersionInformation: "f6a18cea-5806-4e7b-853a-58e96224cd8d",
-            MessageTypes.ConnectionHeartbeat: "4bdaa255-16b8-43a6-b263-689c7beb439b",
-            MessageTypes.RequestConnectionHeartbeat: "e8b711c9-8672-4ffb-a9b0-230630bd9d7c",
-            MessageTypes.Unknown: "dfc5b2d5-521b-46a8-b459-a4947089312c",
+            MessageTypes.TextMessage: MessageTypes.TextMessage.rawValue,
+            MessageTypes.CommandMessage: MessageTypes.CommandMessage.rawValue,
+            MessageTypes.ControlIdiotLight: MessageTypes.ControlIdiotLight.rawValue,
+            MessageTypes.EchoMessage: MessageTypes.EchoMessage.rawValue,
+            MessageTypes.Acknowledge: MessageTypes.Acknowledge.rawValue,
+            MessageTypes.Heartbeat: MessageTypes.Heartbeat.rawValue,
+            MessageTypes.KVPData: MessageTypes.KVPData.rawValue,
+            MessageTypes.EchoReturn: MessageTypes.EchoReturn.rawValue,
+            MessageTypes.SpecialCommand: MessageTypes.SpecialCommand.rawValue,
+            MessageTypes.HandShake: MessageTypes.HandShake.rawValue,
+            MessageTypes.RequestCommandCount: MessageTypes.RequestCommandCount.rawValue,
+            MessageTypes.GetCommand: MessageTypes.GetCommand.rawValue,
+            MessageTypes.CommandByIndex: MessageTypes.CommandByIndex.rawValue,
+            MessageTypes.SendCommandToClient: MessageTypes.SendCommandToClient.rawValue,
+            MessageTypes.ClientCommandResult: MessageTypes.ClientCommandResult.rawValue,
+            MessageTypes.GetAllClientCommands: MessageTypes.GetAllClientCommands.rawValue,
+            MessageTypes.AllClientCommandsReturned: MessageTypes.AllClientCommandsReturned.rawValue,
+            MessageTypes.IDEncapsulatedCommand: MessageTypes.IDEncapsulatedCommand.rawValue,
+            MessageTypes.PushVersionInformation: MessageTypes.PushVersionInformation.rawValue,
+            MessageTypes.ConnectionHeartbeat: MessageTypes.ConnectionHeartbeat.rawValue,
+            MessageTypes.RequestConnectionHeartbeat: MessageTypes.RequestConnectionHeartbeat.rawValue,
+            MessageTypes.Unknown: MessageTypes.Unknown.rawValue,
     ]
     
     /// Command definition map for special commands.
     private static let SpecialCommmandIndicators: [SpecialCommands: String] =
         [
-            .ClearKVPList: "a1a4974c-ed8f-41bc-bdbf-49570f67cc03",
-            .ClearLogList: "283c06c3-dca6-4044-a8ba-b034efd51594",
-            .ClearIdiotLights: "1600bf5d-ffa7-474b-ab55-c8298f056969",
-            .Unknown: "bbfb4205-d9f6-49cf-bd96-630641d4fb16",
+            .ClearKVPList: SpecialCommands.ClearKVPList.rawValue,
+            .ClearLogList: SpecialCommands.ClearLogList.rawValue,
+            .ClearIdiotLights: SpecialCommands.ClearIdiotLights.rawValue,
+            .Unknown: SpecialCommands.Unknown.rawValue,
     ]
     
     /// Command definition map for handshake commands.
     private static let HandShakeIndicators: [HandShakeCommands: String] =
         [
-            .RequestConnection: "6dc88b50-15c0-41e0-aa6f-c1c33d93303b",
-            .ConnectionGranted: "fceee865-ccdc-4c6b-8944-3a959a64d894",
-            .ConnectionRefused: "b32f179c-c1b4-40c3-8bb0-ad84a985bad4",
-            .ConnectionClose: "70b6f26c-92fc-423f-9ea4-418d51cc0528",
-            .Disconnected: "78dfa276-48f3-47bc-88bc-4f46bd9f74ce",
-            .DropAsClient: "dc430ff8-c1a3-4d01-8a0a-67997b59da31",
-            .Unknown: "1f9e85e3-446b-4c93-b93d-ea8d6955f4bb",
+            .RequestConnection: HandShakeCommands.RequestConnection.rawValue,
+            .ConnectionGranted: HandShakeCommands.ConnectionGranted.rawValue,
+            .ConnectionRefused: HandShakeCommands.ConnectionRefused.rawValue,
+            .ConnectionClose: HandShakeCommands.ConnectionClose.rawValue,
+            .Disconnected: HandShakeCommands.Disconnected.rawValue,
+            .DropAsClient: HandShakeCommands.DropAsClient.rawValue,
+            .Unknown: HandShakeCommands.Unknown.rawValue,
     ]
+    
+    /// Given a formatted command string, return it in symbolic form, meaning, UUIDs are converted to human-
+    /// readable strings.
+    ///
+    /// - Note: Do **not** send the returned result to a peer as it is not decodable.
+    ///
+    /// - Parameter Raw: Raw, formatted command string.
+    /// - Returns: Command string with symbols, not values. The return value is intended only for display use.
+    public static func MakeSymbolic(Command: String) -> String
+    {
+        if Command.isEmpty
+        {
+            return ""
+        }
+        var ReturnMe = Command
+        for Case in SpecialCommands.allCases
+        {
+            let Raw = Case.rawValue
+            let Nice = "\(Case)"
+            ReturnMe = ReturnMe.replacingOccurrences(of: Raw, with: Nice)
+        }
+        for Case in HandShakeCommands.allCases
+        {
+            let Raw = Case.rawValue
+            let Nice = "\(Case)"
+            ReturnMe = ReturnMe.replacingOccurrences(of: Raw, with: Nice)
+        }
+        for Case in MessageTypes.allCases
+        {
+            let Raw = Case.rawValue
+            let Nice = "\(Case)"
+            ReturnMe = ReturnMe.replacingOccurrences(of: Raw, with: Nice)
+        }
+        return ReturnMe
+    }
 }
 
 /// Special UI-infrastructure commands.
@@ -1208,12 +1243,12 @@ class MessageHelper
 /// - ClearLogList: Clear the contents of the log item list.
 /// - ClearIdiotLights: Reset all idiot lights (except for A1, which is reserved for the local instance).
 /// - Unknown: Unknown special command - if explicitly used, ignored.
-enum SpecialCommands: Int
+enum SpecialCommands: String, CaseIterable
 {
-    case ClearKVPList = 0
-    case ClearLogList = 1
-    case ClearIdiotLights = 2
-    case Unknown = 10000
+    case ClearKVPList = "a1a4974c-ed8f-41bc-bdbf-49570f67cc03"
+    case ClearLogList = "283c06c3-dca6-4044-a8ba-b034efd51594"
+    case ClearIdiotLights = "1600bf5d-ffa7-474b-ab55-c8298f056969"
+    case Unknown = "bbfb4205-d9f6-49cf-bd96-630641d4fb16"
 }
 
 /// Sub-commands related to handshakes between two peers when netogiating who is the server and who is the client.
@@ -1225,15 +1260,15 @@ enum SpecialCommands: Int
 /// - Disconnected: Sent by the server to the client when it closes the connection.
 /// - DropAsClient: Sent by the server asynchronously when it closes the connection for any reason.
 /// - Unknown: Unknown command - if explicitly used, ignored.
-enum HandShakeCommands: Int
+enum HandShakeCommands: String, CaseIterable
 {
-    case RequestConnection = 0
-    case ConnectionGranted = 1
-    case ConnectionRefused = 2
-    case ConnectionClose = 3
-    case Disconnected = 4
-    case DropAsClient = 5
-    case Unknown = 10000
+    case RequestConnection = "6dc88b50-15c0-41e0-aa6f-c1c33d93303b"
+    case ConnectionGranted = "fceee865-ccdc-4c6b-8944-3a959a64d894"
+    case ConnectionRefused = "b32f179c-c1b4-40c3-8bb0-ad84a985bad4"
+    case ConnectionClose = "70b6f26c-92fc-423f-9ea4-418d51cc0528"
+    case Disconnected = "78dfa276-48f3-47bc-88bc-4f46bd9f74ce"
+    case DropAsClient = "dc430ff8-c1a3-4d01-8a0a-67997b59da31"
+    case Unknown = "1f9e85e3-446b-4c93-b93d-ea8d6955f4bb"
 }
 
 /// Types of messages that may be sent or received from other peers.
@@ -1260,30 +1295,30 @@ enum HandShakeCommands: Int
 /// - ConnectionHeartbeat: Connection heartbeat command - used to monitor connection status.
 /// - RequestConnectionHeartbeat: Request a heartbeat command to be sent from the selected peer.
 /// - Unknown: Unknown command - if explicitly used, it will be ignored.
-enum MessageTypes: Int
+enum MessageTypes: String, CaseIterable
 {
-    case TextMessage = 0
-    case CommandMessage = 1
-    case ControlIdiotLight = 2
-    case EchoMessage = 3
-    case Acknowledge = 4
-    case Heartbeat = 5
-    case KVPData = 6
-    case EchoReturn = 7
-    case SpecialCommand = 8
-    case HandShake = 9
-    case RequestCommandCount = 10
-    case GetCommand = 11
-    case CommandByIndex = 12
-    case SendCommandToClient = 13
-    case ClientCommandResult = 14
-    case GetAllClientCommands = 15
-    case AllClientCommandsReturned = 16
-    case IDEncapsulatedCommand = 17
-    case PushVersionInformation = 18
-    case ConnectionHeartbeat = 19
-    case RequestConnectionHeartbeat = 20
-    case Unknown = 10000
+    case TextMessage = "a8d8c35e-f638-47fe-8819-bd04d59c6989"
+    case CommandMessage = "a11cac68-6298-4d21-bb84-8746ee544a7b"
+    case ControlIdiotLight = "76d9f217-d2b8-4b65-93b4-182e4b38eab2"
+    case EchoMessage = "9a904bd0-117b-4548-b31f-da2b4c3807dd"
+    case Acknowledge = "73783e04-cad4-42a4-a3b3-449efcabf592"
+    case Heartbeat = "5d8a38fd-878a-458f-aa80-62d810e520c1"
+    case KVPData = "4c2805b8-d5ad-4c68-a5f8-1f554a90671a"
+    case EchoReturn = "970bac64-f399-499d-8db6-c65e508ae40d"
+    case SpecialCommand = "e83a5588-b285-49ee-b2fe-95f803f073b7"
+    case HandShake = "52c4be7a-b84f-4812-880e-98b4c67543fb"
+    case RequestCommandCount = "7eea42d3-7cda-4c4d-bb06-39b52f2cbac9"
+    case GetCommand = "ec0d895a-2648-4db8-8d67-20be849edb32"
+    case CommandByIndex = "37b02db4-f425-48a8-b6e7-7bbced7a0990"
+    case SendCommandToClient = "9cfc1d01-f1f0-4d26-bb38-300ff3df0c92"
+    case ClientCommandResult = "79726762-3eeb-450f-8c29-4701857a5073"
+    case GetAllClientCommands = "582e3f52-a9ad-4ef3-8842-b8334a547500"
+    case AllClientCommandsReturned = "6b3c2e18-879d-488e-b333-2d43eacb9c71"
+    case IDEncapsulatedCommand = "c0e8487c-840a-4799-9d9d-906adb96f0a3"
+    case PushVersionInformation = "f6a18cea-5806-4e7b-853a-58e96224cd8d"
+    case ConnectionHeartbeat = "4bdaa255-16b8-43a6-b263-689c7beb439b"
+    case RequestConnectionHeartbeat = "e8b711c9-8672-4ffb-a9b0-230630bd9d7c"
+    case Unknown = "dfc5b2d5-521b-46a8-b459-a4947089312c"
 }
 
 /// Describes states of UI features.
