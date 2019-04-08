@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="14490.70"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--Window Controller-->
+        <scene sceneID="p3K-fD-YaR">
+            <objects>
+                <windowController storyboardIdentifier="CustomizeWindow" id="qGx-JI-d0B" sceneMemberID="viewController">
+                    <window key="window" title="TDDebug Settings" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" frameAutosaveName="" animationBehavior="default" id="YNJ-5e-XQX">
+                        <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
+                        <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
+                        <rect key="contentRect" x="490" y="534" width="480" height="270"/>
+                        <rect key="screenRect" x="0.0" y="0.0" width="2880" height="1597"/>
+                        <connections>
+                            <outlet property="delegate" destination="qGx-JI-d0B" id="ifv-jV-tDp"/>
+                        </connections>
+                    </window>
+                    <connections>
+                        <segue destination="OoX-dO-4Po" kind="relationship" relationship="window.shadowedContentViewController" id="QZz-aj-5ra"/>
+                    </connections>
+                </windowController>
+                <customObject id="D1d-Da-jIr" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-197" y="105"/>
+        </scene>
+        <!--Main CustomizeUI Code-->
+        <scene sceneID="LId-25-7J1">
+            <objects>
+                <viewController id="OoX-dO-4Po" customClass="MainCustomizeUICode" customModule="TDDebug" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" id="9J7-Mh-2Ht">
+                        <rect key="frame" x="0.0" y="0.0" width="654" height="403"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <subviews>
+                            <tabView translatesAutoresizingMaskIntoConstraints="NO" id="KgG-pl-edo">
+                                <rect key="frame" x="13" y="40" width="628" height="349"/>
+                                <font key="font" metaFont="system"/>
+                                <tabViewItems>
+                                    <tabViewItem label="Connections" identifier="" id="zDd-g7-RH5">
+                                        <view key="view" id="EWv-cR-KY7">
+                                            <rect key="frame" x="10" y="33" width="608" height="303"/>
+                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                            <subviews>
+                                                <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="a5B-o6-CpG">
+                                                    <rect key="frame" x="15" y="284" width="335" height="18"/>
+                                                    <buttonCell key="cell" type="check" title="Automatically accept incoming connection requests" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="9ud-Ly-7aO">
+                                                        <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                                                        <font key="font" metaFont="system"/>
+                                                    </buttonCell>
+                                                    <connections>
+                                                        <action selector="HandleAutoAcceptIncomingCheckChanged:" target="OoX-dO-4Po" id="nyM-fY-xf4"/>
+                                                    </connections>
+                                                </button>
+                                                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="LGY-Ig-x4e">
+                                                    <rect key="frame" x="17" y="245" width="143" height="17"/>
+                                                    <textFieldCell key="cell" lineBreakMode="clipping" title="Auto accept delay time" id="SwE-4Z-Qnc">
+                                                        <font key="font" metaFont="system"/>
+                                                        <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                                        <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                                    </textFieldCell>
+                                                </textField>
+                                                <popUpButton verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="zG9-BV-54F">
+                                                    <rect key="frame" x="178" y="240" width="107" height="25"/>
+                                                    <popUpButtonCell key="cell" type="push" title="6 seconds" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" selectedItem="pgU-Uo-jYp" id="NpX-Vm-rWj">
+                                                        <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
+                                                        <font key="font" metaFont="menu"/>
+                                                        <menu key="menu" id="bXk-wp-UfD">
+                                                            <items>
+                                                                <menuItem title="1 second" id="Jb1-5F-JtY"/>
+                                                                <menuItem title="6 seconds" state="on" id="pgU-Uo-jYp"/>
+                                                                <menuItem title="10 seconds" id="cH8-9H-Se6"/>
+                                                            </items>
+                                                        </menu>
+                                                    </popUpButtonCell>
+                                                    <connections>
+                                                        <action selector="HandleAutoAcceptDelayPopupChanged:" target="OoX-dO-4Po" id="Rs5-Za-eK0"/>
+                                                    </connections>
+                                                </popUpButton>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="LGY-Ig-x4e" firstAttribute="baseline" secondItem="zG9-BV-54F" secondAttribute="baseline" id="BCm-kp-cLY"/>
+                                                <constraint firstItem="zG9-BV-54F" firstAttribute="top" secondItem="a5B-o6-CpG" secondAttribute="bottom" constant="22" id="Y6s-R1-7fh"/>
+                                                <constraint firstItem="a5B-o6-CpG" firstAttribute="top" secondItem="EWv-cR-KY7" secondAttribute="top" constant="3" id="eUF-Vm-TPP"/>
+                                                <constraint firstItem="zG9-BV-54F" firstAttribute="leading" secondItem="LGY-Ig-x4e" secondAttribute="trailing" constant="22" id="f27-yT-cTU"/>
+                                                <constraint firstItem="LGY-Ig-x4e" firstAttribute="leading" secondItem="EWv-cR-KY7" secondAttribute="leading" constant="19" id="nN1-TI-31V"/>
+                                                <constraint firstItem="a5B-o6-CpG" firstAttribute="leading" secondItem="EWv-cR-KY7" secondAttribute="leading" constant="17" id="w6t-6p-bND"/>
+                                            </constraints>
+                                        </view>
+                                    </tabViewItem>
+                                    <tabViewItem label="Visual" identifier="" id="GCd-6e-j9g">
+                                        <view key="view" id="3wI-VX-863">
+                                            <rect key="frame" x="10" y="33" width="608" height="303"/>
+                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                        </view>
+                                    </tabViewItem>
+                                </tabViewItems>
+                            </tabView>
+                            <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="oSC-qQ-VAm">
+                                <rect key="frame" x="291" y="2" width="72" height="32"/>
+                                <buttonCell key="cell" type="push" title="Done" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="wzG-tm-axK">
+                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                    <font key="font" metaFont="system"/>
+                                </buttonCell>
+                                <connections>
+                                    <action selector="HandeDonePressed:" target="OoX-dO-4Po" id="67x-jO-XmC"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <constraints>
+                            <constraint firstAttribute="bottom" secondItem="oSC-qQ-VAm" secondAttribute="bottom" constant="9" id="0sY-g2-xqP"/>
+                            <constraint firstItem="oSC-qQ-VAm" firstAttribute="top" secondItem="KgG-pl-edo" secondAttribute="bottom" constant="20" id="JzW-hT-gnW"/>
+                            <constraint firstItem="oSC-qQ-VAm" firstAttribute="centerX" secondItem="9J7-Mh-2Ht" secondAttribute="centerX" id="YHF-sf-Iqx"/>
+                            <constraint firstItem="KgG-pl-edo" firstAttribute="leading" secondItem="9J7-Mh-2Ht" secondAttribute="leading" constant="20" symbolic="YES" id="eLl-2D-ObJ"/>
+                            <constraint firstAttribute="trailing" secondItem="KgG-pl-edo" secondAttribute="trailing" constant="20" symbolic="YES" id="kDy-cz-KgE"/>
+                            <constraint firstItem="KgG-pl-edo" firstAttribute="top" secondItem="9J7-Mh-2Ht" secondAttribute="top" constant="20" id="uSK-gm-WTM"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="AutoAcceptDelayLabel" destination="LGY-Ig-x4e" id="fVV-5m-dV8"/>
+                        <outlet property="AutoAcceptDelayPopup" destination="zG9-BV-54F" id="w3W-uV-Ooq"/>
+                        <outlet property="AutoAcceptInComingCheck" destination="a5B-o6-CpG" id="AWu-pS-GO0"/>
+                    </connections>
+                </viewController>
+                <customObject id="dhe-EX-DOg" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="596" y="146.5"/>
+        </scene>
+    </scenes>
+</document>
