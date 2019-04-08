@@ -60,6 +60,11 @@
 		17508F37225AF5CF00BC9FC0 /* SelectorDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17508F36225AF5CF00BC9FC0 /* SelectorDelegate.swift */; };
 		17508F3D225B04B700BC9FC0 /* SelectorWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17508F3C225B04B700BC9FC0 /* SelectorWindow.swift */; };
 		17508F3F225B053800BC9FC0 /* SelectorWindowUI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17508F3E225B053800BC9FC0 /* SelectorWindowUI.swift */; };
+		17508F42225B213200BC9FC0 /* ConfirmConnection.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 17508F41225B213200BC9FC0 /* ConfirmConnection.storyboard */; };
+		17508F44225B224700BC9FC0 /* ConfirmConnectionUICode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17508F43225B224700BC9FC0 /* ConfirmConnectionUICode.swift */; };
+		17508F47225B47C300BC9FC0 /* CustomizeUI.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 17508F46225B47C300BC9FC0 /* CustomizeUI.storyboard */; };
+		17508F4B225B49C900BC9FC0 /* CustomizeConnectionsUICode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17508F4A225B49C900BC9FC0 /* CustomizeConnectionsUICode.swift */; };
+		17508F4D225B4A5B00BC9FC0 /* CustomizeColorsFontsUICode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17508F4C225B4A5B00BC9FC0 /* CustomizeColorsFontsUICode.swift */; };
 		1772A2FB2253705C006D0A16 /* OSColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1772A2FA2253705C006D0A16 /* OSColor.swift */; };
 		17B3EE8D2255CD35009988D3 /* SendToRemote.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 17B3EE8C2255CD35009988D3 /* SendToRemote.storyboard */; };
 		17B3EE8F2255CD40009988D3 /* SendToRemoteCode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17B3EE8E2255CD40009988D3 /* SendToRemoteCode.swift */; };
@@ -127,6 +132,11 @@
 		17508F36225AF5CF00BC9FC0 /* SelectorDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectorDelegate.swift; sourceTree = "<group>"; };
 		17508F3C225B04B700BC9FC0 /* SelectorWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectorWindow.swift; sourceTree = "<group>"; };
 		17508F3E225B053800BC9FC0 /* SelectorWindowUI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectorWindowUI.swift; sourceTree = "<group>"; };
+		17508F41225B213200BC9FC0 /* ConfirmConnection.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = ConfirmConnection.storyboard; sourceTree = "<group>"; };
+		17508F43225B224700BC9FC0 /* ConfirmConnectionUICode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfirmConnectionUICode.swift; sourceTree = "<group>"; };
+		17508F46225B47C300BC9FC0 /* CustomizeUI.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = CustomizeUI.storyboard; sourceTree = "<group>"; };
+		17508F4A225B49C900BC9FC0 /* CustomizeConnectionsUICode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomizeConnectionsUICode.swift; sourceTree = "<group>"; };
+		17508F4C225B4A5B00BC9FC0 /* CustomizeColorsFontsUICode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomizeColorsFontsUICode.swift; sourceTree = "<group>"; };
 		1772A2FA2253705C006D0A16 /* OSColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OSColor.swift; sourceTree = "<group>"; };
 		17B3EE8C2255CD35009988D3 /* SendToRemote.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = SendToRemote.storyboard; sourceTree = "<group>"; };
 		17B3EE8E2255CD40009988D3 /* SendToRemoteCode.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SendToRemoteCode.swift; sourceTree = "<group>"; };
@@ -323,7 +333,9 @@
 				1743C1402251DF9C003FE6B2 /* TDDebug.entitlements */,
 				172E7F642259C9DC009E4768 /* ViewStates */,
 				1722346822572D0D00518601 /* Filter */,
+				17508F45225B47AB00BC9FC0 /* Customization */,
 				172E7F672259E5D9009E4768 /* ItemViewer */,
+				17508F40225B210700BC9FC0 /* ConfirmConnection */,
 				17B68CCB2254711800AEBE94 /* About */,
 				1704C5B222530FA800C49E91 /* SendToClient */,
 				172426D32252398900E34282 /* PeerViewer */,
@@ -359,6 +371,25 @@
 				17508F3E225B053800BC9FC0 /* SelectorWindowUI.swift */,
 			);
 			path = Selector;
+			sourceTree = "<group>";
+		};
+		17508F40225B210700BC9FC0 /* ConfirmConnection */ = {
+			isa = PBXGroup;
+			children = (
+				17508F41225B213200BC9FC0 /* ConfirmConnection.storyboard */,
+				17508F43225B224700BC9FC0 /* ConfirmConnectionUICode.swift */,
+			);
+			path = ConfirmConnection;
+			sourceTree = "<group>";
+		};
+		17508F45225B47AB00BC9FC0 /* Customization */ = {
+			isa = PBXGroup;
+			children = (
+				17508F46225B47C300BC9FC0 /* CustomizeUI.storyboard */,
+				17508F4A225B49C900BC9FC0 /* CustomizeConnectionsUICode.swift */,
+				17508F4C225B4A5B00BC9FC0 /* CustomizeColorsFontsUICode.swift */,
+			);
+			path = Customization;
 			sourceTree = "<group>";
 		};
 		1772A2F92253704A006D0A16 /* OSColor */ = {
@@ -492,7 +523,9 @@
 				172E7F692259E5FB009E4768 /* ItemViewer.storyboard in Resources */,
 				1743C13B2251DF9C003FE6B2 /* Assets.xcassets in Resources */,
 				17B68CCD2254713100AEBE94 /* AboutTDDebug.storyboard in Resources */,
+				17508F42225B213200BC9FC0 /* ConfirmConnection.storyboard in Resources */,
 				1743C13E2251DF9C003FE6B2 /* Main.storyboard in Resources */,
+				17508F47225B47C300BC9FC0 /* CustomizeUI.storyboard in Resources */,
 				1722346A22572D2C00518601 /* Filterer.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -576,6 +609,7 @@
 				173366A0225708BE00438E66 /* MessageHandler.swift in Sources */,
 				1746B53F22520A8D00E554EC /* StateProtocol.swift in Sources */,
 				1772A2FB2253705C006D0A16 /* OSColor.swift in Sources */,
+				17508F44225B224700BC9FC0 /* ConfirmConnectionUICode.swift in Sources */,
 				1743C1372251DF9B003FE6B2 /* AppDelegate.swift in Sources */,
 				1743C14E2252041B003FE6B2 /* OSColorExtensions.swift in Sources */,
 				17508F3F225B053800BC9FC0 /* SelectorWindowUI.swift in Sources */,
@@ -601,10 +635,12 @@
 				17B68CCF2254731C00AEBE94 /* AboutTDDebugCode.swift in Sources */,
 				172426D92252488F00E34282 /* PeerViewerUIWindow.swift in Sources */,
 				1746B54622520C9F00E554EC /* MainProtocol.swift in Sources */,
+				17508F4B225B49C900BC9FC0 /* CustomizeConnectionsUICode.swift in Sources */,
 				1746B53D22520A7000E554EC /* State.swift in Sources */,
 				17B68CD12254756400AEBE94 /* AboutTDDebugWindow.swift in Sources */,
 				17508F37225AF5CF00BC9FC0 /* SelectorDelegate.swift in Sources */,
 				172426D7225239C400E34282 /* PeerViewerUICode.swift in Sources */,
+				17508F4D225B4A5B00BC9FC0 /* CustomizeColorsFontsUICode.swift in Sources */,
 				1743C14A2252034E003FE6B2 /* MessageHelper.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
