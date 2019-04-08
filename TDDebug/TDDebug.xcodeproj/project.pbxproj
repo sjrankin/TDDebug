@@ -43,6 +43,7 @@
 		173366A222570A0400438E66 /* MessageHandlerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 173366A122570A0400438E66 /* MessageHandlerDelegate.swift */; };
 		173366A322570BD500438E66 /* MessageHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1733669F225708BE00438E66 /* MessageHandler.swift */; };
 		173366A422570BD800438E66 /* MessageHandlerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 173366A122570A0400438E66 /* MessageHandlerDelegate.swift */; };
+		1740CFBB225B70BD000FD536 /* CustomizationUI.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1740CFBA225B70BD000FD536 /* CustomizationUI.storyboard */; };
 		1743C1372251DF9B003FE6B2 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1743C1362251DF9B003FE6B2 /* AppDelegate.swift */; };
 		1743C1392251DF9B003FE6B2 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1743C1382251DF9B003FE6B2 /* ViewController.swift */; };
 		1743C13B2251DF9C003FE6B2 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1743C13A2251DF9C003FE6B2 /* Assets.xcassets */; };
@@ -62,9 +63,7 @@
 		17508F3F225B053800BC9FC0 /* SelectorWindowUI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17508F3E225B053800BC9FC0 /* SelectorWindowUI.swift */; };
 		17508F42225B213200BC9FC0 /* ConfirmConnection.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 17508F41225B213200BC9FC0 /* ConfirmConnection.storyboard */; };
 		17508F44225B224700BC9FC0 /* ConfirmConnectionUICode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17508F43225B224700BC9FC0 /* ConfirmConnectionUICode.swift */; };
-		17508F47225B47C300BC9FC0 /* CustomizeUI.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 17508F46225B47C300BC9FC0 /* CustomizeUI.storyboard */; };
-		17508F4B225B49C900BC9FC0 /* CustomizeConnectionsUICode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17508F4A225B49C900BC9FC0 /* CustomizeConnectionsUICode.swift */; };
-		17508F4D225B4A5B00BC9FC0 /* CustomizeColorsFontsUICode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17508F4C225B4A5B00BC9FC0 /* CustomizeColorsFontsUICode.swift */; };
+		17508F4F225B6DD100BC9FC0 /* MainCustomizeUICode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17508F4E225B6DD100BC9FC0 /* MainCustomizeUICode.swift */; };
 		1772A2FB2253705C006D0A16 /* OSColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1772A2FA2253705C006D0A16 /* OSColor.swift */; };
 		17B3EE8D2255CD35009988D3 /* SendToRemote.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 17B3EE8C2255CD35009988D3 /* SendToRemote.storyboard */; };
 		17B3EE8F2255CD40009988D3 /* SendToRemoteCode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17B3EE8E2255CD40009988D3 /* SendToRemoteCode.swift */; };
@@ -112,6 +111,7 @@
 		172E7F6C2259E739009E4768 /* ItemViewerUICode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemViewerUICode.swift; sourceTree = "<group>"; };
 		1733669F225708BE00438E66 /* MessageHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageHandler.swift; sourceTree = "<group>"; };
 		173366A122570A0400438E66 /* MessageHandlerDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageHandlerDelegate.swift; sourceTree = "<group>"; };
+		1740CFBA225B70BD000FD536 /* CustomizationUI.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = CustomizationUI.storyboard; sourceTree = "<group>"; };
 		1743C1332251DF9B003FE6B2 /* TDDebug.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TDDebug.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1743C1362251DF9B003FE6B2 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		1743C1382251DF9B003FE6B2 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -134,9 +134,7 @@
 		17508F3E225B053800BC9FC0 /* SelectorWindowUI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectorWindowUI.swift; sourceTree = "<group>"; };
 		17508F41225B213200BC9FC0 /* ConfirmConnection.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = ConfirmConnection.storyboard; sourceTree = "<group>"; };
 		17508F43225B224700BC9FC0 /* ConfirmConnectionUICode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfirmConnectionUICode.swift; sourceTree = "<group>"; };
-		17508F46225B47C300BC9FC0 /* CustomizeUI.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = CustomizeUI.storyboard; sourceTree = "<group>"; };
-		17508F4A225B49C900BC9FC0 /* CustomizeConnectionsUICode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomizeConnectionsUICode.swift; sourceTree = "<group>"; };
-		17508F4C225B4A5B00BC9FC0 /* CustomizeColorsFontsUICode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomizeColorsFontsUICode.swift; sourceTree = "<group>"; };
+		17508F4E225B6DD100BC9FC0 /* MainCustomizeUICode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainCustomizeUICode.swift; sourceTree = "<group>"; };
 		1772A2FA2253705C006D0A16 /* OSColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OSColor.swift; sourceTree = "<group>"; };
 		17B3EE8C2255CD35009988D3 /* SendToRemote.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = SendToRemote.storyboard; sourceTree = "<group>"; };
 		17B3EE8E2255CD40009988D3 /* SendToRemoteCode.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SendToRemoteCode.swift; sourceTree = "<group>"; };
@@ -385,9 +383,8 @@
 		17508F45225B47AB00BC9FC0 /* Customization */ = {
 			isa = PBXGroup;
 			children = (
-				17508F46225B47C300BC9FC0 /* CustomizeUI.storyboard */,
-				17508F4A225B49C900BC9FC0 /* CustomizeConnectionsUICode.swift */,
-				17508F4C225B4A5B00BC9FC0 /* CustomizeColorsFontsUICode.swift */,
+				17508F4E225B6DD100BC9FC0 /* MainCustomizeUICode.swift */,
+				1740CFBA225B70BD000FD536 /* CustomizationUI.storyboard */,
 			);
 			path = Customization;
 			sourceTree = "<group>";
@@ -523,9 +520,9 @@
 				172E7F692259E5FB009E4768 /* ItemViewer.storyboard in Resources */,
 				1743C13B2251DF9C003FE6B2 /* Assets.xcassets in Resources */,
 				17B68CCD2254713100AEBE94 /* AboutTDDebug.storyboard in Resources */,
+				1740CFBB225B70BD000FD536 /* CustomizationUI.storyboard in Resources */,
 				17508F42225B213200BC9FC0 /* ConfirmConnection.storyboard in Resources */,
 				1743C13E2251DF9C003FE6B2 /* Main.storyboard in Resources */,
-				17508F47225B47C300BC9FC0 /* CustomizeUI.storyboard in Resources */,
 				1722346A22572D2C00518601 /* Filterer.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -624,6 +621,7 @@
 				1743C1482252032F003FE6B2 /* MultiPeer.swift in Sources */,
 				1704C5B4225311D400C49E91 /* SendToClientUIWindow.swift in Sources */,
 				172E7F6D2259E739009E4768 /* ItemViewerUICode.swift in Sources */,
+				17508F4F225B6DD100BC9FC0 /* MainCustomizeUICode.swift in Sources */,
 				172E7F612259A757009E4768 /* ConnectionNotificationProtocol.swift in Sources */,
 				1722346C22572E3F00518601 /* FiltererWindow.swift in Sources */,
 				172E7F662259C9F5009E4768 /* ViewState.swift in Sources */,
@@ -635,12 +633,10 @@
 				17B68CCF2254731C00AEBE94 /* AboutTDDebugCode.swift in Sources */,
 				172426D92252488F00E34282 /* PeerViewerUIWindow.swift in Sources */,
 				1746B54622520C9F00E554EC /* MainProtocol.swift in Sources */,
-				17508F4B225B49C900BC9FC0 /* CustomizeConnectionsUICode.swift in Sources */,
 				1746B53D22520A7000E554EC /* State.swift in Sources */,
 				17B68CD12254756400AEBE94 /* AboutTDDebugWindow.swift in Sources */,
 				17508F37225AF5CF00BC9FC0 /* SelectorDelegate.swift in Sources */,
 				172426D7225239C400E34282 /* PeerViewerUICode.swift in Sources */,
-				17508F4D225B4A5B00BC9FC0 /* CustomizeColorsFontsUICode.swift in Sources */,
 				1743C14A2252034E003FE6B2 /* MessageHelper.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
