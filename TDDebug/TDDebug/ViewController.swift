@@ -1333,7 +1333,7 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
     
     func DoCustomize()
     {
-        let Storyboard = NSStoryboard(name: "CustomizeUI", bundle: nil)
+        let Storyboard = NSStoryboard(name: "CustomizationUI", bundle: nil)
         let CustomizeController = Storyboard.instantiateController(withIdentifier: "CustomizeWindow") as? NSWindowController
         CustomizeController?.showWindow(nil)
     }
