@@ -78,12 +78,12 @@
                                     <action selector="HandleClosePressed:" target="pBD-fb-K83" id="2A3-qw-pU2"/>
                                 </connections>
                             </button>
-                            <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" textCompletion="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ckr-on-rtB">
+                            <textField focusRingType="exterior" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" textCompletion="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ckr-on-rtB">
                                 <rect key="frame" x="18" y="49" width="769" height="232"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="232" id="2Ce-Ns-Kba"/>
                                 </constraints>
-                                <textFieldCell key="cell" selectable="YES" borderStyle="border" title="Multiline Label" allowsEditingTextAttributes="YES" id="1vI-JP-cGB">
+                                <textFieldCell key="cell" selectable="YES" borderStyle="border" focusRingType="exterior" title="Multiline Label" drawsBackground="YES" allowsEditingTextAttributes="YES" id="1vI-JP-cGB">
                                     <font key="font" metaFont="system" size="16"/>
                                     <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                     <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -218,6 +218,114 @@
                 <customObject id="VDd-ZK-JL0" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-245.5" y="791"/>
+        </scene>
+        <!--Window Controller-->
+        <scene sceneID="ofn-7U-qR0">
+            <objects>
+                <windowController storyboardIdentifier="SelectorWindow" id="kfO-1b-LJL" customClass="SelectorWindow" customModule="TDDebug" customModuleProvider="target" sceneMemberID="viewController">
+                    <window key="window" title="Window" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" frameAutosaveName="" animationBehavior="default" id="55k-r1-Tar">
+                        <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
+                        <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
+                        <rect key="contentRect" x="490" y="534" width="480" height="270"/>
+                        <rect key="screenRect" x="0.0" y="0.0" width="2880" height="1597"/>
+                        <connections>
+                            <outlet property="delegate" destination="kfO-1b-LJL" id="7eP-mk-bBQ"/>
+                        </connections>
+                    </window>
+                    <connections>
+                        <segue destination="HjK-dA-9TF" kind="relationship" relationship="window.shadowedContentViewController" id="Xg3-hk-zza"/>
+                    </connections>
+                </windowController>
+                <customObject id="MUW-yi-Zme" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="843" y="713"/>
+        </scene>
+        <!--Selector WindowUI-->
+        <scene sceneID="pwa-Yv-hUy">
+            <objects>
+                <viewController storyboardIdentifier="SelectorWindowUI" id="HjK-dA-9TF" customClass="SelectorWindowUI" customModule="TDDebug" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" id="zZ3-lY-cxd">
+                        <rect key="frame" x="0.0" y="0.0" width="502" height="161"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <subviews>
+                            <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="i5J-ia-38P">
+                                <rect key="frame" x="157" y="13" width="59" height="32"/>
+                                <buttonCell key="cell" type="push" title="OK" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="5BG-6Q-P1o">
+                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                    <font key="font" metaFont="system"/>
+                                    <string key="keyEquivalent" base64-UTF8="YES">
+DQ
+</string>
+                                </buttonCell>
+                                <connections>
+                                    <action selector="HandleOKPressed:" target="HjK-dA-9TF" id="u64-hp-bT7"/>
+                                </connections>
+                            </button>
+                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="XJh-D5-dvi">
+                                <rect key="frame" x="18" y="126" width="466" height="17"/>
+                                <textFieldCell key="cell" lineBreakMode="clipping" title="Select control:" id="BTN-gq-HKw">
+                                    <font key="font" metaFont="system"/>
+                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                </textFieldCell>
+                            </textField>
+                            <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="uRl-eG-wCq">
+                                <rect key="frame" x="38" y="92" width="97" height="18"/>
+                                <buttonCell key="cell" type="radio" title="Item Header" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="Qm2-uU-veP">
+                                    <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                                    <font key="font" metaFont="system"/>
+                                </buttonCell>
+                                <connections>
+                                    <action selector="RadioButtonAction:" target="HjK-dA-9TF" id="FLC-hR-qMT"/>
+                                </connections>
+                            </button>
+                            <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="tba-cw-ftH">
+                                <rect key="frame" x="38" y="60" width="107" height="18"/>
+                                <buttonCell key="cell" type="radio" title="Item Message" bezelStyle="regularSquare" imagePosition="left" alignment="left" state="on" inset="2" id="kFB-JT-ZDA">
+                                    <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                                    <font key="font" metaFont="system"/>
+                                </buttonCell>
+                                <connections>
+                                    <action selector="RadioButtonAction:" target="HjK-dA-9TF" id="rNd-Mz-skk"/>
+                                </connections>
+                            </button>
+                            <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Th5-Gn-ck4">
+                                <rect key="frame" x="307" y="13" width="82" height="32"/>
+                                <buttonCell key="cell" type="push" title="Cancel" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="zfg-aw-X7J">
+                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                    <font key="font" metaFont="system"/>
+                                    <string key="keyEquivalent" base64-UTF8="YES">
+Gw
+</string>
+                                </buttonCell>
+                                <connections>
+                                    <action selector="HandleCancelPressed:" target="HjK-dA-9TF" id="ceS-Bq-6WI"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <constraints>
+                            <constraint firstItem="XJh-D5-dvi" firstAttribute="leading" secondItem="zZ3-lY-cxd" secondAttribute="leading" constant="20" symbolic="YES" id="17F-yY-vaV"/>
+                            <constraint firstItem="i5J-ia-38P" firstAttribute="baseline" secondItem="Th5-Gn-ck4" secondAttribute="baseline" id="Id7-Ug-vjM"/>
+                            <constraint firstItem="XJh-D5-dvi" firstAttribute="top" secondItem="zZ3-lY-cxd" secondAttribute="top" constant="20" symbolic="YES" id="RNS-l8-I7O"/>
+                            <constraint firstItem="uRl-eG-wCq" firstAttribute="leading" secondItem="zZ3-lY-cxd" secondAttribute="leading" constant="39" id="UAl-Ha-K4C"/>
+                            <constraint firstAttribute="bottom" secondItem="i5J-ia-38P" secondAttribute="bottom" constant="20" symbolic="YES" id="cQX-y3-zh9"/>
+                            <constraint firstItem="tba-cw-ftH" firstAttribute="top" secondItem="uRl-eG-wCq" secondAttribute="bottom" constant="16" id="gpe-fs-shQ"/>
+                            <constraint firstItem="i5J-ia-38P" firstAttribute="leading" secondItem="zZ3-lY-cxd" secondAttribute="leading" constant="163" id="klq-kT-61p"/>
+                            <constraint firstItem="uRl-eG-wCq" firstAttribute="leading" secondItem="tba-cw-ftH" secondAttribute="leading" id="mfo-P0-00t"/>
+                            <constraint firstAttribute="trailing" secondItem="Th5-Gn-ck4" secondAttribute="trailing" constant="119" id="pWj-RE-BAX"/>
+                            <constraint firstItem="uRl-eG-wCq" firstAttribute="top" secondItem="XJh-D5-dvi" secondAttribute="bottom" constant="15" id="r15-L7-BFU"/>
+                            <constraint firstAttribute="trailing" secondItem="XJh-D5-dvi" secondAttribute="trailing" constant="20" symbolic="YES" id="tdM-I8-GzU"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="HeaderRadioButton" destination="uRl-eG-wCq" id="Ynx-P1-ZS2"/>
+                        <outlet property="MessageHeader" destination="XJh-D5-dvi" id="25O-zO-wXi"/>
+                        <outlet property="MessageRadioButton" destination="tba-cw-ftH" id="KLa-hB-1Gk"/>
+                    </connections>
+                </viewController>
+                <customObject id="nom-T1-E8f" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="854" y="1139.5"/>
         </scene>
     </scenes>
     <resources>
