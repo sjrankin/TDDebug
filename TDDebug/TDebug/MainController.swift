@@ -976,16 +976,11 @@ class MainController: UIViewController, UITableViewDelegate, UITableViewDataSour
     @IBAction func HandleTestButton(_ sender: Any)
     {
         #if true
-        MPMgr.Broadcast(Message: "Test \(TestCount)")
+        let Broadcast = MessageHelper.MakeBroadcastMessage(From: MPMgr.SelfPeer, Message: "Test \(TestCount)")
+        MPMgr.BroadcastPreformatted(Message: Broadcast)
         TestCount = TestCount + 1
         #else
-        if CurrentHost.isEmpty
-        {
-            MustSelectHostFirst()
-            return
-        }
-        TComm.ConnectToRemote(CurrentServer!)
-        TComm.Broadcast(Message: "Test \(TestCount)")
+        MPMgr.Broadcast(Message: "Test \(TestCount)")
         TestCount = TestCount + 1
         #endif
     }
