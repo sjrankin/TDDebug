@@ -534,6 +534,27 @@ class MainController: UIViewController, UITableViewDelegate, UITableViewDataSour
         }
     }
     
+    func HandleBroadcastMessage(_ Raw: String, Peer: MCPeerID)
+    {
+        var ItemSource = "TDebug"
+        var ItemMessage = ""
+        if let (Source, Message) = MessageHelper.DecodeBroadcastMessage(Raw)
+        {
+            ItemSource = Source
+            ItemMessage = "Broadcast(\(Source)): \(Message)"
+        }
+        else
+        {
+            ItemMessage = "Error decoding broadcast message from \(Peer.displayName)"
+        }
+        let Item = LogItem(Text: ItemMessage)
+        Item.HostName = ItemSource
+        OperationQueue.main.addOperation
+            {
+                self.AddLogMessage(Item: Item)
+        }
+    }
+    
     func ReceivedData(Manager: MultiPeerManager, Peer: MCPeerID, RawData: String,
                       OverrideMessageType: MessageTypes? = nil, EncapsulatedID: UUID? = nil)
     {
@@ -589,6 +610,9 @@ class MainController: UIViewController, UITableViewDelegate, UITableViewDataSour
             
         case .SendCommandToClient:
             HandleReceivedClientCommand(RawData, Peer: Peer)
+            
+        case .BroadcastMessage:
+            HandleBroadcastMessage(RawData, Peer: Peer)
             
         default:
             print("Unhandled message type: \(MessageType), Raw=\(RawData)")
