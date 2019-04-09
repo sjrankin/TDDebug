@@ -55,4 +55,22 @@ extension MainController
                  Text: String?, FGColor: OSColor?, BGColor: OSColor?)
     {
     }
+    
+    func Message(_ Handler: MessageHandler, From Peer: MCPeerID, ReturnClientCommands: Any?)
+    {
+    }
+    
+    func Message(_ Handler: MessageHandler, From Peer: MCPeerID, AsyncResultID: UUID,
+                 MessageType: MessageTypes, RawCommand: String)
+    {
+    }
+    
+    func Message(_ Handler: MessageHandler, From Peer: MCPeerID, EncapsulatedID: UUID,
+                 RawCommand: String)
+    {
+    }
+    
+    func Message(_ Handler: MessageHandler, From Peer: MCPeerID, RespondToHeartBeat InSeconds: Double, Fail After: Double, SenderCumulativeCount: Int)
+    {
+    }
 }
