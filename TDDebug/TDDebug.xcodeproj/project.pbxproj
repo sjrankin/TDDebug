@@ -76,6 +76,15 @@
 		17B3EE9D2255CD72009988D3 /* LogItemViewer.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 17B3EE9C2255CD72009988D3 /* LogItemViewer.storyboard */; };
 		17B3EEA02255CD8D009988D3 /* MainProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17B3EE9F2255CD8D009988D3 /* MainProtocol.swift */; };
 		17B3EEA42255CDF4009988D3 /* KVPItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17B3EEA32255CDF3009988D3 /* KVPItem.swift */; };
+		17B4951F225C373700117CF5 /* Searcher.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 17B4951E225C373700117CF5 /* Searcher.storyboard */; };
+		17B49521225C397700117CF5 /* SearcherWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17B49520225C397700117CF5 /* SearcherWindow.swift */; };
+		17B49523225C398400117CF5 /* SearcherUICode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17B49522225C398400117CF5 /* SearcherUICode.swift */; };
+		17B49525225C585300117CF5 /* LogItemProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17B49524225C585300117CF5 /* LogItemProtocol.swift */; };
+		17B49529225C60CC00117CF5 /* ViewControllerMessageHandling.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17B49528225C60CC00117CF5 /* ViewControllerMessageHandling.swift */; };
+		17B4952B225C688300117CF5 /* MainControllerMessageHandling.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17B4952A225C688300117CF5 /* MainControllerMessageHandling.swift */; };
+		17B4952E225C6C5B00117CF5 /* Broadcast.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 17B4952D225C6C5B00117CF5 /* Broadcast.storyboard */; };
+		17B49530225C6CE200117CF5 /* BroadcastWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17B4952F225C6CE200117CF5 /* BroadcastWindow.swift */; };
+		17B49532225C6D2500117CF5 /* BroadcastUICode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17B49531225C6D2500117CF5 /* BroadcastUICode.swift */; };
 		17B68CCA225468CC00AEBE94 /* MainWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17B68CC9225468CC00AEBE94 /* MainWindow.swift */; };
 		17B68CCD2254713100AEBE94 /* AboutTDDebug.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 17B68CCC2254713100AEBE94 /* AboutTDDebug.storyboard */; };
 		17B68CCF2254731C00AEBE94 /* AboutTDDebugCode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17B68CCE2254731C00AEBE94 /* AboutTDDebugCode.swift */; };
@@ -148,6 +157,15 @@
 		17B3EE9F2255CD8D009988D3 /* MainProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainProtocol.swift; sourceTree = "<group>"; };
 		17B3EEA32255CDF3009988D3 /* KVPItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KVPItem.swift; sourceTree = "<group>"; };
 		17B3EEA52255E1D9009988D3 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = "<group>"; };
+		17B4951E225C373700117CF5 /* Searcher.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Searcher.storyboard; sourceTree = "<group>"; };
+		17B49520225C397700117CF5 /* SearcherWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearcherWindow.swift; sourceTree = "<group>"; };
+		17B49522225C398400117CF5 /* SearcherUICode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearcherUICode.swift; sourceTree = "<group>"; };
+		17B49524225C585300117CF5 /* LogItemProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogItemProtocol.swift; sourceTree = "<group>"; };
+		17B49528225C60CC00117CF5 /* ViewControllerMessageHandling.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewControllerMessageHandling.swift; sourceTree = "<group>"; };
+		17B4952A225C688300117CF5 /* MainControllerMessageHandling.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainControllerMessageHandling.swift; sourceTree = "<group>"; };
+		17B4952D225C6C5B00117CF5 /* Broadcast.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Broadcast.storyboard; sourceTree = "<group>"; };
+		17B4952F225C6CE200117CF5 /* BroadcastWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BroadcastWindow.swift; sourceTree = "<group>"; };
+		17B49531225C6D2500117CF5 /* BroadcastUICode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BroadcastUICode.swift; sourceTree = "<group>"; };
 		17B68CC9225468CC00AEBE94 /* MainWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainWindow.swift; sourceTree = "<group>"; };
 		17B68CCC2254713100AEBE94 /* AboutTDDebug.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = AboutTDDebug.storyboard; sourceTree = "<group>"; };
 		17B68CCE2254731C00AEBE94 /* AboutTDDebugCode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutTDDebugCode.swift; sourceTree = "<group>"; };
@@ -189,6 +207,7 @@
 				171EB6082255C4510075C134 /* AppDelegate.swift */,
 				171EB6022255C4250075C134 /* Main.storyboard */,
 				171EB6042255C42E0075C134 /* MainController.swift */,
+				17B4952A225C688300117CF5 /* MainControllerMessageHandling.swift */,
 				17B3EEA32255CDF3009988D3 /* KVPItem.swift */,
 				171EB6102255C47D0075C134 /* IDTableCell.swift */,
 				171EB60E2255C4750075C134 /* LaunchScreen.storyboard */,
@@ -317,18 +336,19 @@
 			children = (
 				1743C13A2251DF9C003FE6B2 /* Assets.xcassets */,
 				1743C1362251DF9B003FE6B2 /* AppDelegate.swift */,
-				1743C1382251DF9B003FE6B2 /* ViewController.swift */,
-				1743C13C2251DF9C003FE6B2 /* Main.storyboard */,
 				17B68CC9225468CC00AEBE94 /* MainWindow.swift */,
-				1746B54722520D4A00E554EC /* LogItem.swift */,
-				1722347322576E9A00518601 /* LogItemList.swift */,
-				1746B54322520C6700E554EC /* KVPItem.swift */,
-				17223471225754EA00518601 /* KVPItems.swift */,
+				1743C13C2251DF9C003FE6B2 /* Main.storyboard */,
+				1743C1382251DF9B003FE6B2 /* ViewController.swift */,
+				17B49528225C60CC00117CF5 /* ViewControllerMessageHandling.swift */,
 				1746B54022520AB900E554EC /* Versioning.swift */,
 				1746B54522520C9F00E554EC /* MainProtocol.swift */,
 				172E7F602259A757009E4768 /* ConnectionNotificationProtocol.swift */,
 				1743C13F2251DF9C003FE6B2 /* Info.plist */,
 				1743C1402251DF9C003FE6B2 /* TDDebug.entitlements */,
+				17B49527225C5A2500117CF5 /* LogItems */,
+				17B49526225C5A1200117CF5 /* KVP */,
+				17B4951D225C370E00117CF5 /* Search */,
+				17B4952C225C6C3F00117CF5 /* Broadcast */,
 				172E7F642259C9DC009E4768 /* ViewStates */,
 				1722346822572D0D00518601 /* Filter */,
 				17508F45225B47AB00BC9FC0 /* Customization */,
@@ -411,6 +431,45 @@
 				17B3EE9F2255CD8D009988D3 /* MainProtocol.swift */,
 			);
 			path = Commands;
+			sourceTree = "<group>";
+		};
+		17B4951D225C370E00117CF5 /* Search */ = {
+			isa = PBXGroup;
+			children = (
+				17B4951E225C373700117CF5 /* Searcher.storyboard */,
+				17B49520225C397700117CF5 /* SearcherWindow.swift */,
+				17B49522225C398400117CF5 /* SearcherUICode.swift */,
+			);
+			path = Search;
+			sourceTree = "<group>";
+		};
+		17B49526225C5A1200117CF5 /* KVP */ = {
+			isa = PBXGroup;
+			children = (
+				1746B54322520C6700E554EC /* KVPItem.swift */,
+				17223471225754EA00518601 /* KVPItems.swift */,
+			);
+			path = KVP;
+			sourceTree = "<group>";
+		};
+		17B49527225C5A2500117CF5 /* LogItems */ = {
+			isa = PBXGroup;
+			children = (
+				17B49524225C585300117CF5 /* LogItemProtocol.swift */,
+				1746B54722520D4A00E554EC /* LogItem.swift */,
+				1722347322576E9A00518601 /* LogItemList.swift */,
+			);
+			path = LogItems;
+			sourceTree = "<group>";
+		};
+		17B4952C225C6C3F00117CF5 /* Broadcast */ = {
+			isa = PBXGroup;
+			children = (
+				17B4952D225C6C5B00117CF5 /* Broadcast.storyboard */,
+				17B4952F225C6CE200117CF5 /* BroadcastWindow.swift */,
+				17B49531225C6D2500117CF5 /* BroadcastUICode.swift */,
+			);
+			path = Broadcast;
 			sourceTree = "<group>";
 		};
 		17B68CCB2254711800AEBE94 /* About */ = {
@@ -524,6 +583,8 @@
 				17508F42225B213200BC9FC0 /* ConfirmConnection.storyboard in Resources */,
 				1743C13E2251DF9C003FE6B2 /* Main.storyboard in Resources */,
 				1722346A22572D2C00518601 /* Filterer.storyboard in Resources */,
+				17B4951F225C373700117CF5 /* Searcher.storyboard in Resources */,
+				17B4952E225C6C5B00117CF5 /* Broadcast.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -572,6 +633,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				171EB6092255C4510075C134 /* AppDelegate.swift in Sources */,
+				17B4952B225C688300117CF5 /* MainControllerMessageHandling.swift in Sources */,
 				173366A422570BD800438E66 /* MessageHandlerDelegate.swift in Sources */,
 				17B3EE9B2255CD6B009988D3 /* LogItemProtocol.swift in Sources */,
 				171EB5FB2255C2D10075C134 /* OSColorExtensions.swift in Sources */,
@@ -603,8 +665,10 @@
 				172E7F632259C9CA009E4768 /* ViewStateManager.swift in Sources */,
 				1743C1392251DF9B003FE6B2 /* ViewController.swift in Sources */,
 				1746B54822520D4A00E554EC /* LogItem.swift in Sources */,
+				17B49529225C60CC00117CF5 /* ViewControllerMessageHandling.swift in Sources */,
 				173366A0225708BE00438E66 /* MessageHandler.swift in Sources */,
 				1746B53F22520A8D00E554EC /* StateProtocol.swift in Sources */,
+				17B49523225C398400117CF5 /* SearcherUICode.swift in Sources */,
 				1772A2FB2253705C006D0A16 /* OSColor.swift in Sources */,
 				17508F44225B224700BC9FC0 /* ConfirmConnectionUICode.swift in Sources */,
 				1743C1372251DF9B003FE6B2 /* AppDelegate.swift in Sources */,
@@ -613,6 +677,7 @@
 				1746B54422520C6700E554EC /* KVPItem.swift in Sources */,
 				1722346E22572E5300518601 /* FiltererUICode.swift in Sources */,
 				172E7F6B2259E72D009E4768 /* ItemViewerWindow.swift in Sources */,
+				17B49521225C397700117CF5 /* SearcherWindow.swift in Sources */,
 				1722347422576E9A00518601 /* LogItemList.swift in Sources */,
 				1704C5B82253244D00C49E91 /* ClientCommands.swift in Sources */,
 				17508F3D225B04B700BC9FC0 /* SelectorWindow.swift in Sources */,
@@ -623,10 +688,13 @@
 				172E7F6D2259E739009E4768 /* ItemViewerUICode.swift in Sources */,
 				17508F4F225B6DD100BC9FC0 /* MainCustomizeUICode.swift in Sources */,
 				172E7F612259A757009E4768 /* ConnectionNotificationProtocol.swift in Sources */,
+				17B49530225C6CE200117CF5 /* BroadcastWindow.swift in Sources */,
 				1722346C22572E3F00518601 /* FiltererWindow.swift in Sources */,
 				172E7F662259C9F5009E4768 /* ViewState.swift in Sources */,
 				17B68CCA225468CC00AEBE94 /* MainWindow.swift in Sources */,
 				1704C5B62253123F00C49E91 /* SendToClientUICode.swift in Sources */,
+				17B49525225C585300117CF5 /* LogItemProtocol.swift in Sources */,
+				17B49532225C6D2500117CF5 /* BroadcastUICode.swift in Sources */,
 				1746B54122520AB900E554EC /* Versioning.swift in Sources */,
 				17223472225754EA00518601 /* KVPItems.swift in Sources */,
 				1743C14C22520366003FE6B2 /* MultiPeerDelegate.swift in Sources */,
