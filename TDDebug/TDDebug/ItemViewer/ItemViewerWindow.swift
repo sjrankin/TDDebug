@@ -11,7 +11,7 @@ import AppKit
 
 class ItemViewerWindow: NSWindowController
 {
-    weak var MainDelegate: MainProtocol? = nil
+    weak var MainDelegate: LogItemProtocol? = nil
         {
         didSet
         {
