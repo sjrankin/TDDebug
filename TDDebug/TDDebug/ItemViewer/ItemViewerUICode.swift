@@ -12,7 +12,7 @@ import AppKit
 class ItemViewerUICode: NSViewController, NSTableViewDelegate, NSTableViewDataSource
 {
     var HaveDelegate = false
-    weak var Delegate: MainProtocol!
+    weak var Delegate: LogItemProtocol!
         {
         didSet
         {
