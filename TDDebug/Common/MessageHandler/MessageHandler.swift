@@ -29,6 +29,7 @@ class MessageHandler
     {
         let (Command, Address, Text, FGColor, BGColor) = MessageHelper.DecodeIdiotLightMessage(Raw)
         let FinalAddress = Address.uppercased()
+        #if false
         OperationQueue.main.addOperation
             {
                 switch Command
@@ -57,6 +58,7 @@ class MessageHandler
                     print("Unknown idiot light command: \(Raw)")
                 }
         }
+        #endif
     }
     
     func Process(ReceivedData: String, Peer: MCPeerID, Manager: MultiPeerManager,
