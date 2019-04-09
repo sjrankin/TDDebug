@@ -90,4 +90,18 @@ class MainWindow: NSWindowController, NSToolbarItemValidation
         let VC = window!.contentViewController as? ViewController
         VC?.HandleFilePrint(sender)
     }
+    
+    @IBOutlet weak var SearchButton: NSToolbarItem!
+    @IBAction func HandleSearchButtonPressed(_ sender: Any)
+    {
+        let VC = window!.contentViewController as? ViewController
+        VC?.HandleSearch(sender) 
+    }
+    
+    @IBOutlet weak var BroadcastButton: NSToolbarItem!
+    @IBAction func HandleBroadcastButtonPressed(_ sender: Any)
+    {
+        let VC = window!.contentViewController as? ViewController
+        VC?.HandleBroadcast(sender)
+    }
 }
