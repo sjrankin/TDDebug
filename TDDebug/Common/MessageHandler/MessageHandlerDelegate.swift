@@ -9,6 +9,7 @@
 import Foundation
 import MultipeerConnectivity
 
+/// Protocol to communicate between the message handling class and the consumer of the messages.
 protocol MessageHandlerDelegate: class
 {
     /// Handle a received broadcast command.
@@ -96,4 +97,45 @@ protocol MessageHandlerDelegate: class
     ///   - BGColor: The color of the background of the idiot light. Nil if no color specified.
     func Message(_ Handler: MessageHandler, From Peer: MCPeerID, IdiotLightCommand: IdiotLightCommands,
                  Address: String, Text: String?, FGColor: OSColor?, BGColor: OSColor?)
+    
+    /// Respond to a connection heartbeat received from a peer.
+    ///
+    /// - Parameters:
+    ///   - Handler: The message handler class that received the command and called this function.
+    ///   - Peer: The peer that sent the message.
+    ///   - InSeconds: How long to wait before responding to the sender with our own heartbeat message.
+    ///   - After: Fail after this number of seconds.
+    ///   - SenderCumulativeCount: Number of heartbeats sent so far by the peer.
+    func Message(_ Handler: MessageHandler, From Peer: MCPeerID, RespondToHeartBeat InSeconds: Double, Fail After: Double,
+                 SenderCumulativeCount: Int)
+    
+    /// Respond to a request by a peer to return client commands.
+    ///
+    /// - Parameters:
+    ///   - Handler: The message handler class that received the command and called this function.
+    ///   - Peer: The peer that sent the message.
+    ///   - ReturnClientCommands: Not used.
+    func Message(_ Handler: MessageHandler, From Peer: MCPeerID, ReturnClientCommands: Any?)
+    
+    /// Respond to an asynchronous result return.
+    ///
+    /// - Parameters:
+    ///   - Handler: The message handler class that received the command and called this function.
+    ///   - Peer: The peer that sent the message.
+    ///   - AsyncResultID: ID of the asynchronous result. Set when the asynchronous call is made to allow for tracking
+    ///                    of results to calls.
+    ///   - MessageType: The type of command that caused an asynchronous result.
+    ///   - RawCommand: The raw returned command.
+    func Message(_ Handler: MessageHandler, From Peer: MCPeerID, AsyncResultID: UUID,
+                 MessageType: MessageTypes, RawCommand: String)
+    
+    /// Handle encapsulated commands.
+    ///
+    /// - Parameters:
+    ///   - Handler: The message handler class that received the command and called this function.
+    ///   - Peer: The peer that sent the message.
+    ///   - EncapsulatedID: ID of the encapculated command.
+    ///   - RawCommand: The raw, encapsulated command.
+    func Message(_ Handler: MessageHandler, From Peer: MCPeerID, EncapsulatedID: UUID,
+                 RawCommand: String)
 }
