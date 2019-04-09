@@ -127,22 +127,7 @@
                                                 <items>
                                                     <menuItem title="Find…" tag="1" keyEquivalent="f" id="kPK-z6-sro">
                                                         <connections>
-                                                            <action selector="performFindPanelAction:" target="Ady-hI-5gd" id="wdK-al-61i"/>
-                                                        </connections>
-                                                    </menuItem>
-                                                    <menuItem title="Find Next" tag="2" keyEquivalent="g" id="UYW-9U-TNM">
-                                                        <connections>
-                                                            <action selector="performFindPanelAction:" target="Ady-hI-5gd" id="Ksc-HS-m9M"/>
-                                                        </connections>
-                                                    </menuItem>
-                                                    <menuItem title="Find Previous" tag="3" keyEquivalent="G" id="Jxv-rH-usn">
-                                                        <connections>
-                                                            <action selector="performFindPanelAction:" target="Ady-hI-5gd" id="EpQ-Ul-qa3"/>
-                                                        </connections>
-                                                    </menuItem>
-                                                    <menuItem title="Use Selection for Find" tag="7" keyEquivalent="e" id="vbV-rv-4YJ">
-                                                        <connections>
-                                                            <action selector="performFindPanelAction:" target="Ady-hI-5gd" id="IDQ-l7-DNW"/>
+                                                            <action selector="HandleSearch:" target="Ady-hI-5gd" id="Pxo-MA-bva"/>
                                                         </connections>
                                                     </menuItem>
                                                 </items>
@@ -165,6 +150,12 @@
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <connections>
                                                 <action selector="HandleSendToClient:" target="Ady-hI-5gd" id="4EH-dt-U9a"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Broadcast" id="JKi-Gq-Bn0">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="HandleBroadcast:" target="Ady-hI-5gd" id="l76-HM-BBw"/>
                                             </connections>
                                         </menuItem>
                                         <menuItem isSeparatorItem="YES" id="eFH-ev-raD"/>
@@ -335,12 +326,30 @@
                                         <action selector="HandlePrinterButtonPressed:" target="B8D-0N-5wS" id="PFB-YD-yfm"/>
                                     </connections>
                                 </toolbarItem>
+                                <toolbarItem implicitItemIdentifier="B11E6D17-1B4D-4FB9-BC8D-40CC581DE976" label="Search" paletteLabel="Search Log" toolTip="Search for text in the log." tag="-1" image="Search" id="szS-TF-pOr">
+                                    <size key="minSize" width="24" height="24"/>
+                                    <size key="maxSize" width="24" height="24"/>
+                                    <connections>
+                                        <action selector="HandleSearchButtonPressed:" target="B8D-0N-5wS" id="qXA-Zh-XMU"/>
+                                    </connections>
+                                </toolbarItem>
+                                <toolbarItem implicitItemIdentifier="59A40791-88C9-4D41-A74D-3B080A57160B" label="Broadcast" paletteLabel="Broadcast" toolTip="Broadcast messages or commands to all peers." tag="-1" image="Broadcast" id="iQh-N5-xB2">
+                                    <size key="minSize" width="24" height="24"/>
+                                    <size key="maxSize" width="24" height="24"/>
+                                    <connections>
+                                        <action selector="HandleBroadcastButtonPressed:" target="B8D-0N-5wS" id="PJW-AP-Q19"/>
+                                    </connections>
+                                </toolbarItem>
                             </allowedToolbarItems>
                             <defaultToolbarItems>
                                 <toolbarItem reference="KsA-vt-sct"/>
-                                <toolbarItem reference="L0k-Zt-P5Z"/>
-                                <toolbarItem reference="4yg-Te-ptA"/>
+                                <toolbarItem reference="iQh-N5-xB2"/>
                                 <toolbarItem reference="XVc-wZ-grz"/>
+                                <toolbarItem reference="pTd-de-Abu"/>
+                                <toolbarItem reference="4yg-Te-ptA"/>
+                                <toolbarItem reference="szS-TF-pOr"/>
+                                <toolbarItem reference="pTd-de-Abu"/>
+                                <toolbarItem reference="L0k-Zt-P5Z"/>
                                 <toolbarItem reference="06z-nW-7TV"/>
                                 <toolbarItem reference="er7-qd-Fll"/>
                                 <toolbarItem reference="iMU-ei-LRy"/>
@@ -353,6 +362,7 @@
                         </connections>
                     </window>
                     <connections>
+                        <outlet property="BroadcastButton" destination="iQh-N5-xB2" id="gjE-V1-wJd"/>
                         <outlet property="ColorsButton" destination="5Kq-eH-PGs" id="nfP-Fn-GQX"/>
                         <outlet property="CustomizeButton" destination="iMU-ei-LRy" id="bBv-s9-BKh"/>
                         <outlet property="DisconnectButton" destination="06z-nW-7TV" id="sgb-k2-Lps"/>
@@ -362,6 +372,7 @@
                         <outlet property="PeersButton" destination="KsA-vt-sct" id="GZu-VV-lTS"/>
                         <outlet property="PrinterButton" destination="Z6j-Fa-Kvd" id="Tj5-7l-hDm"/>
                         <outlet property="ResetConnectionButton" destination="XVc-wZ-grz" id="dYA-n4-bHr"/>
+                        <outlet property="SearchButton" destination="szS-TF-pOr" id="UMJ-G0-T1Z"/>
                         <outlet property="SendButton" destination="L0k-Zt-P5Z" id="FVy-xK-wTs"/>
                         <segue destination="XfG-lQ-9wD" kind="relationship" relationship="window.shadowedContentViewController" id="cq2-FE-JQM"/>
                     </connections>
@@ -1564,6 +1575,7 @@
         </scene>
     </scenes>
     <resources>
+        <image name="Broadcast" width="24" height="24"/>
         <image name="ColorRing" width="24" height="24"/>
         <image name="Connect" width="16" height="16"/>
         <image name="Customize" width="24" height="24"/>
@@ -1576,6 +1588,7 @@
         <image name="Printer" width="24" height="24"/>
         <image name="Refresh" width="16" height="16"/>
         <image name="ResetConnection" width="24" height="24"/>
+        <image name="Search" width="24" height="24"/>
         <image name="Send" width="24" height="24"/>
     </resources>
 </document>
