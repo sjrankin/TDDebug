@@ -12,7 +12,7 @@ import AppKit
 import MultipeerConnectivity
 
 /// Code to run the main view controller for TDDebug.
-class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSource,
+class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSource, 
     MultiPeerDelegate,                  //Delegate for handling raw multi-peer data.
     MainProtocol,                       //Delegate to export certain functions and data from the ViewController class.
     StateProtocol,                      //Delegate to handle state changes.
@@ -69,6 +69,20 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
         EnableIdiotLight("C3", false)
         
         SetSendEnableState(To: false)
+        UpdateLabels()
+    }
+    
+    @IBOutlet weak var LogLabel: NSTextField!
+    @IBOutlet weak var StatusLabel: NSTextField!
+    @IBOutlet weak var VersionLabel: NSTextField!
+    @IBOutlet weak var VersionLabelView: NSView!
+    @IBOutlet weak var StatusLabelView: NSView!
+    @IBOutlet weak var LogLabelView: NSView!
+    func UpdateLabels()
+    {
+        VersionLabel.frameCenterRotation = CGFloat(90.0)
+        StatusLabel.frameCenterRotation = CGFloat(90.0)
+        LogLabel.frameCenterRotation = CGFloat(90.0)
     }
     
     func ShowInstanceVersion()
@@ -232,6 +246,7 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
             {
                 if Show
                 {
+                    self.LogLabel.textColor = NSColor(named: "Pistachio")!
                     self.LogTableContainer.layer?.borderColor = NSColor(named: "Pistachio")!.cgColor
                     self.LogTableContainer.layer?.borderWidth = 3.0
                     if let Window = self.view.window?.windowController as? MainWindow
@@ -241,6 +256,7 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
                 }
                 else
                 {
+                    self.LogLabel.textColor = NSColor.black
                     self.LogTableContainer.layer?.borderColor = OSColor.clear.cgColor
                     self.LogTableContainer.layer?.borderWidth = 0.0
                     if let Window = self.view.window?.windowController as? MainWindow
@@ -277,6 +293,9 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
         }
     }
     
+    /// Add a log message to the log table and scroll to ensure it is visible.
+    ///
+    /// - Parameter Item: The log item to add.
     func AddLogMessage(Item: LogItem)
     {
         OperationQueue.main.addOperation
@@ -287,10 +306,18 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
         }
     }
     
+    /// Add data to the KVP table.
+    ///
+    /// - Parameters:
+    ///   - Name: Key name.
+    ///   - Value: Value associated with the key.
     func AddKVPData(_ Name: String, _ Value: String)
     {
-        KVPItems.append(KVPItem(WithKey: Name, AndValue: Value))
-        KVPTable.reloadData()
+        OperationQueue.main.addOperation
+            {
+        self.KVPItems.append(KVPItem(WithKey: Name, AndValue: Value))
+        self.KVPTable.reloadData()
+        }
     }
     
     /// Add data to the KVP table. If the data is already present (determined by the ID),
@@ -317,6 +344,9 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
         }
     }
     
+    /// Remove the KVP item from the internal list and from the user-facing table.
+    ///
+    /// - Parameter ItemID: The ID of the item to remove.
     func RemoveKVP(ItemID: UUID)
     {
         OperationQueue.main.addOperation
@@ -1071,15 +1101,11 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
     
     func InitializeKVPTable()
     {
-        //        KVPTable.delegate = self
-        //        KVPTable.dataSource = self
         KVPTable.reloadData()
     }
     
     func InitializeLogTable()
     {
-        //        LogTable.delegate = self
-        //        LogTable.dataSource = self
         LogTable.reloadData()
         LogTable.doubleAction = #selector(HandleLogDoubleClick(_:))
     }
