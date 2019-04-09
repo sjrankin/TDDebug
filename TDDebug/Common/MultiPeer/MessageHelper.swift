@@ -39,6 +39,54 @@ class MessageHelper
         return (String(Parts[0]), String(Parts[1]))
     }
     
+    /// Decode a broadcast message.
+    ///
+    /// - Parameter Raw: The raw message that was broadcast.
+    /// - Returns: Tuple in the form (Name of peer that broadcast message, message body). Nil on failure/error.
+    public static func DecodeBroadcastMessage(_ Raw: String) -> (String, String)?
+    {
+        let Delimiter = String(Raw.first!)
+        var Next = Raw
+        Next.removeFirst()
+        let Parts = Next.split(separator: String.Element(Delimiter))
+        if Parts.count != 3
+        {
+            return nil
+        }
+        if let (_, BroadcastFrom) = DecodeKVP(String(Parts[1]))
+        {
+            if let (_, Message) = DecodeKVP(String(Parts[2]))
+            {
+                return (BroadcastFrom, Message)
+            }
+        }
+        return nil
+    }
+    
+    /// Decode a broadcast command.
+    ///
+    /// - Parameter Raw: The raw command message that was broadcast.
+    /// - Returns: Tuple in the form (Name of peer that broadcast message, undecoded command). Nil on failure/error.
+    public static func DecodeBroadcastCommand(_ Raw: String) -> (String, String)?
+    {
+        let Delimiter = String(Raw.first!)
+        var Next = Raw
+        Next.removeFirst()
+        let Parts = Next.split(separator: String.Element(Delimiter))
+        if Parts.count != 3
+        {
+            return nil
+        }
+        if let (_, BroadcastFrom) = DecodeKVP(String(Parts[1]))
+        {
+            if let (_, RawCommand) = DecodeKVP(String(Parts[2]))
+            {
+                return (BroadcastFrom, RawCommand)
+            }
+        }
+        return nil
+    }
+    
     /// Decode a returned client command list response.
     ///
     /// - Parameter Raw: The raw response from the client that sent the response.
@@ -1093,6 +1141,60 @@ class MessageHelper
         return Final
     }
     
+    /// Create a broadcast text message command.
+    ///
+    /// - Parameters:
+    ///   - From: The peer that is broadcasting the message.
+    ///   - Message: The text message to send.
+    /// - Returns: Command string to broadcast a message.
+    public static func MakeBroadcastMessage(From: MCPeerID, Message: String) -> String
+    {
+        return MakeBroadcastMessage(From: From.displayName, Message: Message)
+    }
+    
+    /// Create a broadcast text message command.
+    ///
+    /// - Parameters:
+    ///   - From: The peer that is broadcasting the message.
+    ///   - Message: The text message to send.
+    /// - Returns: Command string to broadcast a message.
+    public static func MakeBroadcastMessage(From: String, Message: String) -> String
+    {
+        let Cmd = MessageTypeIndicators[.BroadcastMessage]!
+        let Source = "From=\(From)"
+        let Msg = "Message=\(Message)"
+        let Delimiter = GetUnusedDelimiter(From: [Cmd, Source, Msg])
+        let Final = AssembleCommand(FromParts: [Cmd, Source, Msg], WithDelimiter: Delimiter)
+        return Final
+    }
+    
+    /// Create a broadcast command command.
+    ///
+    /// - Parameters:
+    ///   - From: The peer that is broadcasting the message.
+    ///   - PreformattedCommand: The pre-formatted command to broadcast.
+    /// - Returns: Command string to broadcast as a command.
+    public static func MakeBroadcastCommand(From: MCPeerID, PreformattedCommand: String) -> String
+    {
+        return MakeBroadcastCommand(From: From.displayName, PreformattedCommand: PreformattedCommand)
+    }
+    
+    /// Create a broadcast command command.
+    ///
+    /// - Parameters:
+    ///   - From: The peer that is broadcasting the message.
+    ///   - PreformattedCommand: The pre-formatted command to broadcast.
+    /// - Returns: Command string to broadcast as a command.
+    public static func MakeBroadcastCommand(From: String, PreformattedCommand: String) -> String
+    {
+        let Cmd = MessageTypeIndicators[.BroadcastCommand]!
+        let Source = "From=\(From)"
+        let PCmd = "Command=\(PreformattedCommand)"
+        let Delimiter = GetUnusedDelimiter(From: [Cmd, Source, PCmd])
+        let Final = AssembleCommand(FromParts: [Cmd, Source, PCmd], WithDelimiter: Delimiter)
+        return Final
+    }
+    
     /// Assemble the list of string into a command that can be sent to another TDebug instance or other app that implements
     /// at least the MultiPeerManager.
     ///
@@ -1177,6 +1279,8 @@ class MessageHelper
             MessageTypes.PushVersionInformation: MessageTypes.PushVersionInformation.rawValue,
             MessageTypes.ConnectionHeartbeat: MessageTypes.ConnectionHeartbeat.rawValue,
             MessageTypes.RequestConnectionHeartbeat: MessageTypes.RequestConnectionHeartbeat.rawValue,
+            MessageTypes.BroadcastMessage: MessageTypes.BroadcastMessage.rawValue,
+            MessageTypes.BroadcastCommand: MessageTypes.BroadcastCommand.rawValue,
             MessageTypes.Unknown: MessageTypes.Unknown.rawValue,
     ]
     
@@ -1318,6 +1422,8 @@ enum MessageTypes: String, CaseIterable
     case PushVersionInformation = "f6a18cea-5806-4e7b-853a-58e96224cd8d"
     case ConnectionHeartbeat = "4bdaa255-16b8-43a6-b263-689c7beb439b"
     case RequestConnectionHeartbeat = "e8b711c9-8672-4ffb-a9b0-230630bd9d7c"
+    case BroadcastMessage = "671841fc-b8d6-43da-bd77-288ab7e65918"
+    case BroadcastCommand = "fe730b23-3f55-4338-b91e-de0d4560563d"
     case Unknown = "dfc5b2d5-521b-46a8-b459-a4947089312c"
 }
 
