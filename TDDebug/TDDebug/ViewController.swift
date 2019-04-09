@@ -13,7 +13,12 @@ import MultipeerConnectivity
 
 /// Code to run the main view controller for TDDebug.
 class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSource,
-    MultiPeerDelegate, MainProtocol, StateProtocol, MessageHandlerDelegate
+    MultiPeerDelegate,                  //Delegate for handling raw multi-peer data.
+    MainProtocol,                       //Delegate to export certain functions and data from the ViewController class.
+    StateProtocol,                      //Delegate to handle state changes.
+    MessageHandlerDelegate,             //Delegate to implement functions for message handling from the MessageHandler class.
+                                        //(These functions are in ViewControllerMessageHandling.swift.
+    LogItemProtocol                     //Delegate to handle log item viewing in external windows.
 {
     let KVPTableTag = 100
     let LogTableTag = 200
@@ -114,23 +119,6 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
     
     var IdiotLights = [String: (NSView, NSTextField)]()
     
-    // MARK: MessageHandler delegate functions.
-    
-    func Message(_ Handler: MessageHandler, KVPData: (UUID, String, String))
-    {
-    }
-    
-    func Message(_ Handler: MessageHandler, Execute: ClientCommand)
-    {
-        
-    }
-    
-    func Message(_ Handler: MessageHandler, IdiotLightCommand: IdiotLightCommands, Address: String,
-                 Text: String?, FGColor: OSColor?, BGColor: OSColor?)
-    {
-        
-    }
-    
     // MARK: MainProtocol implementation.
     
     var MPManager: MultiPeerManager
@@ -230,6 +218,11 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
     func LastSelectedLogItem() -> LogItem?
     {
         return _LastSelectedLogItem
+    }
+    
+    func GetItemManager() -> LogItemList
+    {
+        return LogItems
     }
     
     @IBOutlet weak var LogTableContainer: NSScrollView!
@@ -847,6 +840,27 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
         }
     }
     
+    func HandleBroadcastMessage(_ Raw: String, Peer: MCPeerID)
+    {
+        var ItemSource = "TDDebug"
+        var ItemMessage = ""
+        if let (Source, Message) = MessageHelper.DecodeBroadcastMessage(Raw)
+        {
+            ItemSource = Source
+            ItemMessage = "Broadcast(\(Source)): \(Message)"
+        }
+        else
+        {
+            ItemMessage = "Error decoding broadcast message from \(Peer.displayName)"
+        }
+        let Item = LogItem(Text: ItemMessage)
+        Item.HostName = ItemSource
+        OperationQueue.main.addOperation
+            {
+                self.AddLogMessage(Item: Item)
+        }
+    }
+    
     func ReceivedData(Manager: MultiPeerManager, Peer: MCPeerID, RawData: String,
                       OverrideMessageType: MessageTypes? = nil, EncapsulatedID: UUID? = nil)
     {
@@ -904,8 +918,8 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
         case .RequestConnectionHeartbeat:
             HandleConnectionHeartbeatRequest(RawData, Peer: Peer)
             
-        case .SendCommandToClient:
-            HandleReceivedClientCommand(RawData, Peer: Peer)
+        case .BroadcastMessage:
+            HandleBroadcastMessage(RawData, Peer: Peer)
             
         default:
             print("Unhandled message type: \(MessageType), Raw=\(RawData)")
@@ -1400,6 +1414,27 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
         DoShowAbout()
     }
     
+    func DoSearch()
+    {
+        if SearchController == nil
+        {
+            let Storyboard = NSStoryboard(name: "Searcher", bundle: nil)
+            SearchController = Storyboard.instantiateController(withIdentifier: "SearchWindow") as? SearcherWindow
+        }
+        if let SVC = SearchController as? SearcherWindow
+        {
+            SVC.MainDelegate = self
+            SVC.showWindow(nil)
+        }
+    }
+    
+    var SearchController: NSWindowController? = nil
+    
+    @IBAction func HandleSearch(_ sender: Any)
+    {
+        DoSearch()
+    }
+    
     var FilterController: NSWindowController? = nil
     
     func DoRunLogFilter()
@@ -1451,6 +1486,27 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
     @IBAction func ResetConnection(_ sender: Any)
     {
         DoResetConnection()
+    }
+    
+    func DoHandleBroadcast()
+    {
+        if BroadcastController == nil
+        {
+            let Storyboard = NSStoryboard(name: "Broadcast", bundle: nil)
+            BroadcastController = Storyboard.instantiateController(withIdentifier: "BroadcastWindow") as? BroadcastWindow
+        }
+        if let BVC = BroadcastController as? BroadcastWindow
+        {
+            BVC.MainDelegate = self
+            BVC.showWindow(nil)
+        }
+    }
+    
+    var BroadcastController: NSWindowController? = nil
+    
+    @IBAction func HandleBroadcast(_ sender: Any)
+    {
+        DoHandleBroadcast()
     }
     
     func CloseProtocol(ForType: ConnectionProtocolTypes)
