@@ -56,7 +56,8 @@ class BroadcastUICode: NSViewController, NSTabViewDelegate
         {
         case 0:
             let MessageToBroadcast = BroadcastMessageBox.stringValue
-            let BroadcastMessage = MessageHelper.MakeBroadcastMessage(From: "(Delegate?.MPManager.SelfPeer)!", Message: MessageToBroadcast)
+            let HostName: String = (Delegate?.MPManager.SelfPeer.displayName)!
+            let BroadcastMessage = MessageHelper.MakeBroadcastMessage(From: "\(HostName)", Message: MessageToBroadcast)
             Delegate?.MPManager.BroadcastPreformatted(Message: BroadcastMessage)
             
         case 1:
