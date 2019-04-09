@@ -8,6 +8,7 @@
 
 import Foundation
 import AppKit
+import MultipeerConnectivity
 
 /// Manages a list of log items.
 class LogItemList
@@ -180,5 +181,51 @@ class LogItemList
         }
         let Result = _Filter?.PredicatesMatchFilter(SourceOK: SatisfiesSource, TextOK: SatisfiesText)
         return Result!
+    }
+    
+    /// Search log text for the specified string and conditions. Return a list of all log items that
+    /// match the conditions.
+    ///
+    /// - Parameters:
+    ///   - Text: The text to search for.
+    ///   - IgnoreCase: Determines whether the search is case sensitive or not.
+    ///   - SourceIn: List of item sources the message must be in.
+    /// - Returns: List of log items that match the conditions.
+    public func SearchFor(Text: String, IgnoreCase: Bool, SourceIn: [String]) -> [LogItem]
+    {
+        var Results = [LogItem]()
+        for Item in List
+        {
+            var StringMatch = false
+            if IgnoreCase
+            {
+                let icText = Text.lowercased()
+                let icSource = Item.Message.lowercased()
+                StringMatch = icSource.contains(icText)
+            }
+            else
+            {
+                StringMatch = Item.Message.contains(Text)
+            }
+            if !StringMatch
+            {
+                continue
+            }
+            var FoundSource = false
+            for Source in SourceIn
+            {
+                if Source == Item.HostName
+                {
+                    FoundSource = true
+                    break
+                }
+            }
+            if !FoundSource
+            {
+                continue
+            }
+            Results.append(Item)
+        }
+        return Results
     }
 }
