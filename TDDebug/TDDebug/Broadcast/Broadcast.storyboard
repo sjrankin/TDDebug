@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="14490.70"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--Window Controller-->
+        <scene sceneID="7Ps-kQ-caO">
+            <objects>
+                <windowController storyboardIdentifier="BroadcastWindow" id="Hbx-GF-pnL" customClass="BroadcastWindow" customModule="TDDebug" customModuleProvider="target" sceneMemberID="viewController">
+                    <window key="window" title="Broadcast" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" frameAutosaveName="" animationBehavior="default" id="mtM-4h-IVt">
+                        <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
+                        <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
+                        <rect key="contentRect" x="490" y="534" width="480" height="280"/>
+                        <rect key="screenRect" x="0.0" y="0.0" width="2880" height="1597"/>
+                        <value key="minSize" type="size" width="480" height="280"/>
+                        <connections>
+                            <outlet property="delegate" destination="Hbx-GF-pnL" id="RmZ-KF-eqc"/>
+                        </connections>
+                    </window>
+                    <connections>
+                        <segue destination="BGl-by-0BN" kind="relationship" relationship="window.shadowedContentViewController" id="9GX-z8-Ibu"/>
+                    </connections>
+                </windowController>
+                <customObject id="R47-jO-P88" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-116" y="88"/>
+        </scene>
+        <!--BroadcastUI Code-->
+        <scene sceneID="fAD-fo-8Jj">
+            <objects>
+                <viewController storyboardIdentifier="BroadcastController" id="BGl-by-0BN" customClass="BroadcastUICode" customModule="TDDebug" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" id="8gJ-Af-E7T">
+                        <rect key="frame" x="0.0" y="0.0" width="480" height="279"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <subviews>
+                            <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Dpk-pZ-iNl">
+                                <rect key="frame" x="14" y="6" width="102" height="32"/>
+                                <buttonCell key="cell" type="push" title="Broadcast" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="HXO-fB-HFZ">
+                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                    <font key="font" metaFont="system"/>
+                                </buttonCell>
+                                <connections>
+                                    <action selector="HandleBroadcastButtonPressed:" target="BGl-by-0BN" id="iay-X1-WTp"/>
+                                </connections>
+                            </button>
+                            <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="DNU-Vd-4az">
+                                <rect key="frame" x="391" y="6" width="75" height="32"/>
+                                <buttonCell key="cell" type="push" title="Close" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="1QQ-oj-S8q">
+                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                    <font key="font" metaFont="system"/>
+                                </buttonCell>
+                                <connections>
+                                    <action selector="HandleCloseButtonPressed:" target="BGl-by-0BN" id="Mab-RT-sSQ"/>
+                                </connections>
+                            </button>
+                            <tabView translatesAutoresizingMaskIntoConstraints="NO" id="pf3-nl-QEb">
+                                <rect key="frame" x="13" y="44" width="454" height="221"/>
+                                <font key="font" metaFont="system"/>
+                                <tabViewItems>
+                                    <tabViewItem label="Message" identifier="" id="QG1-oy-7uh">
+                                        <view key="view" id="iQc-fQ-qHx">
+                                            <rect key="frame" x="10" y="33" width="434" height="175"/>
+                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                            <subviews>
+                                                <textField verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="mwv-xb-oWL">
+                                                    <rect key="frame" x="17" y="30" width="407" height="117"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="117" id="xbc-oM-fPL"/>
+                                                    </constraints>
+                                                    <textFieldCell key="cell" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" borderStyle="bezel" placeholderString="Enter text to broadcast to all peers." drawsBackground="YES" id="lns-yt-fjg">
+                                                        <font key="font" metaFont="system"/>
+                                                        <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                                                        <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                                    </textFieldCell>
+                                                </textField>
+                                                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="NBG-TI-P6z">
+                                                    <rect key="frame" x="17" y="5" width="409" height="17"/>
+                                                    <textFieldCell key="cell" lineBreakMode="clipping" title="Click the Broadcast button to send your message." id="Vta-p9-AMA">
+                                                        <font key="font" metaFont="system"/>
+                                                        <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                                        <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                                    </textFieldCell>
+                                                </textField>
+                                                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="rVV-oU-RfR">
+                                                    <rect key="frame" x="15" y="155" width="37" height="17"/>
+                                                    <textFieldCell key="cell" lineBreakMode="clipping" title="Label" id="Auz-q9-Hub">
+                                                        <font key="font" usesAppearanceFont="YES"/>
+                                                        <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                                        <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                                    </textFieldCell>
+                                                </textField>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="NBG-TI-P6z" firstAttribute="top" secondItem="mwv-xb-oWL" secondAttribute="bottom" constant="8" symbolic="YES" id="26t-y0-Lgp"/>
+                                                <constraint firstItem="rVV-oU-RfR" firstAttribute="leading" secondItem="mwv-xb-oWL" secondAttribute="leading" id="A4Q-dh-vFm"/>
+                                                <constraint firstItem="rVV-oU-RfR" firstAttribute="top" secondItem="iQc-fQ-qHx" secondAttribute="top" constant="3" id="Ajk-Kq-5c5"/>
+                                                <constraint firstItem="mwv-xb-oWL" firstAttribute="top" secondItem="rVV-oU-RfR" secondAttribute="bottom" constant="8" symbolic="YES" id="Cyz-Iy-aZm"/>
+                                                <constraint firstItem="mwv-xb-oWL" firstAttribute="trailing" secondItem="NBG-TI-P6z" secondAttribute="trailing" id="Ee0-nO-VbG"/>
+                                                <constraint firstAttribute="trailing" secondItem="mwv-xb-oWL" secondAttribute="trailing" constant="10" id="Y9U-Fh-zVU"/>
+                                                <constraint firstItem="rVV-oU-RfR" firstAttribute="leading" secondItem="iQc-fQ-qHx" secondAttribute="leading" constant="17" id="ciG-Ac-KsV"/>
+                                                <constraint firstItem="NBG-TI-P6z" firstAttribute="leading" secondItem="iQc-fQ-qHx" secondAttribute="leading" constant="19" id="pj2-9d-M6g"/>
+                                            </constraints>
+                                        </view>
+                                    </tabViewItem>
+                                    <tabViewItem label="Command" identifier="" id="7PO-xe-aOR">
+                                        <view key="view" id="CTh-uV-FGQ">
+                                            <rect key="frame" x="10" y="33" width="434" height="175"/>
+                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                            <subviews>
+                                                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="NWn-U8-TOg">
+                                                    <rect key="frame" x="155" y="90" width="125" height="17"/>
+                                                    <textFieldCell key="cell" lineBreakMode="clipping" title="No commands yet..." id="3ax-ee-ayA">
+                                                        <font key="font" usesAppearanceFont="YES"/>
+                                                        <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                                        <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                                    </textFieldCell>
+                                                </textField>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="NWn-U8-TOg" firstAttribute="top" secondItem="CTh-uV-FGQ" secondAttribute="top" constant="68" id="2tn-sE-VCb"/>
+                                                <constraint firstItem="NWn-U8-TOg" firstAttribute="centerX" secondItem="CTh-uV-FGQ" secondAttribute="centerX" id="C3c-q7-8YO"/>
+                                            </constraints>
+                                        </view>
+                                    </tabViewItem>
+                                </tabViewItems>
+                            </tabView>
+                        </subviews>
+                        <constraints>
+                            <constraint firstItem="pf3-nl-QEb" firstAttribute="trailing" secondItem="DNU-Vd-4az" secondAttribute="trailing" id="1H6-M8-EwO"/>
+                            <constraint firstItem="Dpk-pZ-iNl" firstAttribute="baseline" secondItem="DNU-Vd-4az" secondAttribute="baseline" id="491-H6-Gbh"/>
+                            <constraint firstItem="pf3-nl-QEb" firstAttribute="top" secondItem="8gJ-Af-E7T" secondAttribute="top" constant="20" id="CgR-vf-9aJ"/>
+                            <constraint firstItem="pf3-nl-QEb" firstAttribute="leading" secondItem="8gJ-Af-E7T" secondAttribute="leading" constant="20" symbolic="YES" id="JU2-bj-6bS"/>
+                            <constraint firstAttribute="trailing" secondItem="pf3-nl-QEb" secondAttribute="trailing" constant="20" symbolic="YES" id="TMp-Va-uKk"/>
+                            <constraint firstAttribute="bottom" secondItem="Dpk-pZ-iNl" secondAttribute="bottom" constant="13" id="ewd-jj-Y2u"/>
+                            <constraint firstItem="pf3-nl-QEb" firstAttribute="leading" secondItem="Dpk-pZ-iNl" secondAttribute="leading" id="fkW-p1-C2W"/>
+                            <constraint firstItem="Dpk-pZ-iNl" firstAttribute="top" secondItem="pf3-nl-QEb" secondAttribute="bottom" constant="20" id="mw1-B5-L91"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="BroadcastButton" destination="Dpk-pZ-iNl" id="7Me-51-Igo"/>
+                        <outlet property="BroadcastMessageBox" destination="mwv-xb-oWL" id="NJI-LS-47G"/>
+                        <outlet property="TabControl" destination="pf3-nl-QEb" id="bao-Jz-8hZ"/>
+                    </connections>
+                </viewController>
+                <customObject id="Pgw-vl-iIG" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-116" y="690.5"/>
+        </scene>
+    </scenes>
+</document>
