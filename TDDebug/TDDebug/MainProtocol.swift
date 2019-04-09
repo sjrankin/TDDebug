@@ -21,7 +21,7 @@ protocol MainProtocol: class
     func GetFilterSourceList() -> [String]
     func CloseProtocol(ForType: ConnectionProtocolTypes)
     func SetProtocol(ForType: ConnectionProtocolTypes, Delegate: ConnectionNotificationProtocol)
-    func LastSelectedLogItem() -> LogItem?
+    func GetItemManager() -> LogItemList
 }
 
 /// Types of windows that implement connection protocols.
