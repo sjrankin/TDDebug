@@ -1195,6 +1195,8 @@ class MessageHelper
         return Final
     }
     
+    //TO DO - add instance ID to the start of all commands to differentiate between instances on the same host
+    
     /// Assemble the list of string into a command that can be sent to another TDebug instance or other app that implements
     /// at least the MultiPeerManager.
     ///
