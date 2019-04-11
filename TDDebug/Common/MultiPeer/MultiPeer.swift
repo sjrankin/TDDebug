@@ -26,6 +26,7 @@ class MultiPeerManager: NSObject, MCNearbyServiceAdvertiserDelegate, MCNearbySer
     private let ServiceAdvertiser: MCNearbyServiceAdvertiser!
     private let ServiceBrower: MCNearbyServiceBrowser!
     var Delegate: MultiPeerDelegate? = nil
+    var InstanceID: UUID = UUID()
     
     lazy var Session: MCSession =
         {
