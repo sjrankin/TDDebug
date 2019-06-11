@@ -26,10 +26,18 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
     var MPMgr: MultiPeerManager!
     var LocalCommands: ClientCommands!
     var MsgHandler: MessageHandler!
+    var PrefixCode: UUID!
+    var IsDebugger: Bool!
+    var ADel: AppDelegate!
     
     override func viewDidLoad()
     {
         super.viewDidLoad()
+        
+        ADel = NSApp.delegate as! AppDelegate
+        
+        PrefixCode = UUID()
+        IsDebugger = false
         
         State.Initialize(WithDelegate: self)
         
@@ -39,6 +47,7 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
         MPMgr = MultiPeerManager()
         MPMgr.Delegate = self
         MsgHandler = MessageHandler(self)
+        MessageHelper.Initialize(PrefixCode)
         
         LocalCommands = ClientCommands()
         
@@ -78,6 +87,7 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
     @IBOutlet weak var VersionLabelView: NSView!
     @IBOutlet weak var StatusLabelView: NSView!
     @IBOutlet weak var LogLabelView: NSView!
+    
     func UpdateLabels()
     {
         VersionLabel.frameCenterRotation = CGFloat(90.0)
@@ -95,6 +105,7 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
         AddVersionData(Order: 4, Name: "Build ID", Value: Versioning.BuildID)
         AddVersionData(Order: 5, Name: "Copyright", Value: Versioning.CopyrightText())
         AddVersionData(Order: 6, Name: "Program ID", Value: Versioning.ProgramID)
+        AddVersionData(Order: 7, Name: "Prefix", Value: PrefixCode.uuidString)
     }
     
     func ShowClientVersion(ProgramName: String? = nil, Version: String? = nil, Build: String? = nil, Built: String? = nil,
@@ -435,6 +446,12 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
         else
         {
             SetSendEnableState(To: true)
+        }
+        if NewState == .connected
+        {
+            //Get peer information for the newly-connected peer.
+            let GetPeerInfo = MessageHelper.MakeGetPeerInformation()
+            MPMgr.SendPreformatted(Message: GetPeerInfo, To: Changed)
         }
     }
     
@@ -792,6 +809,27 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
         ShowClientVersion(ProgramName: Name, Version: Version, Build: Build, Built: BuildTimeStamp, BuildID: BuildID, Copyright: Copyright, ProgramID: ProgramID)
     }
     
+    /// Returns this peer's information to the requesting peer.
+    /// - Parameter Raw: Not used.
+    /// - Parameter Peer: The peer that wants information about us.
+    func HandleReturnPeerType(_ Raw: String, Peer: MCPeerID)
+    {
+        let ReturnToPeer = MessageHelper.MakeGetPeerTypeReturn(IsDebugger: IsDebugger, PrefixCode: PrefixCode)
+        MPMgr.SendPreformatted(Message: ReturnToPeer, To: Peer)
+    }
+    
+    func HandlePeerTypeFromSender(_ Raw: String, Peer: MCPeerID)
+    {
+        let PeerData = MessageHelper.DecodePeerTypeCommand(Raw)
+        let LogText = "\(Peer.displayName) [Debugger: \(PeerData?.PeerIsDebugger)], Prefix=\((PeerData?.PeerPrefixID?.uuidString)!)"
+        let SomeItem = LogItem(ItemID: UUID(),
+                               TimeStamp: MessageHelper.MakeTimeStamp(FromDate: Date()),
+                               Text: LogText)
+        SomeItem.HostName = Peer.displayName
+        SomeItem.BGColor = NSColor(named: "ProcessYellow")
+        self.AddLogMessage(Item: SomeItem)
+    }
+    
     func ExecuteClientCommand(_ Command: ClientCommand)
     {
         
@@ -908,6 +946,14 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
         {
         case .HandShake:
             HandleHandShakeCommand(RawData, Peer: Peer)
+            
+        case .GetPeerType:
+            //Send peer data to someone else.
+            HandleReturnPeerType(RawData, Peer: Peer)
+            
+        case .SendPeerType:
+            //Receive peer data from someone else.
+            HandlePeerTypeFromSender(RawData, Peer: Peer)
             
         case .SpecialCommand:
             HandleSpecialCommand(RawData, Peer: Peer)
@@ -1533,6 +1579,31 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
     @IBAction func HandleBroadcast(_ sender: Any)
     {
         DoHandleBroadcast()
+    }
+    
+    func DoHandleDebuggerState()
+    {
+        IsDebugger = !IsDebugger
+        //Eventually need to broadcast the change.
+    }
+    
+    @IBAction func HandleDebugMenuSelected(_ sender: Any)
+    {
+        DoHandleDebuggerState()
+        if let Window = self.view.window?.windowController as? MainWindow
+        {
+            Window.DebuggerButton.image = IsDebugger ? NSImage(named: "DebugButton") : NSImage(named: "DebugOffButton")
+        }
+        let DebugMenu = sender as? NSMenuItem
+        DebugMenu?.title = IsDebugger ? "Disable as Debugger" : "Set as Debugger"
+    }
+    
+    @IBAction func HandleDebugButtonPressed(_ sender: Any)
+    {
+        DoHandleDebuggerState()
+        let Button = sender as? NSToolbarItem
+        Button?.image = IsDebugger ? NSImage(named: "DebugButton") : NSImage(named: "DebugOffButton")
+        ADel.DebuggerMenuItem.title = IsDebugger ? "Disable as Debugger" : "Set as Debugger"
     }
     
     func CloseProtocol(ForType: ConnectionProtocolTypes)
