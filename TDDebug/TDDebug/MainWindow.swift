@@ -104,4 +104,11 @@ class MainWindow: NSWindowController, NSToolbarItemValidation
         let VC = window!.contentViewController as? ViewController
         VC?.HandleBroadcast(sender)
     }
+    
+    @IBOutlet weak var DebuggerButton: NSToolbarItem!
+    @IBAction func HandleDebuggerButtonPressed(_ sender: Any)
+    {
+        let VC = window!.contentViewController as? ViewController
+        VC?.HandleDebugButtonPressed(sender)
+    }
 }
