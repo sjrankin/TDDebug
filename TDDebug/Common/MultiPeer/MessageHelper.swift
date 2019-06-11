@@ -646,6 +646,49 @@ class MessageHelper
         return (Command, Address, Text, FGColor, BGColor)
     }
     
+    public static func DecodeIdiotLightMessage2(_ Raw: String) -> IdiotLightMessage?
+    {
+        let Delimiter = String(Raw.first!)
+        var Next = Raw
+        Next.removeFirst()
+        let Parts = Next.split(separator: String.Element(Delimiter))
+        
+        if Parts.count != 5
+        {
+            return nil
+        }
+        var PartsList = [(String, String)]()
+        for Part in Parts
+        {
+            if let (Key, Value) = DecodeKVP(String(Part), Delimiter: "=")
+            {
+                PartsList.append((Key, Value))
+            }
+        }
+        let Result = IdiotLightMessage()
+        for (Name, Value) in PartsList
+        {
+            switch Name
+            {
+            case "Address":
+                Result.Address = Value
+                
+            case "Message":
+                Result.Message = Value
+                
+            case "FGColor":
+                Result.FGColor = Value
+                
+            case "BGColor":
+                Result.BGColor = Value
+                
+            default:
+                break
+            }
+        }
+        return Result
+    }
+    
     public static func GetMessageType(_ Raw: String) -> MessageTypes
     {
         if Raw.isEmpty
@@ -881,6 +924,18 @@ class MessageHelper
         let Delimiter = GetUnusedDelimiter(From: [Message, MPayload])
         Message = Delimiter + Message + Delimiter + MPayload
         return MakeMessage(WithType: .Heartbeat, Message, HostName)
+    }
+    
+    public static func MakeIdiotLightMessage(Address: String, Message: String, FGColor: OSColor, BGColor: OSColor) -> String
+    {
+        let Cmd = MessageTypeIndicators[.IdiotLightMessage]!
+        let P1 = "Address=\(Address)"
+        let P2 = "Message=\(Message)"
+        let P3 = "FGColor=\(FGColor.AsHexString())"
+        let P4 = "BGColor=\(BGColor.AsHexString())"
+        let Delimiter = GetUnusedDelimiter(From: [Cmd, P1, P2, P3, P4])
+        let Final = AssembleCommand(FromParts: [Cmd, P1, P2, P3, P4], WithDelimiter: Delimiter)
+        return Final
     }
     
     public static func MakeIdiotLightMessage(Address: String, State: UIFeatureStates) -> String
@@ -1222,6 +1277,59 @@ class MessageHelper
         return Final
     }
     
+    public static func DecodeDebuggerStateChanged(_ Raw: String) -> (UUID, String, Bool)?
+    {
+        let Delimiter = String(Raw.first!)
+        var Next = Raw
+        Next.removeFirst()
+        let Parts = Next.split(separator: String.Element(Delimiter))
+        
+        if Parts.count != 4
+        {
+            return nil
+        }
+        var PartsList = [(String, String)]()
+        for Part in Parts
+        {
+            if let (Key, Value) = DecodeKVP(String(Part), Delimiter: "=")
+            {
+                PartsList.append((Key, Value))
+            }
+        }
+        var Prefix: UUID? = nil
+        var PeerName: String = ""
+        var NewDebugState: Bool = false
+        for (Name, Value) in PartsList
+        {
+            switch Name
+            {
+            case "Prefix":
+                Prefix = UUID(uuidString: Value)!
+                
+            case "Peer":
+                PeerName = Value
+                
+            case "NewDebuggerState":
+                NewDebugState = Bool(Value)!
+                
+            default:
+                break
+            }
+        }
+        return (Prefix!, PeerName, NewDebugState)
+    }
+    
+    public static func MakeDebuggerStateChangeMessage(Prefix: UUID, From: MCPeerID, NewDebugState: Bool) -> String
+    {
+        let Cmd = MessageTypeIndicators[.DebuggerStateChanged]!
+        let P1 = "Prefix=\(Prefix)"
+        let P2 = "Peer=\(From.displayName)"
+        let P3 = "NewDebugState=\(NewDebugState)"
+        let Delimiter = GetUnusedDelimiter(From: [Cmd, P1, P2, P3])
+        let Final = AssembleCommand(FromParts: [Cmd, P1, P2, P3], WithDelimiter: Delimiter)
+        return Final
+    }
+    
     /// Create a broadcast text message command.
     ///
     /// - Parameters:
@@ -1366,6 +1474,8 @@ class MessageHelper
             MessageTypes.BroadcastCommand: MessageTypes.BroadcastCommand.rawValue,
             MessageTypes.GetPeerType: MessageTypes.GetPeerType.rawValue,
             MessageTypes.SendPeerType: MessageTypes.SendPeerType.rawValue,
+            MessageTypes.IdiotLightMessage: MessageTypes.IdiotLightMessage.rawValue,
+            MessageTypes.DebuggerStateChanged: MessageTypes.DebuggerStateChanged.rawValue,
             MessageTypes.Unknown: MessageTypes.Unknown.rawValue,
     ]
     
@@ -1487,6 +1597,8 @@ enum HandShakeCommands: String, CaseIterable
 /// - BroadcastCommand: Send a command to all peers.
 /// - GetPeerType: Request peer information.
 /// - SendPeerType: Send instance information to a peer.
+/// - IdiotLightMessage: More complete control of idiot lights.
+/// - DebuggerStateChanged: The debug state of the instance changed.
 /// - Unknown: Unknown command - if explicitly used, it will be ignored.
 enum MessageTypes: String, CaseIterable
 {
@@ -1515,6 +1627,8 @@ enum MessageTypes: String, CaseIterable
     case BroadcastCommand = "fe730b23-3f55-4338-b91e-de0d4560563d"
     case GetPeerType = "1eed12e8-a155-4887-bdcf-904042250769"
     case SendPeerType = "f57ebac8-8bf5-11e9-bc42-526af7764f64"
+    case IdiotLightMessage = "fbd09de5-c994-40ba-a8b3-a56979826872"
+    case DebuggerStateChanged = "1f98a419-d2a8-4a8e-b618-c729ce78e3ea"
     case Unknown = "dfc5b2d5-521b-46a8-b459-a4947089312c"
 }
 
