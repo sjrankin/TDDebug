@@ -11,7 +11,7 @@ import UIKit
 import MultipeerConnectivity
 
 class MainController: UIViewController, UITableViewDelegate, UITableViewDataSource,
-      MultiPeerDelegate, MainProtocol, StateProtocol, MessageHandlerDelegate
+    MultiPeerDelegate, MainProtocol, StateProtocol, MessageHandlerDelegate
 {
     var HostNames: [String]? = nil
     
@@ -20,16 +20,21 @@ class MainController: UIViewController, UITableViewDelegate, UITableViewDataSour
     var MPMgr: MultiPeerManager!
     var LocalCommands: ClientCommands!
     var MsgHandler: MessageHandler!
+    var PrefixCode: UUID!
+    var IsDebugger: Bool!
     
     override func viewDidLoad()
     {
         super.viewDidLoad()
+        PrefixCode = UUID()
+        IsDebugger = false
         State.Initialize(WithDelegate: self)
         InitializeUI()
         
         MPMgr = MultiPeerManager()
         MPMgr.Delegate = self
         MsgHandler = MessageHandler(self)
+        MessageHelper.Initialize(PrefixCode)
         
         LocalCommands = ClientCommands()
         
@@ -49,6 +54,8 @@ class MainController: UIViewController, UITableViewDelegate, UITableViewDataSour
         AddKVPData("Program", Versioning.ApplicationName)
         AddKVPData("Version", Versioning.MakeVersionString(IncludeVersionSuffix: true, IncludeVersionPrefix: false))
         AddKVPData("Build", "\(Versioning.Build)")
+        let PrefixString: String = PrefixCode.uuidString
+        AddKVPData("Prefix", PrefixString)
         AddKVPData("This Host", GetDeviceName())
         let SomeItem = LogItem(ItemID: UUID(),
                                TimeStamp: MessageHelper.MakeTimeStamp(FromDate: Date()),
@@ -170,9 +177,26 @@ class MainController: UIViewController, UITableViewDelegate, UITableViewDataSour
         default:
             NewStateName = "undetermined"
         }
+        
+        if ConnectedDevices.count < 1
+        {
+       SetIdiotLightA1(ToState: .NoPeers)
+        }
+        else
+        {
+            SetIdiotLightA1(ToState: .PeersFound)
+        }
+        
         let Item = LogItem(Text: "Device \(ChangedPeerName) is now \(NewStateName).")
         AddLogMessage(Item: Item)
         AddKVPData(ID: ConnectCountID, "Peers", "\(ConnectedDevices.count)")
+        
+        if NewState == .connected
+        {
+            //Get peer information for the newly-connected peer.
+            let GetPeerInfo = MessageHelper.MakeGetPeerInformation()
+            MPMgr.SendPreformatted(Message: GetPeerInfo, To: Changed)
+        }
     }
     
     let ConnectCountID = UUID()
@@ -488,9 +512,30 @@ class MainController: UIViewController, UITableViewDelegate, UITableViewDataSour
         print("Build time-stamp: \(BuildTimeStamp), Copyright: \(Copyright)")
     }
     
+    /// Returns this peer's information to the requesting peer.
+    /// - Parameter Raw: Not used.
+    /// - Parameter Peer: The peer that wants information about us.
+    func HandleReturnPeerType(_ Raw: String, Peer: MCPeerID)
+    {
+        let ReturnToPeer = MessageHelper.MakeGetPeerTypeReturn(IsDebugger: IsDebugger, PrefixCode: PrefixCode)
+        MPMgr.SendPreformatted(Message: ReturnToPeer, To: Peer)
+    }
+    
+    func HandlePeerTypeFromSender(_ Raw: String, Peer: MCPeerID)
+    {
+        let PeerData = MessageHelper.DecodePeerTypeCommand(Raw)
+        let LogText = "\(Peer.displayName) [Debugger: \(PeerData?.PeerIsDebugger)], Prefix=\((PeerData?.PeerPrefixID?.uuidString)!)"
+        let SomeItem = LogItem(ItemID: UUID(),
+                               TimeStamp: MessageHelper.MakeTimeStamp(FromDate: Date()),
+                               Text: LogText)
+        SomeItem.HostName = Peer.displayName
+        SomeItem.BGColor = UIColor(named: "ProcessYellow")
+        self.AddLogMessage(Item: SomeItem)
+    }
+    
     /// Exit the application.
     ///
-    /// - Note: This is non-standard and will cause Apple Store rejections if submitted.
+    /// - Note: **This is non-standard and will cause Apple Store rejections if submitted.**
     func HCF() -> Never
     {
         exit(0)
@@ -529,7 +574,7 @@ class MainController: UIViewController, UITableViewDelegate, UITableViewDataSour
         {
             OperationQueue.main.addOperation
                 {
-                self.ExecuteCommandFromPeer(ExecuteMe, Peer: Peer)
+                    self.ExecuteCommandFromPeer(ExecuteMe, Peer: Peer)
             }
         }
     }
@@ -571,6 +616,12 @@ class MainController: UIViewController, UITableViewDelegate, UITableViewDataSour
         {
         case .HandShake:
             HandleHandShakeCommand(RawData, Peer: Peer)
+            
+        case .GetPeerType:
+            HandleReturnPeerType(RawData, Peer: Peer)
+            
+        case .SendPeerType:
+            HandlePeerTypeFromSender(RawData, Peer: Peer)
             
         case .SpecialCommand:
             HandleSpecialCommand(RawData, Peer: Peer)
@@ -870,6 +921,35 @@ class MainController: UIViewController, UITableViewDelegate, UITableViewDataSour
         return LogCell
     }
     
+    func SetIdiotLightA1(ToState: A1States)
+    {
+        OperationQueue.main.addOperation
+            {
+            switch ToState
+            {
+            case .NotConnected:
+                self.SetIdiotLight("A", 1, "Not Connected", UIColor.black, UIColor.white)
+                
+            case .Connected:
+                self.SetIdiotLight("A", 1, "Client Connected", UIColor.black, UIColor.green)
+                
+            case .NoPeers:
+                self.SetIdiotLight("A", 1, "No Peers", UIColor.black, UIColor.lightGray)
+                
+            case .PeersFound:
+                self.SetIdiotLight("A", 1, "Peers Found", UIColor.white, UIColor.purple)
+                }
+        }
+    }
+    
+    enum A1States
+    {
+        case NotConnected
+        case PeersFound
+        case NoPeers
+        case Connected
+    }
+    
     func SetIdiotLight(_ Row: String, _ Column: Int, _ Text: String, _ TextColor: UIColor = UIColor.black,
                        _ BGColor: UIColor = UIColor.white)
     {
@@ -971,6 +1051,13 @@ class MainController: UIViewController, UITableViewDelegate, UITableViewDataSour
         }
         
         super.prepare(for: segue, sender: self)
+    }
+    
+    @IBAction func HandleDebuggerButton(_ sender: Any)
+    {
+        let Button = sender as? UIBarButtonItem
+        IsDebugger = !IsDebugger
+        Button?.title = IsDebugger ? "Stop Debug" : "Start Debug"
     }
     
     @IBAction func HandleTestButton(_ sender: Any)
