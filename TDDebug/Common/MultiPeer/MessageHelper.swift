@@ -17,6 +17,16 @@ import MultipeerConnectivity
 /// Class that helps with encoding and decoding messages sent to and from TD{D}ebug instances. Intended for use on iOS and macOS.
 class MessageHelper
 {
+    /// Initialize the message helper.
+    /// - Parameter Prefix: The prefix code for the instance.
+    public static func Initialize(_ Prefix: UUID)
+    {
+        PrefixCode = Prefix
+    }
+    
+    /// Holds the prefix code.
+    private static var PrefixCode: UUID!
+    
     /// Decode a key-value pair with the specified delimiter. The format is assumed to be: key=value.
     ///
     /// - Parameters:
@@ -211,6 +221,48 @@ class MessageHelper
             return (ID, String(Parts[2]))
         }
         return nil
+    }
+    
+    public static func DecodePeerTypeCommand(_ Raw: String) -> PeerType?
+    {
+        let Delimiter = String(Raw.first!)
+        var Next = Raw
+        Next.removeFirst()
+        let Parts = Next.split(separator: String.Element(Delimiter))
+        if Parts.count != 3
+        {
+            return nil
+        }
+        var IsDebugger = false
+        var PrefixCode = UUID()
+        let (Name0, Value0) = DecodeKVP(String(Parts[1]), Delimiter: "=")!
+        switch Name0
+        {
+        case "Debugger":
+            IsDebugger = Bool(Value0)!
+            
+        case "PrefixCode":
+            PrefixCode = UUID(uuidString: Value0)!
+            
+        default:
+            fatalError("Unexpected parameter \"\(Name0)\" found when decoding peer ID command.")
+        }
+        let (Name1, Value1) = DecodeKVP(String(Parts[2]), Delimiter: "=")!
+        switch Name1
+        {
+        case "Debugger":
+            IsDebugger = Bool(Value1)!
+            
+        case "PrefixCode":
+            PrefixCode = UUID(uuidString: Value1)!
+            
+        default:
+            fatalError("Unexpected parameter \"\(Name1)\" found when decoding peer ID command.")
+        }
+        let PType = PeerType()
+        PType.PeerIsDebugger = IsDebugger
+        PType.PeerPrefixID = PrefixCode
+        return PType
     }
     
     /// Decode a client command string.
@@ -613,6 +665,7 @@ class MessageHelper
             let MessageType = MessageTypeFromID(String(Part))
             return MessageType
         }
+        print("Unexpected message found: \(Raw)")
         return .Unknown
     }
     
@@ -711,6 +764,9 @@ class MessageHelper
         return (MessageTypeFromID(String(Parts[0])), String(Parts[1]), String(Parts[2]), String(Parts[3]))
     }
     
+    /// Return a message type from the raw string.
+    /// - Parameter RawID: The raw string a message type is extracted from then returned
+    /// - Returns: Message type from the raw string.
     public static func MessageTypeFromID(_ RawID: String) -> MessageTypes
     {
         let FixedID = RawID.lowercased()
@@ -940,6 +996,18 @@ class MessageHelper
         return MessageTypeIndicators[.RequestCommandCount]!
     }
     
+    /// Make a command to have a client return the peer's information.
+    ///
+    /// - Returns: Command string for retrieving the peer's information.
+    public static func MakeGetPeerInformation() -> String
+    {
+        let Cmd = MessageTypeIndicators[.GetPeerType]!
+        let P1 = "From=\((PrefixCode)!)"
+        let Delimiter = GetUnusedDelimiter(From: [Cmd, P1])
+        let Final = AssembleCommand(FromParts: [Cmd, P1], WithDelimiter: Delimiter)
+        return Final
+    }
+    
     /// Make a command string that requests a client command at the CommandIndexth position.
     ///
     /// - Parameter CommandIndex: Determines the client command to return.
@@ -1021,6 +1089,19 @@ class MessageHelper
         let SValue = "Value=\(ReturnValue)"
         let Delimiter = GetUnusedDelimiter(From: [Cmd, SResult, SValue])
         let Final = AssembleCommand(FromParts: [Cmd, SResult, SValue], WithDelimiter: Delimiter)
+        return Final
+    }
+    
+    /// Creates and returns a command that returns peer data.
+    /// - Parameter IsDebugger: The peer-is-acting-as-a-debugger flag.
+    /// - Parameter PrefixCode: The peer instance prefix code.
+    public static func MakeGetPeerTypeReturn(IsDebugger: Bool, PrefixCode: UUID) -> String
+    {
+        let Cmd = MessageTypeIndicators[.SendPeerType]!
+        let P1 = "Debugger=\(IsDebugger)"
+        let P2 = "PrefixCode=\(PrefixCode.uuidString)"
+        let Delimiter = GetUnusedDelimiter(From: [Cmd, P1, P2])
+        let Final = AssembleCommand(FromParts: [Cmd, P1, P2], WithDelimiter: Delimiter)
         return Final
     }
     
@@ -1283,6 +1364,8 @@ class MessageHelper
             MessageTypes.RequestConnectionHeartbeat: MessageTypes.RequestConnectionHeartbeat.rawValue,
             MessageTypes.BroadcastMessage: MessageTypes.BroadcastMessage.rawValue,
             MessageTypes.BroadcastCommand: MessageTypes.BroadcastCommand.rawValue,
+            MessageTypes.GetPeerType: MessageTypes.GetPeerType.rawValue,
+            MessageTypes.SendPeerType: MessageTypes.SendPeerType.rawValue,
             MessageTypes.Unknown: MessageTypes.Unknown.rawValue,
     ]
     
@@ -1400,6 +1483,10 @@ enum HandShakeCommands: String, CaseIterable
 /// - PushVersionInformation: Send version information to another peer.
 /// - ConnectionHeartbeat: Connection heartbeat command - used to monitor connection status.
 /// - RequestConnectionHeartbeat: Request a heartbeat command to be sent from the selected peer.
+/// - BroadcastMessage: Send a message to all peers.
+/// - BroadcastCommand: Send a command to all peers.
+/// - GetPeerType: Request peer information.
+/// - SendPeerType: Send instance information to a peer.
 /// - Unknown: Unknown command - if explicitly used, it will be ignored.
 enum MessageTypes: String, CaseIterable
 {
@@ -1426,6 +1513,8 @@ enum MessageTypes: String, CaseIterable
     case RequestConnectionHeartbeat = "e8b711c9-8672-4ffb-a9b0-230630bd9d7c"
     case BroadcastMessage = "671841fc-b8d6-43da-bd77-288ab7e65918"
     case BroadcastCommand = "fe730b23-3f55-4338-b91e-de0d4560563d"
+    case GetPeerType = "1eed12e8-a155-4887-bdcf-904042250769"
+    case SendPeerType = "f57ebac8-8bf5-11e9-bc42-526af7764f64"
     case Unknown = "dfc5b2d5-521b-46a8-b459-a4947089312c"
 }
 
