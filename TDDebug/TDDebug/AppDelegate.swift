@@ -24,5 +24,8 @@ import Cocoa
     {
         // Insert code here to tear down your application
     }
+    
+    /// Reference to the debugger menu item.
+    @IBOutlet weak var DebuggerMenuItem: NSMenuItem!
 }
 
