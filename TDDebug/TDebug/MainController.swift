@@ -268,6 +268,22 @@ class MainController: UIViewController, UITableViewDelegate, UITableViewDataSour
         }
     }
     
+    func HandleIdiotLightMessage(_ Raw: String)
+    {
+        OperationQueue.main.addOperation
+            {
+                if let IdiotCommand = MessageHelper.DecodeIdiotLightMessage2(Raw)
+                {
+                    let FinalAddress = IdiotCommand.Address.uppercased()
+                    self.IdiotLights[FinalAddress]!.1.text = IdiotCommand.Message
+                    let FGColor = OSColor(HexString: IdiotCommand.FGColor)
+                    self.IdiotLights[FinalAddress]!.1.textColor = FGColor!
+                    let BGColor = OSColor(HexString: IdiotCommand.BGColor)
+                    self.IdiotLights[FinalAddress]!.0.backgroundColor = BGColor!
+                }
+        }
+    }
+    
     func DoEcho(Delay: Int, Message: String)
     {
         if EchoTimer != nil
@@ -524,13 +540,31 @@ class MainController: UIViewController, UITableViewDelegate, UITableViewDataSour
     func HandlePeerTypeFromSender(_ Raw: String, Peer: MCPeerID)
     {
         let PeerData = MessageHelper.DecodePeerTypeCommand(Raw)
-        let LogText = "\(Peer.displayName) [Debugger: \(PeerData?.PeerIsDebugger)], Prefix=\((PeerData?.PeerPrefixID?.uuidString)!)"
+        let PeerIsDebugger: String = String(PeerData!.PeerIsDebugger)
+        let LogText = "\(Peer.displayName) [Debugger: \(PeerIsDebugger)], Prefix=\((PeerData?.PeerPrefixID?.uuidString)!)"
         let SomeItem = LogItem(ItemID: UUID(),
                                TimeStamp: MessageHelper.MakeTimeStamp(FromDate: Date()),
                                Text: LogText)
         SomeItem.HostName = Peer.displayName
         SomeItem.BGColor = UIColor(named: "ProcessYellow")
         self.AddLogMessage(Item: SomeItem)
+    }
+    
+    func HandleDebuggerStateChanged(_ Raw: String, Peer: MCPeerID)
+    {
+        if Peer == MPMgr?.SelfPeer
+        {
+            print("Received own command broadcast")
+            return
+        }
+        if let (OtherPrefix, OtherPeerName, NewDebuggerState) = MessageHelper.DecodeDebuggerStateChanged(Raw)
+        {
+            print("\(OtherPeerName) debug state is now \(NewDebuggerState) [Prefix: \(OtherPrefix)]")
+        }
+        else
+        {
+            print("Error returned by DecodeDebuggerStateChanged")
+        }
     }
     
     /// Exit the application.
@@ -637,6 +671,9 @@ class MainController: UIViewController, UITableViewDelegate, UITableViewDataSour
         case .ControlIdiotLight:
             ControlIdiotLight(RawData)
             
+        case .IdiotLightMessage:
+            HandleIdiotLightMessage(RawData)
+            
         case .KVPData:
             ManageKVPData(RawData, Peer: Peer)
             
@@ -662,8 +699,8 @@ class MainController: UIViewController, UITableViewDelegate, UITableViewDataSour
         case .SendCommandToClient:
             HandleReceivedClientCommand(RawData, Peer: Peer)
             
-        case .BroadcastMessage:
-            HandleBroadcastMessage(RawData, Peer: Peer)
+        case .DebuggerStateChanged:
+            HandleDebuggerStateChanged(RawData, Peer: Peer)
             
         default:
             print("Unhandled message type: \(MessageType), Raw=\(RawData)")
@@ -1058,6 +1095,8 @@ class MainController: UIViewController, UITableViewDelegate, UITableViewDataSour
         let Button = sender as? UIBarButtonItem
         IsDebugger = !IsDebugger
         Button?.title = IsDebugger ? "Stop Debug" : "Start Debug"
+        let DbgMsg = MessageHelper.MakeDebuggerStateChangeMessage(Prefix: PrefixCode, From: MPMgr!.SelfPeer, NewDebugState: IsDebugger)
+        MPMgr?.BroadcastPreformatted(Message: DbgMsg)
     }
     
     @IBAction func HandleTestButton(_ sender: Any)
