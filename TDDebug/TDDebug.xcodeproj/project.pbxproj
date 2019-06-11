@@ -91,6 +91,8 @@
 		17B68CCD2254713100AEBE94 /* AboutTDDebug.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 17B68CCC2254713100AEBE94 /* AboutTDDebug.storyboard */; };
 		17B68CCF2254731C00AEBE94 /* AboutTDDebugCode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17B68CCE2254731C00AEBE94 /* AboutTDDebugCode.swift */; };
 		17B68CD12254756400AEBE94 /* AboutTDDebugWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17B68CD02254756400AEBE94 /* AboutTDDebugWindow.swift */; };
+		17C0E6FA22AF9FD3003FAFA8 /* IdiotLightMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17C0E6F922AF9FD3003FAFA8 /* IdiotLightMessage.swift */; };
+		17C0E6FB22AF9FD3003FAFA8 /* IdiotLightMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17C0E6F922AF9FD3003FAFA8 /* IdiotLightMessage.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -173,6 +175,7 @@
 		17B68CCC2254713100AEBE94 /* AboutTDDebug.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = AboutTDDebug.storyboard; sourceTree = "<group>"; };
 		17B68CCE2254731C00AEBE94 /* AboutTDDebugCode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutTDDebugCode.swift; sourceTree = "<group>"; };
 		17B68CD02254756400AEBE94 /* AboutTDDebugWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutTDDebugWindow.swift; sourceTree = "<group>"; };
+		17C0E6F922AF9FD3003FAFA8 /* IdiotLightMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IdiotLightMessage.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -370,6 +373,7 @@
 				1743C1472252032F003FE6B2 /* MultiPeer.swift */,
 				1743C14B22520366003FE6B2 /* MultiPeerDelegate.swift */,
 				1743C1492252034E003FE6B2 /* MessageHelper.swift */,
+				17C0E6F922AF9FD3003FAFA8 /* IdiotLightMessage.swift */,
 				1767D28722AF4C75005EE191 /* PeerType.swift */,
 				1704C5B72253244D00C49E91 /* ClientCommands.swift */,
 			);
@@ -655,6 +659,7 @@
 				171EB5F72255C2C30075C134 /* MultiPeer.swift in Sources */,
 				17B3EE952255CD5A009988D3 /* LogItem.swift in Sources */,
 				171EB6112255C47D0075C134 /* IDTableCell.swift in Sources */,
+				17C0E6FB22AF9FD3003FAFA8 /* IdiotLightMessage.swift in Sources */,
 				17B3EE992255CD66009988D3 /* LogItemViewerCode.swift in Sources */,
 				171EB5F92255C2CA0075C134 /* MessageHelper.swift in Sources */,
 				171EB5FC2255C2D80075C134 /* State.swift in Sources */,
@@ -711,6 +716,7 @@
 				17B68CD12254756400AEBE94 /* AboutTDDebugWindow.swift in Sources */,
 				17508F37225AF5CF00BC9FC0 /* SelectorDelegate.swift in Sources */,
 				172426D7225239C400E34282 /* PeerViewerUICode.swift in Sources */,
+				17C0E6FA22AF9FD3003FAFA8 /* IdiotLightMessage.swift in Sources */,
 				1743C14A2252034E003FE6B2 /* MessageHelper.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
