@@ -64,6 +64,8 @@
 		17508F42225B213200BC9FC0 /* ConfirmConnection.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 17508F41225B213200BC9FC0 /* ConfirmConnection.storyboard */; };
 		17508F44225B224700BC9FC0 /* ConfirmConnectionUICode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17508F43225B224700BC9FC0 /* ConfirmConnectionUICode.swift */; };
 		17508F4F225B6DD100BC9FC0 /* MainCustomizeUICode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17508F4E225B6DD100BC9FC0 /* MainCustomizeUICode.swift */; };
+		1767D28822AF4C75005EE191 /* PeerType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1767D28722AF4C75005EE191 /* PeerType.swift */; };
+		1767D28922AF4D37005EE191 /* PeerType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1767D28722AF4C75005EE191 /* PeerType.swift */; };
 		1772A2FB2253705C006D0A16 /* OSColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1772A2FA2253705C006D0A16 /* OSColor.swift */; };
 		17B3EE8D2255CD35009988D3 /* SendToRemote.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 17B3EE8C2255CD35009988D3 /* SendToRemote.storyboard */; };
 		17B3EE8F2255CD40009988D3 /* SendToRemoteCode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17B3EE8E2255CD40009988D3 /* SendToRemoteCode.swift */; };
@@ -144,6 +146,7 @@
 		17508F41225B213200BC9FC0 /* ConfirmConnection.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = ConfirmConnection.storyboard; sourceTree = "<group>"; };
 		17508F43225B224700BC9FC0 /* ConfirmConnectionUICode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfirmConnectionUICode.swift; sourceTree = "<group>"; };
 		17508F4E225B6DD100BC9FC0 /* MainCustomizeUICode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainCustomizeUICode.swift; sourceTree = "<group>"; };
+		1767D28722AF4C75005EE191 /* PeerType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeerType.swift; sourceTree = "<group>"; };
 		1772A2FA2253705C006D0A16 /* OSColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OSColor.swift; sourceTree = "<group>"; };
 		17B3EE8C2255CD35009988D3 /* SendToRemote.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = SendToRemote.storyboard; sourceTree = "<group>"; };
 		17B3EE8E2255CD40009988D3 /* SendToRemoteCode.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SendToRemoteCode.swift; sourceTree = "<group>"; };
@@ -367,6 +370,7 @@
 				1743C1472252032F003FE6B2 /* MultiPeer.swift */,
 				1743C14B22520366003FE6B2 /* MultiPeerDelegate.swift */,
 				1743C1492252034E003FE6B2 /* MessageHelper.swift */,
+				1767D28722AF4C75005EE191 /* PeerType.swift */,
 				1704C5B72253244D00C49E91 /* ClientCommands.swift */,
 			);
 			path = MultiPeer;
@@ -639,6 +643,7 @@
 				171EB5FB2255C2D10075C134 /* OSColorExtensions.swift in Sources */,
 				171EB5FA2255C2CD0075C134 /* ClientCommands.swift in Sources */,
 				17B3EEA42255CDF4009988D3 /* KVPItem.swift in Sources */,
+				1767D28922AF4D37005EE191 /* PeerType.swift in Sources */,
 				17B3EEA02255CD8D009988D3 /* MainProtocol.swift in Sources */,
 				17B3EE932255CD53009988D3 /* ClientTestUICode.swift in Sources */,
 				171EB5F82255C2C60075C134 /* MultiPeerDelegate.swift in Sources */,
@@ -675,6 +680,7 @@
 				1743C14E2252041B003FE6B2 /* OSColorExtensions.swift in Sources */,
 				17508F3F225B053800BC9FC0 /* SelectorWindowUI.swift in Sources */,
 				1746B54422520C6700E554EC /* KVPItem.swift in Sources */,
+				1767D28822AF4C75005EE191 /* PeerType.swift in Sources */,
 				1722346E22572E5300518601 /* FiltererUICode.swift in Sources */,
 				172E7F6B2259E72D009E4768 /* ItemViewerWindow.swift in Sources */,
 				17B49521225C397700117CF5 /* SearcherWindow.swift in Sources */,
