@@ -533,7 +533,7 @@ class MainController: UIViewController, UITableViewDelegate, UITableViewDataSour
     /// - Parameter Peer: The peer that wants information about us.
     func HandleReturnPeerType(_ Raw: String, Peer: MCPeerID)
     {
-        let ReturnToPeer = MessageHelper.MakeGetPeerTypeReturn(IsDebugger: IsDebugger, PrefixCode: PrefixCode)
+        let ReturnToPeer = MessageHelper.MakeGetPeerTypeReturn(IsDebugger: IsDebugger, PrefixCode: PrefixCode, PeerName: "TDebug")
         MPMgr.SendPreformatted(Message: ReturnToPeer, To: Peer)
     }
     
