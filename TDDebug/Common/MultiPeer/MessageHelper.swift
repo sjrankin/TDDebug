@@ -229,12 +229,13 @@ class MessageHelper
         var Next = Raw
         Next.removeFirst()
         let Parts = Next.split(separator: String.Element(Delimiter))
-        if Parts.count != 3
+        if Parts.count != 4
         {
             return nil
         }
         var IsDebugger = false
         var PrefixCode = UUID()
+        var PeerName = ""
         let (Name0, Value0) = DecodeKVP(String(Parts[1]), Delimiter: "=")!
         switch Name0
         {
@@ -243,6 +244,9 @@ class MessageHelper
             
         case "PrefixCode":
             PrefixCode = UUID(uuidString: Value0)!
+            
+        case "Name":
+            PeerName = Value0
             
         default:
             fatalError("Unexpected parameter \"\(Name0)\" found when decoding peer ID command.")
@@ -256,12 +260,16 @@ class MessageHelper
         case "PrefixCode":
             PrefixCode = UUID(uuidString: Value1)!
             
+        case "Name":
+            PeerName = Value1
+            
         default:
             fatalError("Unexpected parameter \"\(Name1)\" found when decoding peer ID command.")
         }
         let PType = PeerType()
         PType.PeerIsDebugger = IsDebugger
         PType.PeerPrefixID = PrefixCode
+        PType.PeerTitle = PeerName
         return PType
     }
     
@@ -1150,13 +1158,16 @@ class MessageHelper
     /// Creates and returns a command that returns peer data.
     /// - Parameter IsDebugger: The peer-is-acting-as-a-debugger flag.
     /// - Parameter PrefixCode: The peer instance prefix code.
-    public static func MakeGetPeerTypeReturn(IsDebugger: Bool, PrefixCode: UUID) -> String
+    /// - Parameter PeerName: The name of the peer.
+    /// - Returns: String to send to the caller.
+    public static func MakeGetPeerTypeReturn(IsDebugger: Bool, PrefixCode: UUID, PeerName: String) -> String
     {
         let Cmd = MessageTypeIndicators[.SendPeerType]!
         let P1 = "Debugger=\(IsDebugger)"
         let P2 = "PrefixCode=\(PrefixCode.uuidString)"
-        let Delimiter = GetUnusedDelimiter(From: [Cmd, P1, P2])
-        let Final = AssembleCommand(FromParts: [Cmd, P1, P2], WithDelimiter: Delimiter)
+        let P3 = "Name=\(PeerName)"
+        let Delimiter = GetUnusedDelimiter(From: [Cmd, P1, P2, P3])
+        let Final = AssembleCommand(FromParts: [Cmd, P1, P2, P3], WithDelimiter: Delimiter)
         return Final
     }
     
