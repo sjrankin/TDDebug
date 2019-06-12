@@ -16,6 +16,21 @@ class PeerType
     {
     }
     
+    /// Holds the peer-identified name.
+    private var _PeerTitle: String = ""
+    /// Get or set the peer-specified name for itself.
+    public var PeerTitle: String
+    {
+        get
+        {
+            return _PeerTitle
+        }
+        set
+        {
+            _PeerTitle = newValue
+        }
+    }
+    
     /// Holds the peer is a debugger flag.
     private var _PeerIsDebugger: Bool = false
     /// Get or set the peer is a debugger flag.
