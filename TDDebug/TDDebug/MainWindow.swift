@@ -105,6 +105,13 @@ class MainWindow: NSWindowController, NSToolbarItemValidation
         VC?.HandleBroadcast(sender)
     }
     
+    @IBOutlet weak var ResetIdiotLightButton: NSToolbarItem!
+    @IBAction func HandleResetIdiotLightsPressed(_ sender: Any)
+    {
+        let VC = window!.contentViewController as? ViewController
+        VC?.DoResetIdiotLights(sender) 
+    }
+    
     @IBOutlet weak var DebuggerButton: NSToolbarItem!
     @IBAction func HandleDebuggerButtonPressed(_ sender: Any)
     {
