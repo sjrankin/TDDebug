@@ -529,7 +529,7 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
                 let FGColor = OSColor(HexString: IdiotCommand.FGColor)
                 self.IdiotLights[FinalAddress]!.1.textColor = FGColor!
                 let BGColor = OSColor(HexString: IdiotCommand.BGColor)
-                self.IdiotLights[FinalAddress]!.0.layer?.backgroundColor = BGColor.cgColor
+                self.IdiotLights[FinalAddress]!.0.layer?.backgroundColor = BGColor?.cgColor
                 }
         }
     }
@@ -830,7 +830,7 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
     /// - Parameter Peer: The peer that wants information about us.
     func HandleReturnPeerType(_ Raw: String, Peer: MCPeerID)
     {
-        let ReturnToPeer = MessageHelper.MakeGetPeerTypeReturn(IsDebugger: IsDebugger, PrefixCode: PrefixCode)
+        let ReturnToPeer = MessageHelper.MakeGetPeerTypeReturn(IsDebugger: IsDebugger, PrefixCode: PrefixCode, PeerName: "TDDebug")
         MPMgr.SendPreformatted(Message: ReturnToPeer, To: Peer)
     }
     
@@ -881,7 +881,7 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
     
     func HandleDebuggerStateChanged(_ Raw: String, Peer: MCPeerID)
     {
-        if Peer = MPMgr?.SelfPeer
+        if Peer == MPMgr?.SelfPeer
         {
             print("Received own command broadcast")
             return
@@ -1519,6 +1519,18 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
         let Storyboard = NSStoryboard(name: "AboutTDDebug", bundle: nil)
         let AboutController = Storyboard.instantiateController(withIdentifier: "AboutTDDebugWindow") as? NSWindowController
         AboutController?.showWindow(nil)
+    }
+    
+    func DoResetIdiotLights(_ sender: Any)
+    {
+        EnableIdiotLight("A2", false)
+        EnableIdiotLight("A3", false)
+        EnableIdiotLight("B1", false)
+        EnableIdiotLight("B2", false)
+        EnableIdiotLight("B3", false)
+        EnableIdiotLight("C1", false)
+        EnableIdiotLight("C2", false)
+        EnableIdiotLight("C3", false)
     }
     
     @IBAction func AboutTDDebug(_ sender: Any)
