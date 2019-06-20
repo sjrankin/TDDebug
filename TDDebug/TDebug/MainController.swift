@@ -634,6 +634,29 @@ class MainController: UIViewController, UITableViewDelegate, UITableViewDataSour
         }
     }
     
+    func ResetUI()
+    {
+        OperationQueue.main.addOperation
+            {
+                self.ShowInstanceVersion()
+                LogList.removeAll()
+                LogTable.reloadData()
+                self.InternalResetIdiotLights()
+                //self.KVPItems.removeAll()
+                //self.KVPTable.reloadData()
+        }
+    }
+    
+    func ClientExecutionStarted(_ Raw: String, Peer: MCPeerID)
+    {
+        
+    }
+    
+    func ClientExecutionTerminated(_ Raw: String, Peer: MCPeerID)
+    {
+        
+    }
+    
     func ReceivedData(Manager: MultiPeerManager, Peer: MCPeerID, RawData: String,
                       OverrideMessageType: MessageTypes? = nil, EncapsulatedID: UUID? = nil)
     {
@@ -701,6 +724,15 @@ class MainController: UIViewController, UITableViewDelegate, UITableViewDataSour
             
         case .DebuggerStateChanged:
             HandleDebuggerStateChanged(RawData, Peer: Peer)
+            
+        case .ResetTDebugUI:
+            ResetUI()
+            
+        case .ExecutionStarted:
+            ClientExecutionStarted(RawData, Peer: Peer)
+            
+        case .ExecutionTerminated:
+            ClientExecutionTerminated(RawData: Peer: Peer)
             
         default:
             print("Unhandled message type: \(MessageType), Raw=\(RawData)")
@@ -884,6 +916,18 @@ class MainController: UIViewController, UITableViewDelegate, UITableViewDataSour
         View.backgroundColor = UIColor.white
         Label.textColor = UIColor.black
         IdiotLightTable.append((Row, Column, View, Label))
+    }
+    
+    func InternalResetIdiotLights()
+    {
+        EnableIdiotLight("A2", false)
+        EnableIdiotLight("A3", false)
+        EnableIdiotLight("B1", false)
+        EnableIdiotLight("B2", false)
+        EnableIdiotLight("B3", false)
+        EnableIdiotLight("C1", false)
+        EnableIdiotLight("C2", false)
+        EnableIdiotLight("C3", false)
     }
     
     var IdiotLightTable = [(String, Int, UIView, UILabel)]()
