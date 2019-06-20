@@ -27,6 +27,109 @@ class MessageHelper
     /// Holds the prefix code.
     private static var PrefixCode: UUID!
     
+    // MARK: Execution started and terminated commands.
+    
+    public static func MakeExecutionStartedCommand(Prefix: UUID, Exclusive: Bool) -> String
+    {
+        let Cmd = MessageTypeIndicators[.ExecutionStarted]!
+        let P1 = "Prefix=\(Prefix.uuidString)"
+        let P2 = "RequestExclusive=\(Exclusive)"
+        let Delimiter = GetUnusedDelimiter(From: [Cmd, P1, P2])
+        let Final = AssembleCommand(FromParts: [Cmd, P1, P2], WithDelimiter: Delimiter)
+        return Final
+    }
+    
+    public static func DecodeExecutionStartedCommand(_ Raw: String) -> (UUID, Bool)?
+    {
+        let Delimiter = String(Raw.first!)
+        var Next = Raw
+        Next.removeFirst()
+        let Parts = Next.split(separator: String.Element(Delimiter))
+        
+        if Parts.count != 3
+        {
+            return nil
+        }
+        var PartsList = [(String, String)]()
+        for Part in Parts
+        {
+            if let (Key, Value) = DecodeKVP(String(Part), Delimiter: "=")
+            {
+                PartsList.append((Key, Value))
+            }
+        }
+        var Prefix = UUID()
+        var RequestsExclusivity = false
+        for (Name, Value) in PartsList
+        {
+            switch Name
+            {
+            case "Prefix":
+                Prefix = UUID(uuidString: Value)!
+                
+            case "RequestExclusive":
+                RequestsExclusivity = Bool(Value)!
+                
+            default:
+                break
+            }
+        }
+        return (Prefix, RequestsExclusivity)
+    }
+    
+    public static func MakeExecutionTerminatedCommand(Prefix: UUID, WasFatalError: Bool, LastMessage: String) -> String
+    {
+        let Cmd = MessageTypeIndicators[.ExecutionTerminated]!
+        let P1 = "Prefix=\(Prefix.uuidString)"
+        let P2 = "FatalError=\(WasFatalError)"
+        let P3 = "LastMessage=\(LastMessage)"
+        let Delimiter = GetUnusedDelimiter(From: [Cmd, P1, P2, P3])
+        let Final = AssembleCommand(FromParts: [Cmd, P1, P2, P3], WithDelimiter: Delimiter)
+        return Final
+    }
+    
+    public static func DecodeExecutionTerminatedCommand(_ Raw: String) -> (UUID, Bool, String)?
+    {
+        let Delimiter = String(Raw.first!)
+        var Next = Raw
+        Next.removeFirst()
+        let Parts = Next.split(separator: String.Element(Delimiter))
+        
+        if Parts.count != 4
+        {
+            return nil
+        }
+        var PartsList = [(String, String)]()
+        for Part in Parts
+        {
+            if let (Key, Value) = DecodeKVP(String(Part), Delimiter: "=")
+            {
+                PartsList.append((Key, Value))
+            }
+        }
+        var Prefix = UUID()
+        var WasFatal: Bool = false
+        var LastMessage = ""
+        for (Name, Value) in PartsList
+        {
+            switch Name
+            {
+            case "Prefix":
+                Prefix = UUID(uuidString: Value)!
+                
+            case "FatalError":
+                WasFatal = Bool(Value)!
+                
+            case "LastMessage":
+                LastMessage = Value
+                
+            default:
+                break
+            }
+        }
+        return (Prefix, WasFatal, LastMessage)
+    }
+    
     /// Decode a key-value pair with the specified delimiter. The format is assumed to be: key=value.
     ///
     /// - Parameters:
@@ -1071,6 +1174,14 @@ class MessageHelper
         return Final
     }
     
+    /// Make a command that resets the debug UI.
+    /// - Returns: Command string to reset the remote debug UI.
+    public static func MakeResetTDebugUICommand() -> String
+    {
+        let Cmd = MessageTypeIndicators[.ResetTDebugUI]
+        return Cmd!
+    }
+    
     /// Make a command string that requests a client command at the CommandIndexth position.
     ///
     /// - Parameter CommandIndex: Determines the client command to return.
@@ -1487,6 +1598,9 @@ class MessageHelper
             MessageTypes.SendPeerType: MessageTypes.SendPeerType.rawValue,
             MessageTypes.IdiotLightMessage: MessageTypes.IdiotLightMessage.rawValue,
             MessageTypes.DebuggerStateChanged: MessageTypes.DebuggerStateChanged.rawValue,
+            MessageTypes.ExecutionStarted: MessageTypes.ExecutionStarted.rawValue,
+            MessageTypes.ExecutionTerminated: MessageTypes.ExecutionTerminated.rawValue,
+            MessageTypes.ResetTDebugUI: MessageTypes.ResetTDebugUI.rawValue,
             MessageTypes.Unknown: MessageTypes.Unknown.rawValue,
     ]
     
@@ -1640,6 +1754,9 @@ enum MessageTypes: String, CaseIterable
     case SendPeerType = "f57ebac8-8bf5-11e9-bc42-526af7764f64"
     case IdiotLightMessage = "fbd09de5-c994-40ba-a8b3-a56979826872"
     case DebuggerStateChanged = "1f98a419-d2a8-4a8e-b618-c729ce78e3ea"
+    case ExecutionStarted = "9eac9d1b-4423-40d2-a48c-f15949e48f6e"
+    case ExecutionTerminated = "e5d86e41-0810-4065-b944-463d696c3b7e"
+    case ResetTDebugUI = "0ed866a9-81d8-4296-aa34-b88ce4a69ab1"
     case Unknown = "dfc5b2d5-521b-46a8-b459-a4947089312c"
 }
 
