@@ -963,6 +963,29 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
         }
     }
     
+    func ResetUI()
+    {
+        OperationQueue.main.addOperation
+            {
+                self.ShowInstanceVersion()
+                self.LogItems.List.removeAll()
+                self.LogTable.reloadData()
+                self.InternalResetIdiotLights()
+                self.KVPItems.removeAll()
+                self.KVPTable.reloadData()
+        }
+    }
+    
+    func ClientExecutionStarted(_ Raw: String, Peer: MCPeerID)
+    {
+        
+    }
+    
+    func ClientExecutionTerminated(_ Raw: String, Peer: MCPeerID)
+    {
+        
+    }
+    
     func ReceivedData(Manager: MultiPeerManager, Peer: MCPeerID, RawData: String,
                       OverrideMessageType: MessageTypes? = nil, EncapsulatedID: UUID? = nil)
     {
@@ -1036,6 +1059,15 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
             
         case .DebuggerStateChanged:
             HandleDebuggerStateChanged(RawData, Peer: Peer)
+            
+        case .ResetTDebugUI:
+            ResetUI()
+            
+        case .ExecutionStarted:
+            ClientExecutionStarted(RawData, Peer: Peer)
+            
+        case .ExecutionTerminated:
+            ClientExecutionTerminated(RawData, Peer: Peer)
             
         default:
             print("Unhandled message type: \(MessageType), Raw=\(RawData)")
@@ -1521,7 +1553,7 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
         AboutController?.showWindow(nil)
     }
     
-    func DoResetIdiotLights(_ sender: Any)
+    func InternalResetIdiotLights()
     {
         EnableIdiotLight("A2", false)
         EnableIdiotLight("A3", false)
@@ -1531,6 +1563,11 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
         EnableIdiotLight("C1", false)
         EnableIdiotLight("C2", false)
         EnableIdiotLight("C3", false)
+    }
+    
+    func DoResetIdiotLights(_ sender: Any)
+    {
+InternalResetIdiotLights()
     }
     
     @IBAction func AboutTDDebug(_ sender: Any)
