@@ -967,7 +967,8 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
     {
         OperationQueue.main.addOperation
             {
-                self.ShowInstanceVersion()
+                print("Resetting UI.")
+                //self.ShowInstanceVersion()
                 self.LogItems.List.removeAll()
                 self.LogTable.reloadData()
                 self.InternalResetIdiotLights()
@@ -998,7 +999,7 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
         {
             MessageType = MessageHelper.GetMessageType(RawData)
         }
-        print("MessageType=\(MessageType)")
+        //print("MessageType=\(MessageType), RawData=\(RawData)")
         switch MessageType
         {
         case .HandShake:
