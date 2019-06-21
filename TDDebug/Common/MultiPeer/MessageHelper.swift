@@ -800,22 +800,21 @@ class MessageHelper
         return Result
     }
     
+    /// Return the message type parsed from the passed raw data.
+    /// - Returns: The message type.
     public static func GetMessageType(_ Raw: String) -> MessageTypes
     {
         if Raw.isEmpty
         {
+            print("Empty raw data.")
             return .Unknown
         }
         let Delimiter = String(Raw.first!)
         var Next = Raw
         Next.removeFirst()
-        let Parts = Next.split(separator: String.Element(Delimiter))
+        let Parts = Next.split(separator: String.Element(Delimiter), omittingEmptySubsequences: true)
         for Part in Parts
         {
-            if Part.isEmpty
-            {
-                continue
-            }
             let MessageType = MessageTypeFromID(String(Part))
             return MessageType
         }
@@ -1178,8 +1177,10 @@ class MessageHelper
     /// - Returns: Command string to reset the remote debug UI.
     public static func MakeResetTDebugUICommand() -> String
     {
-        let Cmd = MessageTypeIndicators[.ResetTDebugUI]
-        return Cmd!
+        let Cmd = MessageTypeIndicators[.ResetTDebugUI]!
+        let Delimiter = GetUnusedDelimiter(From: [Cmd])
+        let Final = AssembleCommand(FromParts: [Cmd], WithDelimiter: Delimiter)
+        return Final
     }
     
     /// Make a command string that requests a client command at the CommandIndexth position.
