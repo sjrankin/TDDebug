@@ -93,6 +93,12 @@
 		17B68CD12254756400AEBE94 /* AboutTDDebugWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17B68CD02254756400AEBE94 /* AboutTDDebugWindow.swift */; };
 		17C0E6FA22AF9FD3003FAFA8 /* IdiotLightMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17C0E6F922AF9FD3003FAFA8 /* IdiotLightMessage.swift */; };
 		17C0E6FB22AF9FD3003FAFA8 /* IdiotLightMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17C0E6F922AF9FD3003FAFA8 /* IdiotLightMessage.swift */; };
+		17C4161122C0BAEC00A13793 /* CommandDump.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17C4161022C0BAEC00A13793 /* CommandDump.swift */; };
+		17C4161322C0BB3600A13793 /* CommandDumpWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17C4161222C0BB3600A13793 /* CommandDumpWindow.swift */; };
+		17C4161722C0BE9300A13793 /* RawDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17C4161622C0BE9300A13793 /* RawDataManager.swift */; };
+		17C4161822C0BE9300A13793 /* RawDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17C4161622C0BE9300A13793 /* RawDataManager.swift */; };
+		17C4161A22C0BECA00A13793 /* RawDataNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17C4161922C0BECA00A13793 /* RawDataNode.swift */; };
+		17C4161B22C0BECA00A13793 /* RawDataNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17C4161922C0BECA00A13793 /* RawDataNode.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -176,6 +182,10 @@
 		17B68CCE2254731C00AEBE94 /* AboutTDDebugCode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutTDDebugCode.swift; sourceTree = "<group>"; };
 		17B68CD02254756400AEBE94 /* AboutTDDebugWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutTDDebugWindow.swift; sourceTree = "<group>"; };
 		17C0E6F922AF9FD3003FAFA8 /* IdiotLightMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IdiotLightMessage.swift; sourceTree = "<group>"; };
+		17C4161022C0BAEC00A13793 /* CommandDump.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommandDump.swift; sourceTree = "<group>"; };
+		17C4161222C0BB3600A13793 /* CommandDumpWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommandDumpWindow.swift; sourceTree = "<group>"; };
+		17C4161622C0BE9300A13793 /* RawDataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RawDataManager.swift; sourceTree = "<group>"; };
+		17C4161922C0BECA00A13793 /* RawDataNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RawDataNode.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -229,6 +239,7 @@
 		171EB5F62255C24E0075C134 /* Common */ = {
 			isa = PBXGroup;
 			children = (
+				17C4161522C0BE6900A13793 /* RawData */,
 				1733669E225708A700438E66 /* MessageHandler */,
 				1743C14622520314003FE6B2 /* MultiPeer */,
 				1796A2D422521117004975D4 /* Extensions */,
@@ -351,6 +362,7 @@
 				172E7F602259A757009E4768 /* ConnectionNotificationProtocol.swift */,
 				1743C13F2251DF9C003FE6B2 /* Info.plist */,
 				1743C1402251DF9C003FE6B2 /* TDDebug.entitlements */,
+				17C4161422C0BB5D00A13793 /* CommandDump */,
 				17B49527225C5A2500117CF5 /* LogItems */,
 				17B49526225C5A1200117CF5 /* KVP */,
 				17B4951D225C370E00117CF5 /* Search */,
@@ -488,6 +500,24 @@
 				17B68CD02254756400AEBE94 /* AboutTDDebugWindow.swift */,
 			);
 			path = About;
+			sourceTree = "<group>";
+		};
+		17C4161422C0BB5D00A13793 /* CommandDump */ = {
+			isa = PBXGroup;
+			children = (
+				17C4161222C0BB3600A13793 /* CommandDumpWindow.swift */,
+				17C4161022C0BAEC00A13793 /* CommandDump.swift */,
+			);
+			path = CommandDump;
+			sourceTree = "<group>";
+		};
+		17C4161522C0BE6900A13793 /* RawData */ = {
+			isa = PBXGroup;
+			children = (
+				17C4161622C0BE9300A13793 /* RawDataManager.swift */,
+				17C4161922C0BECA00A13793 /* RawDataNode.swift */,
+			);
+			path = RawData;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -645,7 +675,9 @@
 				173366A422570BD800438E66 /* MessageHandlerDelegate.swift in Sources */,
 				17B3EE9B2255CD6B009988D3 /* LogItemProtocol.swift in Sources */,
 				171EB5FB2255C2D10075C134 /* OSColorExtensions.swift in Sources */,
+				17C4161B22C0BECA00A13793 /* RawDataNode.swift in Sources */,
 				171EB5FA2255C2CD0075C134 /* ClientCommands.swift in Sources */,
+				17C4161822C0BE9300A13793 /* RawDataManager.swift in Sources */,
 				17B3EEA42255CDF4009988D3 /* KVPItem.swift in Sources */,
 				1767D28922AF4D37005EE191 /* PeerType.swift in Sources */,
 				17B3EEA02255CD8D009988D3 /* MainProtocol.swift in Sources */,
@@ -700,8 +732,10 @@
 				17508F4F225B6DD100BC9FC0 /* MainCustomizeUICode.swift in Sources */,
 				172E7F612259A757009E4768 /* ConnectionNotificationProtocol.swift in Sources */,
 				17B49530225C6CE200117CF5 /* BroadcastWindow.swift in Sources */,
+				17C4161122C0BAEC00A13793 /* CommandDump.swift in Sources */,
 				1722346C22572E3F00518601 /* FiltererWindow.swift in Sources */,
 				172E7F662259C9F5009E4768 /* ViewState.swift in Sources */,
+				17C4161322C0BB3600A13793 /* CommandDumpWindow.swift in Sources */,
 				17B68CCA225468CC00AEBE94 /* MainWindow.swift in Sources */,
 				1704C5B62253123F00C49E91 /* SendToClientUICode.swift in Sources */,
 				17B49525225C585300117CF5 /* LogItemProtocol.swift in Sources */,
@@ -714,10 +748,12 @@
 				1746B54622520C9F00E554EC /* MainProtocol.swift in Sources */,
 				1746B53D22520A7000E554EC /* State.swift in Sources */,
 				17B68CD12254756400AEBE94 /* AboutTDDebugWindow.swift in Sources */,
+				17C4161A22C0BECA00A13793 /* RawDataNode.swift in Sources */,
 				17508F37225AF5CF00BC9FC0 /* SelectorDelegate.swift in Sources */,
 				172426D7225239C400E34282 /* PeerViewerUICode.swift in Sources */,
 				17C0E6FA22AF9FD3003FAFA8 /* IdiotLightMessage.swift in Sources */,
 				1743C14A2252034E003FE6B2 /* MessageHelper.swift in Sources */,
+				17C4161722C0BE9300A13793 /* RawDataManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
