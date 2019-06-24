@@ -35,6 +35,7 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
         super.viewDidLoad()
         
         ADel = NSApp.delegate as! AppDelegate
+        RawDataManager.Initialize()
         
         PrefixCode = UUID()
         IsDebugger = false
@@ -278,6 +279,7 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
         }
     }
     
+    /// Is this necessary?
     override var representedObject: Any?
         {
         didSet
@@ -999,6 +1001,7 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
         {
             MessageType = MessageHelper.GetMessageType(RawData)
         }
+        RawDataManager.Add(RawData, FromSource: Peer.displayName, MsgType: MessageType, Received: Date())
         //print("MessageType=\(MessageType), RawData=\(RawData)")
         switch MessageType
         {
@@ -1448,6 +1451,21 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
         {
             SVC.MainDelegate = self
             SVC.showWindow(nil)
+        }
+    }
+    
+    var RawDataController: NSWindowController? = nil
+    
+    func HandleShowRawData(_ sender: Any)
+    {
+        if RawDataController == nil
+        {
+            let Storyboard = NSStoryboard(name: "Main", bundle: nil)
+            RawDataController = Storyboard.instantiateController(withIdentifier: "RawCommandLogWindow") as? CommandDumpWindow
+        }
+        if let RDC = RawDataController as? CommandDumpWindow
+        {
+            RDC.showWindow(nil)
         }
     }
     
