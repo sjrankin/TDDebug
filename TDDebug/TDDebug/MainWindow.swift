@@ -118,4 +118,12 @@ class MainWindow: NSWindowController, NSToolbarItemValidation
         let VC = window!.contentViewController as? ViewController
         VC?.HandleDebugButtonPressed(sender)
     }
+    
+    @IBOutlet weak var RawDataButton: NSToolbarItem!
+    @IBAction func HandleRawDataButtonPressed(_ sender: Any)
+    {
+        let VC = window!.contentViewController as? ViewController
+        VC?.HandleShowRawData(sender) 
+    }
+
 }
