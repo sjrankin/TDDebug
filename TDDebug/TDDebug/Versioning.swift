@@ -17,7 +17,7 @@ public class Versioning
     public static let MajorVersion: String = "1"
     
     /// Minor version number.
-    public static let MinorVersion: String = "0"
+    public static let MinorVersion: String = "1"
     
     /// Potential version suffix.
     public static let VersionSuffix: String = ""
@@ -55,19 +55,19 @@ public class Versioning
     }
     
     /// Build number.
-    public static let Build: Int = 642
+    public static let Build: Int = 650
     
     /// Build increment.
     private static let BuildIncrement = 1
     
     /// Build ID.
-    public static let BuildID: String = "5BFE18A3-594F-47BE-89D1-922577303A12"
+    public static let BuildID: String = "077F751A-5D9F-4E77-8BC6-09E047294953"
     
     /// Build date.
-    public static let BuildDate: String = "24 June 2019"
+    public static let BuildDate: String = "25 June 2019"
     
     /// Build Time.
-    public static let BuildTime: String = "21:49"
+    public static let BuildTime: String = "21:56"
     
     /// Return a standard build string.
     ///
