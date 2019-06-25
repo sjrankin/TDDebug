@@ -469,6 +469,11 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
         }
     }
     
+    func HandleHeartBeatMessage(_ Raw: String, Peer: MCPeerID)
+    {
+        DisplayHeartbeatData(Raw, TimeStamp: "\(Date())", Host: Peer.displayName, Peer: Peer)
+    }
+    
     func DisplayHeartbeatData(_ Raw: String, TimeStamp: String, Host: String, Peer: MCPeerID)
     {
         if let (NextExpected, Payload) = MessageHelper.DecodeHeartbeat(Raw)
@@ -565,7 +570,7 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
     
     func HandleEchoMessage(_ Raw: String, Peer: MCPeerID)
     {
-        let (EchoMessage, _, Delay, _) = MessageHelper.DecodeEchoMessage(Raw)
+        let (EchoMessage, _, Delay, _) = MessageHelper.DecodeEchoMessage(Raw)!
         print("HandleEchoMessage: Delay=\(Delay)")
         let REchoMessage = String(EchoMessage.reversed())
         EchoBackTo = Peer
@@ -580,7 +585,7 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
     {
         OperationQueue.main.addOperation
             {
-                let (ID, Key, Value) = MessageHelper.DecodeKVPMessage(Raw)
+                let (ID, Key, Value) = MessageHelper.DecodeKVPMessage(Raw)!
                 print("Received KVP \(Key):\(Value)")
                 if ID == nil
                 {
@@ -736,7 +741,7 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
         var PostConnect2 = ""
         OperationQueue.main.addOperation
             {
-                var ReturnMe = State.TransitionTo(NewState: Command)
+                let ReturnMe = State.TransitionTo(NewState: Command)
                 var ReturnState = ""
                 switch ReturnMe
                 {
@@ -800,6 +805,15 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
     
     func HandleEchoReturn(_ Raw: String)
     {
+        #if true
+        let (Message, HostName, TimeStamp) = MessageHelper.DecodeTextMessage(Raw)
+        OperationQueue.main.addOperation
+            {
+                let Item = LogItem(TimeStamp: TimeStamp, Host: HostName, Text: "Echo returned: " + Message,
+                                   ShowInitialAnimation: true, FinalBG: NSColor.green)
+                self.AddLogMessage(Item: Item)
+        }
+        #else
         let (_, HostName, TimeStamp, FinalMessage) = MessageHelper.DecodeMessage(Raw)
         OperationQueue.main.addOperation
             {
@@ -807,17 +821,28 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
                                    ShowInitialAnimation: true, FinalBG: NSColor.green)
                 self.AddLogMessage(Item: Item)
         }
+        #endif
     }
     
     func HandleTextMessage(_ Raw: String)
     {
+        #if true
+        let (Message, HostName, TimeStamp) = MessageHelper.DecodeTextMessage(Raw)
+        OperationQueue.main.addOperation
+            {
+            let Item = LogItem(TimeStamp: TimeStamp, Host: HostName, Text: Message,
+                               ShowInitialAnimation: true, FinalBG: NSColor.white)
+            self.AddLogMessage(Item: Item)
+        }
+        #else
         let (_, HostName, TimeStamp, FinalMessage) = MessageHelper.DecodeMessage(Raw)
         OperationQueue.main.addOperation
             {
-                let Item = LogItem(TimeStamp: TimeStamp, Host: HostName, Text: FinalMessage, ShowInitialAnimation: true,
-                                   FinalBG: NSColor.white)
+                let Item = LogItem(TimeStamp: TimeStamp, Host: HostName, Text: FinalMessage,
+                                   ShowInitialAnimation: true, FinalBG: NSColor.white)
                 self.AddLogMessage(Item: Item)
         }
+        #endif
     }
     
     func HandlePushedVersionInformation(_ Raw: String)
@@ -989,6 +1014,111 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
         
     }
     
+    #if true
+    /// Handle received data.
+    /// - Parameter Manager: The multi-peer manager.
+    /// - Parameter Peer: The low-level peer ID of the sender of the received data.
+    /// - Parameter RawData: The raw data string sent by the sender.
+    /// - Parameter OverrideMessageType: If present, the message type to use instead of the type decoded in the raw data -
+    ///                                  used for reparsing embedded commands.
+    /// - Parameter EncapsulatedID: If parsing an encapsulated command, the ID of that command.
+    func ReceivedData(Manager: MultiPeerManager, Peer: MCPeerID, RawData: String,
+                      OverrideMessageType: MessageTypes? = nil, EncapsulatedID: UUID? = nil)
+    {
+        var MessageType: MessageTypes = .Unknown
+        var Payload = ""
+        if let OverrideMe = OverrideMessageType
+        {
+            MessageType = OverrideMe
+        }
+        else
+        {
+            let MessageData = MessageHelper.GetMessageData(RawData)
+            MessageType = MessageData.0
+            Payload = MessageData.3
+        }
+        RawDataManager.Add(RawData, FromSource: Peer.displayName, MsgType: MessageType, Received: Date())
+        //print("MessageType=\(MessageType), RawData=\(RawData)")
+        switch MessageType
+        {
+        case .HandShake:
+            HandleHandShakeCommand(Payload, Peer: Peer)
+            
+        case .GetPeerType:
+            //Send peer data to someone else.
+            HandleReturnPeerType(Payload, Peer: Peer)
+            
+        case .SendPeerType:
+            //Receive peer data from someone else.
+            HandlePeerTypeFromSender(Payload, Peer: Peer)
+            
+        case .SpecialCommand:
+            HandleSpecialCommand(Payload, Peer: Peer)
+            
+        case .EchoMessage:
+            //Should be handled by the instance that received the echo.
+            HandleEchoMessage(Payload, Peer: Peer)
+            
+        case .Heartbeat:
+            #if true
+            HandleHeartBeatMessage(Payload, Peer: Peer)
+            #else
+            let (_, HostName, TimeStamp, FinalMessage) = MessageHelper.DecodeMessage(RawData)
+            DisplayHeartbeatData(FinalMessage, TimeStamp: TimeStamp, Host: HostName, Peer: Peer)
+            #endif
+            
+        case .ControlIdiotLight:
+            ControlIdiotLight(Payload)
+            
+        case .IdiotLightMessage:
+            HandleIdiotLightMessage(Payload)
+            
+        case .KVPData:
+            ManageKVPData(Payload, Peer: Peer)
+            
+        case .EchoReturn:
+            //Should be handled by the instance that sent the echo in the first place.
+            HandleEchoReturn(Payload)
+            
+        case .TextMessage:
+            HandleTextMessage(Payload)
+            
+        case .SendCommandToClient:
+            HandleClientCommand(Payload, Peer: Peer)
+            
+        case .GetAllClientCommands:
+            SendClientCommandList(Peer: Peer, CommandID: EncapsulatedID!)
+            
+        case .PushVersionInformation:
+            HandlePushedVersionInformation(Payload)
+            
+        case .ConnectionHeartbeat:
+            HandleConnectionHeartbeat(Payload, Peer: Peer)
+            
+        case .RequestConnectionHeartbeat:
+            HandleConnectionHeartbeatRequest(Payload, Peer: Peer)
+            
+        case .BroadcastMessage:
+            HandleBroadcastMessage(Payload, Peer: Peer)
+            
+        case .DebuggerStateChanged:
+            HandleDebuggerStateChanged(Payload, Peer: Peer)
+            
+        case .ResetTDebugUI:
+            ResetUI()
+            
+        case .ExecutionStarted:
+            ClientExecutionStarted(Payload, Peer: Peer)
+            
+        case .ExecutionTerminated:
+            ClientExecutionTerminated(Payload, Peer: Peer)
+            
+        default:
+            print("Unhandled message type: \(MessageType), Raw=\(RawData)")
+            break
+        }
+    }
+    #else
     func ReceivedData(Manager: MultiPeerManager, Peer: MCPeerID, RawData: String,
                       OverrideMessageType: MessageTypes? = nil, EncapsulatedID: UUID? = nil)
     {
@@ -1001,7 +1131,8 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
         {
             MessageType = MessageHelper.GetMessageType(RawData)
         }
-        RawDataManager.Add(RawData, FromSource: Peer.displayName, MsgType: MessageType, Received: Date())
+        let (_, HostName, _, _) = MessageHelper.DecodeMessage(RawData)
+        RawDataManager.Add(RawData, FromSource: HostName, MsgType: MessageType, Received: Date())
         //print("MessageType=\(MessageType), RawData=\(RawData)")
         switch MessageType
         {
@@ -1078,6 +1209,7 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
             break
         }
     }
+    #endif
     
     func ProcessAsyncResult(CommandID: UUID, Peer: MCPeerID, MessageType: MessageTypes, RawData: String)
     {
