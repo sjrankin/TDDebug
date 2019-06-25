@@ -210,6 +210,11 @@ class MainController: UIViewController, UITableViewDelegate, UITableViewDataSour
         }
     }
     
+    func HandleHeartBeatMessage(_ Raw: String, Peer: MCPeerID)
+    {
+        DisplayHeartbeatData(Raw, TimeStamp: "\(Date())", Host: Peer.displayName, Peer: Peer)
+    }
+    
     func DisplayHeartbeatData(_ Raw: String, TimeStamp: String, Host: String, Peer: MCPeerID)
     {
         if let (NextExpected, Payload) = MessageHelper.DecodeHeartbeat(Raw)
@@ -317,7 +322,7 @@ class MainController: UIViewController, UITableViewDelegate, UITableViewDataSour
     
     func HandleEchoMessage(_ Raw: String, Peer: MCPeerID)
     {
-        let (EchoMessage, _, Delay, _) = MessageHelper.DecodeEchoMessage(Raw)
+        let (EchoMessage, _, Delay, _) = MessageHelper.DecodeEchoMessage(Raw)!
         print("HandleEchoMessage: Delay=\(Delay)")
         let REchoMessage = String(EchoMessage.reversed())
         EchoBackTo = Peer
@@ -332,7 +337,7 @@ class MainController: UIViewController, UITableViewDelegate, UITableViewDataSour
     {
         OperationQueue.main.addOperation
             {
-                let (ID, Key, Value) = MessageHelper.DecodeKVPMessage(Raw)
+                let (ID, Key, Value) = MessageHelper.DecodeKVPMessage(Raw)!
                 print("Received KVP \(Key):\(Value)")
                 if ID == nil
                 {
@@ -482,6 +487,15 @@ class MainController: UIViewController, UITableViewDelegate, UITableViewDataSour
     
     func HandleEchoReturn(_ Raw: String)
     {
+        #if true
+        let (Message, HostName, TimeStamp) = MessageHelper.DecodeTextMessage(Raw)
+        OperationQueue.main.addOperation
+            {
+                let Item = LogItem(TimeStamp: TimeStamp, Host: HostName, Text: "Echo returned: " + Message,
+                                   ShowInitialAnimation: true, FinalBG: UIColor.green)
+                self.AddLogMessage(Item: Item)
+        }
+        #else
         let (_, HostName, TimeStamp, FinalMessage) = MessageHelper.DecodeMessage(Raw)
         OperationQueue.main.addOperation
             {
@@ -489,10 +503,20 @@ class MainController: UIViewController, UITableViewDelegate, UITableViewDataSour
                                    ShowInitialAnimation: true, FinalBG: UIColor(named: "GrannySmith")!)
                 self.AddLogMessage(Item: Item)
         }
+        #endif
     }
     
     func HandleTextMessage(_ Raw: String)
     {
+        #if true
+        let (Message, HostName, TimeStamp) = MessageHelper.DecodeTextMessage(Raw)
+        OperationQueue.main.addOperation
+            {
+                let Item = LogItem(TimeStamp: TimeStamp, Host: HostName, Text: Message,
+                                   ShowInitialAnimation: true, FinalBG: UIColor.white)
+                self.AddLogMessage(Item: Item)
+        }
+        #else
         let (_, HostName, TimeStamp, FinalMessage) = MessageHelper.DecodeMessage(Raw)
         OperationQueue.main.addOperation
             {
@@ -500,6 +524,7 @@ class MainController: UIViewController, UITableViewDelegate, UITableViewDataSour
                                    FinalBG: UIColor.white)
                 self.AddLogMessage(Item: Item)
         }
+        #endif
     }
     
     func SendClientCommandList(Peer: MCPeerID, CommandID: UUID)
@@ -636,6 +661,7 @@ class MainController: UIViewController, UITableViewDelegate, UITableViewDataSour
     
     func ResetUI()
     {
+        #if false
         OperationQueue.main.addOperation
             {
                 self.ShowInstanceVersion()
@@ -645,6 +671,7 @@ class MainController: UIViewController, UITableViewDelegate, UITableViewDataSour
                 //self.KVPItems.removeAll()
                 //self.KVPTable.reloadData()
         }
+        #endif
     }
     
     func ClientExecutionStarted(_ Raw: String, Peer: MCPeerID)
@@ -657,6 +684,97 @@ class MainController: UIViewController, UITableViewDelegate, UITableViewDataSour
         
     }
     
+    #if true
+    func ReceivedData(Manager: MultiPeerManager, Peer: MCPeerID, RawData: String,
+                      OverrideMessageType: MessageTypes? = nil, EncapsulatedID: UUID? = nil)
+    {
+        var MessageType: MessageTypes = .Unknown
+        var Payload = ""
+        if let OverrideMe = OverrideMessageType
+        {
+            MessageType = OverrideMe
+        }
+        else
+        {
+            let MessageData = MessageHelper.GetMessageData(RawData)
+            MessageType = MessageData.0
+            Payload = MessageData.3
+        }
+        switch MessageType
+        {
+        case .HandShake:
+            HandleHandShakeCommand(Payload, Peer: Peer)
+            
+        case .GetPeerType:
+            HandleReturnPeerType(Payload, Peer: Peer)
+            
+        case .SendPeerType:
+            HandlePeerTypeFromSender(Payload, Peer: Peer)
+            
+        case .SpecialCommand:
+            HandleSpecialCommand(Payload, Peer: Peer)
+            
+        case .EchoMessage:
+            //Should be handled by the instance that received the echo.
+            HandleEchoMessage(Payload, Peer: Peer)
+            
+        case .Heartbeat:
+            #if true
+            HandleHeartBeatMessage(Payload, Peer: Peer)
+            #else
+            let (_, HostName, TimeStamp, FinalMessage) = MessageHelper.DecodeMessage(RawData)
+            DisplayHeartbeatData(FinalMessage, TimeStamp: TimeStamp, Host: HostName, Peer: Peer)
+            #endif
+            
+        case .ControlIdiotLight:
+            ControlIdiotLight(Payload)
+            
+        case .IdiotLightMessage:
+            HandleIdiotLightMessage(Payload)
+            
+        case .KVPData:
+            ManageKVPData(Payload, Peer: Peer)
+            
+        case .EchoReturn:
+            //Should be handled by the instance that sent the echo in the first place.
+            HandleEchoReturn(Payload)
+            
+        case .TextMessage:
+            HandleTextMessage(Payload)
+            
+        case .GetAllClientCommands:
+            SendClientCommandList(Peer: Peer, CommandID: EncapsulatedID!)
+            
+        case .ConnectionHeartbeat:
+            HandleConnectionHeartbeat(Payload, Peer: Peer)
+            
+        case .RequestConnectionHeartbeat:
+            HandleConnectionHeartbeatRequest(Payload, Peer: Peer)
+            
+        case .PushVersionInformation:
+            HandlePushedVersionInformation(Payload)
+            
+        case .SendCommandToClient:
+            HandleReceivedClientCommand(Payload, Peer: Peer)
+            
+        case .DebuggerStateChanged:
+            HandleDebuggerStateChanged(Payload, Peer: Peer)
+            
+        case .ResetTDebugUI:
+            ResetUI()
+            
+        case .ExecutionStarted:
+            ClientExecutionStarted(Payload, Peer: Peer)
+            
+        case .ExecutionTerminated:
+            ClientExecutionTerminated(Payload, Peer: Peer)
+            
+        default:
+            print("Unhandled message type: \(MessageType), Raw=\(RawData)")
+            break
+        }
+    }
+    #else
     func ReceivedData(Manager: MultiPeerManager, Peer: MCPeerID, RawData: String,
                       OverrideMessageType: MessageTypes? = nil, EncapsulatedID: UUID? = nil)
     {
@@ -732,13 +850,14 @@ class MainController: UIViewController, UITableViewDelegate, UITableViewDataSour
             ClientExecutionStarted(RawData, Peer: Peer)
             
         case .ExecutionTerminated:
-            ClientExecutionTerminated(RawData: Peer: Peer)
+            ClientExecutionTerminated(RawData, Peer: Peer)
             
         default:
             print("Unhandled message type: \(MessageType), Raw=\(RawData)")
             break
         }
     }
+    #endif
     
     func ProcessAsyncResult(CommandID: UUID, Peer: MCPeerID, MessageType: MessageTypes, RawData: String)
     {
