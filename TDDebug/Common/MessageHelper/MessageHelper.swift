@@ -22,6 +22,7 @@ class MessageHelper
     public static func Initialize(_ Prefix: UUID)
     {
         PrefixCode = Prefix
+        print("MessageHelper.Initialize: PrefixCode=\(Prefix.uuidString)")
     }
     
     /// Holds the prefix code.
@@ -130,43 +131,47 @@ class MessageHelper
         let Delimiter = String(Raw.first!)
         var Next = Raw
         Next.removeFirst()
-        let Parts = Next.split(separator: String.Element(Delimiter), omittingEmptySubsequences: true)
-        let MessageType = MessageTypeFromID(String(Parts[0]))
+        var Parts = Next.split(separator: String.Element(Delimiter), omittingEmptySubsequences: true)
+        let MessageType = MessageTypeFromID(String(Parts.first!))
+        Parts.removeFirst()
         if MessageType == .Unknown
         {
             return (.Unknown, UUID.Empty, UUID.Empty, Raw)
         }
-        let (P1Name, P1Data) = DecodeKVP(String(Parts[1]))!
+        let (P1Name, P1Data) = DecodeKVP(String(Parts.first!))!
+        Parts.removeFirst()
         if P1Name != "SourcePrefix"
         {
             print("Received command with missing source prefix.")
             return (.Unknown, UUID.Empty, UUID.Empty, Raw)
         }
         let SourcePrefix = UUID(uuidString: P1Data)!
-                var StartingIndex = 2
-        var DestinationPrefix = UUID.Empty
-        if Parts.count == 2
+        
+        if Parts.isEmpty
         {
             return (MessageType, SourcePrefix, UUID.Empty, "")
         }
-        let (P2Name, P2Data) = DecodeKVP(String(Parts[2]))!
-        if P2Name == "DestinationPrefix"
+        
+        var DestinationPrefix = UUID.Empty
+        if let (P2Name, P2Data) = DecodeKVP(String(Parts.first!))
         {
-            StartingIndex = 3
-            DestinationPrefix = UUID(uuidString: P2Data)!
+            if P2Name == "DestinationPrefix"
+            {
+                DestinationPrefix = UUID(uuidString: P2Data)!
+                Parts.removeFirst()
+            }
         }
+
         var Payload = ""
-        if StartingIndex >= Parts.count
+        if !Parts.isEmpty
         {
             Payload = Delimiter
+            for Part in Parts
+            {
+                Payload = Payload + Delimiter + String(Part)
+            }
         }
-        else
-        {
-        for Index in StartingIndex ..< Parts.count
-        {
-            Payload = Payload + Delimiter + String(Parts[Index])
-        }
-        }
+
         return (MessageType, SourcePrefix, DestinationPrefix, Payload)
     }
     
@@ -339,9 +344,14 @@ class MessageHelper
         var FinalList = [String]()
         FinalList.append(Command)
         FinalList.append(PrefixTerm)
+        for Part in Parts
+        {
+            FinalList.append(String(Part))
+        }
         var Final = ""
         for Part in FinalList
         {
+            print("GenerateCommand: \(Part)")
             if Part.isEmpty
             {
                 continue
@@ -358,6 +368,7 @@ class MessageHelper
     /// - Returns: Formatted command string to send.
     static func GenerateCommand(Command: MessageTypes, Prefix: UUID, Parts: [String]) -> String
     {
+        print("GenerateCommand(\(Command))")
         return GenerateCommand(Command: Command.rawValue, Prefix: Prefix.uuidString, Parts: Parts)
     }
     
