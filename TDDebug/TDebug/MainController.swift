@@ -769,6 +769,12 @@ class MainController: UIViewController, UITableViewDelegate, UITableViewDataSour
         case .ExecutionTerminated:
             ClientExecutionTerminated(Payload, Peer: Peer)
             
+        case .BroadcastCommand:
+            break
+            
+        case .BroadcastMessage:
+            HandleBroadcastMessage(Payload, Peer: Peer)
+            
         default:
             print("Unhandled message type: \(MessageType), Raw=\(RawData)")
             break
