@@ -46,6 +46,10 @@ extension MessageHelper
     
     public static func DecodePeerTypeCommand(_ Raw: String) -> PeerType?
     {
+        if Raw.isEmpty
+        {
+            return nil
+        }
         let Params = GetParameters(From: Raw, ["Debugger", "PrefixCode", "Name"])
         var IsDebugger = false
         if let Dbgr = Params["Debugger"]
