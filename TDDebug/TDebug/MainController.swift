@@ -684,7 +684,6 @@ class MainController: UIViewController, UITableViewDelegate, UITableViewDataSour
         
     }
     
-    #if true
     func ReceivedData(Manager: MultiPeerManager, Peer: MCPeerID, RawData: String,
                       OverrideMessageType: MessageTypes? = nil, EncapsulatedID: UUID? = nil)
     {
@@ -780,90 +779,6 @@ class MainController: UIViewController, UITableViewDelegate, UITableViewDataSour
             break
         }
     }
-    #else
-    func ReceivedData(Manager: MultiPeerManager, Peer: MCPeerID, RawData: String,
-                      OverrideMessageType: MessageTypes? = nil, EncapsulatedID: UUID? = nil)
-    {
-        var MessageType: MessageTypes = .Unknown
-        if let OverrideMe = OverrideMessageType
-        {
-            MessageType = OverrideMe
-        }
-        else
-        {
-            MessageType = MessageHelper.GetMessageType(RawData)
-        }
-        switch MessageType
-        {
-        case .HandShake:
-            HandleHandShakeCommand(RawData, Peer: Peer)
-            
-        case .GetPeerType:
-            HandleReturnPeerType(RawData, Peer: Peer)
-            
-        case .SendPeerType:
-            HandlePeerTypeFromSender(RawData, Peer: Peer)
-            
-        case .SpecialCommand:
-            HandleSpecialCommand(RawData, Peer: Peer)
-            
-        case .EchoMessage:
-            //Should be handled by the instance that received the echo.
-            HandleEchoMessage(RawData, Peer: Peer)
-            
-        case .Heartbeat:
-            let (_, HostName, TimeStamp, FinalMessage) = MessageHelper.DecodeMessage(RawData)
-            DisplayHeartbeatData(FinalMessage, TimeStamp: TimeStamp, Host: HostName, Peer: Peer)
-            
-        case .ControlIdiotLight:
-            ControlIdiotLight(RawData)
-            
-        case .IdiotLightMessage:
-            HandleIdiotLightMessage(RawData)
-            
-        case .KVPData:
-            ManageKVPData(RawData, Peer: Peer)
-            
-        case .EchoReturn:
-            //Should be handled by the instance that sent the echo in the first place.
-            HandleEchoReturn(RawData)
-            
-        case .TextMessage:
-            HandleTextMessage(RawData)
-            
-        case .GetAllClientCommands:
-            SendClientCommandList(Peer: Peer, CommandID: EncapsulatedID!)
-            
-        case .ConnectionHeartbeat:
-            HandleConnectionHeartbeat(RawData, Peer: Peer)
-            
-        case .RequestConnectionHeartbeat:
-            HandleConnectionHeartbeatRequest(RawData, Peer: Peer)
-            
-        case .PushVersionInformation:
-            HandlePushedVersionInformation(RawData)
-            
-        case .SendCommandToClient:
-            HandleReceivedClientCommand(RawData, Peer: Peer)
-            
-        case .DebuggerStateChanged:
-            HandleDebuggerStateChanged(RawData, Peer: Peer)
-            
-        case .ResetTDebugUI:
-            ResetUI()
-            
-        case .ExecutionStarted:
-            ClientExecutionStarted(RawData, Peer: Peer)
-            
-        case .ExecutionTerminated:
-            ClientExecutionTerminated(RawData, Peer: Peer)
-            
-        default:
-            print("Unhandled message type: \(MessageType), Raw=\(RawData)")
-            break
-        }
-    }
-    #endif
     
     func ProcessAsyncResult(CommandID: UUID, Peer: MCPeerID, MessageType: MessageTypes, RawData: String)
     {
