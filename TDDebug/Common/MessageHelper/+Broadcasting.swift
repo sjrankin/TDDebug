@@ -39,7 +39,7 @@ extension MessageHelper
     {
         let Source = "From=\(From)"
         let Msg = "Message=\(Message)"
-        let Final = GenerateCommand(Command: .BroadcastCommand, Prefix: PrefixCode, Parts: [Source, Msg])
+        let Final = GenerateCommand(Command: .BroadcastMessage, Prefix: PrefixCode, Parts: [Source, Msg])
         return Final
     }
     
