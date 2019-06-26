@@ -351,7 +351,7 @@ class MessageHelper
         var Final = ""
         for Part in FinalList
         {
-            print("GenerateCommand: \(Part)")
+            //print("GenerateCommand: \(Part)")
             if Part.isEmpty
             {
                 continue
@@ -368,7 +368,7 @@ class MessageHelper
     /// - Returns: Formatted command string to send.
     static func GenerateCommand(Command: MessageTypes, Prefix: UUID, Parts: [String]) -> String
     {
-        print("GenerateCommand(\(Command))")
+        //print("GenerateCommand(\(Command))")
         return GenerateCommand(Command: Command.rawValue, Prefix: Prefix.uuidString, Parts: Parts)
     }
     
