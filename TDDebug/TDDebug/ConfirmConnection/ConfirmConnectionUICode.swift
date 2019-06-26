@@ -14,14 +14,7 @@ class ConfirmConnectionUICode: NSViewController
 {
     override func viewDidLoad()
     {
-    super.viewDidLoad()
-        let Duration = AutoAcceptInSec
-        AutoAcceptIndicator.maxValue = Duration
-        ExpectedCount = Duration
-        AutoAcceptTimer = Timer.scheduledTimer(timeInterval: 1.0, target: self,
-                                               selector: #selector(HandleUpdateAutoAcceptIndicator),
-                                               userInfo: nil, repeats: true)
-        Message.stringValue = "The peer \((Peer?.displayName)!) wants to connect to this instance so it can send debug information. Accept this connection?"
+        super.viewDidLoad()
     }
     
     @objc func HandleUpdateAutoAcceptIndicator()
@@ -35,10 +28,23 @@ class ConfirmConnectionUICode: NSViewController
         AutoAcceptIndicator.doubleValue = CurrentCount
     }
     
+    var Peer: MCPeerID? = nil
+    {
+        didSet
+        {
+            let Duration = AutoAcceptInSec
+            AutoAcceptIndicator.maxValue = Duration
+            ExpectedCount = Duration
+            AutoAcceptTimer = Timer.scheduledTimer(timeInterval: 1.0, target: self,
+                                                   selector: #selector(HandleUpdateAutoAcceptIndicator),
+                                                   userInfo: nil, repeats: true)
+            Message.stringValue = "The peer \((Peer?.displayName)!) wants to connect to this instance so it can send debug information. Accept this connection?"
+        }
+    }
+    
     var CurrentCount: Double = 0
     var ExpectedCount: Double = 0
     var AutoAcceptInSec: Double = 6.0
-    var Peer: MCPeerID? = nil
     var AutoAcceptTimer: Timer? = nil
     
     func AutoAccept()
