@@ -13,7 +13,6 @@
 		171EB5EE2255C2250075C134 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 171EB5ED2255C2250075C134 /* Assets.xcassets */; };
 		171EB5F72255C2C30075C134 /* MultiPeer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1743C1472252032F003FE6B2 /* MultiPeer.swift */; };
 		171EB5F82255C2C60075C134 /* MultiPeerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1743C14B22520366003FE6B2 /* MultiPeerDelegate.swift */; };
-		171EB5F92255C2CA0075C134 /* MessageHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1743C1492252034E003FE6B2 /* MessageHelper.swift */; };
 		171EB5FA2255C2CD0075C134 /* ClientCommands.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1704C5B72253244D00C49E91 /* ClientCommands.swift */; };
 		171EB5FB2255C2D10075C134 /* OSColorExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1743C14D2252041B003FE6B2 /* OSColorExtensions.swift */; };
 		171EB5FC2255C2D80075C134 /* State.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1746B53C22520A7000E554EC /* State.swift */; };
@@ -49,7 +48,6 @@
 		1743C13B2251DF9C003FE6B2 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1743C13A2251DF9C003FE6B2 /* Assets.xcassets */; };
 		1743C13E2251DF9C003FE6B2 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1743C13C2251DF9C003FE6B2 /* Main.storyboard */; };
 		1743C1482252032F003FE6B2 /* MultiPeer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1743C1472252032F003FE6B2 /* MultiPeer.swift */; };
-		1743C14A2252034E003FE6B2 /* MessageHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1743C1492252034E003FE6B2 /* MessageHelper.swift */; };
 		1743C14C22520366003FE6B2 /* MultiPeerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1743C14B22520366003FE6B2 /* MultiPeerDelegate.swift */; };
 		1743C14E2252041B003FE6B2 /* OSColorExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1743C14D2252041B003FE6B2 /* OSColorExtensions.swift */; };
 		1746B53D22520A7000E554EC /* State.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1746B53C22520A7000E554EC /* State.swift */; };
@@ -67,6 +65,7 @@
 		1767D28822AF4C75005EE191 /* PeerType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1767D28722AF4C75005EE191 /* PeerType.swift */; };
 		1767D28922AF4D37005EE191 /* PeerType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1767D28722AF4C75005EE191 /* PeerType.swift */; };
 		1772A2FB2253705C006D0A16 /* OSColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1772A2FA2253705C006D0A16 /* OSColor.swift */; };
+		1797522422C38A2F00BF539A /* MessageHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1797522322C38A2F00BF539A /* MessageHelper.swift */; };
 		17B3EE8D2255CD35009988D3 /* SendToRemote.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 17B3EE8C2255CD35009988D3 /* SendToRemote.storyboard */; };
 		17B3EE8F2255CD40009988D3 /* SendToRemoteCode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17B3EE8E2255CD40009988D3 /* SendToRemoteCode.swift */; };
 		17B3EE912255CD48009988D3 /* ClientTestUI.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 17B3EE902255CD48009988D3 /* ClientTestUI.storyboard */; };
@@ -169,7 +168,6 @@
 		1743C13F2251DF9C003FE6B2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		1743C1402251DF9C003FE6B2 /* TDDebug.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = TDDebug.entitlements; sourceTree = "<group>"; };
 		1743C1472252032F003FE6B2 /* MultiPeer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultiPeer.swift; sourceTree = "<group>"; };
-		1743C1492252034E003FE6B2 /* MessageHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageHelper.swift; sourceTree = "<group>"; };
 		1743C14B22520366003FE6B2 /* MultiPeerDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultiPeerDelegate.swift; sourceTree = "<group>"; };
 		1743C14D2252041B003FE6B2 /* OSColorExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OSColorExtensions.swift; sourceTree = "<group>"; };
 		1746B53C22520A7000E554EC /* State.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = State.swift; sourceTree = "<group>"; };
@@ -186,6 +184,7 @@
 		17508F4E225B6DD100BC9FC0 /* MainCustomizeUICode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainCustomizeUICode.swift; sourceTree = "<group>"; };
 		1767D28722AF4C75005EE191 /* PeerType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeerType.swift; sourceTree = "<group>"; };
 		1772A2FA2253705C006D0A16 /* OSColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OSColor.swift; sourceTree = "<group>"; };
+		1797522322C38A2F00BF539A /* MessageHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageHelper.swift; sourceTree = "<group>"; };
 		17B3EE8C2255CD35009988D3 /* SendToRemote.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = SendToRemote.storyboard; sourceTree = "<group>"; };
 		17B3EE8E2255CD40009988D3 /* SendToRemoteCode.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SendToRemoteCode.swift; sourceTree = "<group>"; };
 		17B3EE902255CD48009988D3 /* ClientTestUI.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = ClientTestUI.storyboard; sourceTree = "<group>"; };
@@ -569,7 +568,7 @@
 		17EC153C22C210FC00E4740B /* MessageHelper */ = {
 			isa = PBXGroup;
 			children = (
-				1743C1492252034E003FE6B2 /* MessageHelper.swift */,
+				1797522322C38A2F00BF539A /* MessageHelper.swift */,
 				17EC154C22C2193A00E4740B /* +Heartbeat.swift */,
 				17EC153D22C2133500E4740B /* +IdiotLights.swift */,
 				17EC153F22C2157000E4740B /* +DebuggeeExecution.swift */,
@@ -776,7 +775,6 @@
 				171EB6112255C47D0075C134 /* IDTableCell.swift in Sources */,
 				17C0E6FB22AF9FD3003FAFA8 /* IdiotLightMessage.swift in Sources */,
 				17B3EE992255CD66009988D3 /* LogItemViewerCode.swift in Sources */,
-				171EB5F92255C2CA0075C134 /* MessageHelper.swift in Sources */,
 				171EB5FC2255C2D80075C134 /* State.swift in Sources */,
 				173366A322570BD500438E66 /* MessageHandler.swift in Sources */,
 				171EB60D2255C4670075C134 /* Versioning.swift in Sources */,
@@ -816,6 +814,7 @@
 				17508F3D225B04B700BC9FC0 /* SelectorWindow.swift in Sources */,
 				1722347022573D7D00518601 /* FilterObject.swift in Sources */,
 				173366A222570A0400438E66 /* MessageHandlerDelegate.swift in Sources */,
+				1797522422C38A2F00BF539A /* MessageHelper.swift in Sources */,
 				1743C1482252032F003FE6B2 /* MultiPeer.swift in Sources */,
 				17EC155922C245F100E4740B /* +EchoCommands.swift in Sources */,
 				1704C5B4225311D400C49E91 /* SendToClientUIWindow.swift in Sources */,
@@ -850,7 +849,6 @@
 				172426D7225239C400E34282 /* PeerViewerUICode.swift in Sources */,
 				17EC155022C21B4B00E4740B /* +TextMessages.swift in Sources */,
 				17C0E6FA22AF9FD3003FAFA8 /* IdiotLightMessage.swift in Sources */,
-				1743C14A2252034E003FE6B2 /* MessageHelper.swift in Sources */,
 				17C4161722C0BE9300A13793 /* RawDataManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
