@@ -863,6 +863,7 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
     
     func HandlePeerTypeFromSender(_ Raw: String, Peer: MCPeerID)
     {
+        print("Decode peer data from \"\(Raw)\"")
         let PeerData = MessageHelper.DecodePeerTypeCommand(Raw)
         let PeerIsDebugger: String = String(PeerData!.PeerIsDebugger)
         let LogText = "\(Peer.displayName) [Debugger: \(PeerIsDebugger)], Prefix=\((PeerData?.PeerPrefixID?.uuidString)!)"
@@ -1038,7 +1039,9 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
             Payload = MessageData.3
         }
         RawDataManager.Add(RawData, FromSource: Peer.displayName, MsgType: MessageType, Received: Date())
-        //print("MessageType=\(MessageType), RawData=\(RawData)")
+        print("MessageType=\(MessageType)")
+        print("   RawData=\(RawData)")
+        print("   Payload=\(Payload)")
         switch MessageType
         {
         case .HandShake:
