@@ -64,6 +64,19 @@
 		17508F4F225B6DD100BC9FC0 /* MainCustomizeUICode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17508F4E225B6DD100BC9FC0 /* MainCustomizeUICode.swift */; };
 		1767D28822AF4C75005EE191 /* PeerType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1767D28722AF4C75005EE191 /* PeerType.swift */; };
 		1767D28922AF4D37005EE191 /* PeerType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1767D28722AF4C75005EE191 /* PeerType.swift */; };
+		17715CA222C71947009FD441 /* +Tables.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17715CA122C71947009FD441 /* +Tables.swift */; };
+		17715CA422C7216A009FD441 /* TableCommandData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17715CA322C7216A009FD441 /* TableCommandData.swift */; };
+		17715CA522C7216A009FD441 /* TableCommandData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17715CA322C7216A009FD441 /* TableCommandData.swift */; };
+		17715CA622C72178009FD441 /* +Tables.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17715CA122C71947009FD441 /* +Tables.swift */; };
+		17715CA722C7217E009FD441 /* MessageHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1797522322C38A2F00BF539A /* MessageHelper.swift */; };
+		17715CAA22C726AE009FD441 /* TableManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17715CA922C726AE009FD441 /* TableManager.swift */; };
+		17715CAB22C726AE009FD441 /* TableManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17715CA922C726AE009FD441 /* TableManager.swift */; };
+		17715CAD22C7270F009FD441 /* TableData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17715CAC22C7270F009FD441 /* TableData.swift */; };
+		17715CAE22C7270F009FD441 /* TableData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17715CAC22C7270F009FD441 /* TableData.swift */; };
+		17715CB022C72801009FD441 /* TableDataRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17715CAF22C72801009FD441 /* TableDataRow.swift */; };
+		17715CB122C72801009FD441 /* TableDataRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17715CAF22C72801009FD441 /* TableDataRow.swift */; };
+		17715CB322C72A5F009FD441 /* TableWatcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17715CB222C72A5F009FD441 /* TableWatcher.swift */; };
+		17715CB422C72A5F009FD441 /* TableWatcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17715CB222C72A5F009FD441 /* TableWatcher.swift */; };
 		1772A2FB2253705C006D0A16 /* OSColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1772A2FA2253705C006D0A16 /* OSColor.swift */; };
 		1797522422C38A2F00BF539A /* MessageHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1797522322C38A2F00BF539A /* MessageHelper.swift */; };
 		17B3EE8D2255CD35009988D3 /* SendToRemote.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 17B3EE8C2255CD35009988D3 /* SendToRemote.storyboard */; };
@@ -183,6 +196,12 @@
 		17508F43225B224700BC9FC0 /* ConfirmConnectionUICode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfirmConnectionUICode.swift; sourceTree = "<group>"; };
 		17508F4E225B6DD100BC9FC0 /* MainCustomizeUICode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainCustomizeUICode.swift; sourceTree = "<group>"; };
 		1767D28722AF4C75005EE191 /* PeerType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeerType.swift; sourceTree = "<group>"; };
+		17715CA122C71947009FD441 /* +Tables.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "+Tables.swift"; sourceTree = "<group>"; };
+		17715CA322C7216A009FD441 /* TableCommandData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableCommandData.swift; sourceTree = "<group>"; };
+		17715CA922C726AE009FD441 /* TableManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableManager.swift; sourceTree = "<group>"; };
+		17715CAC22C7270F009FD441 /* TableData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableData.swift; sourceTree = "<group>"; };
+		17715CAF22C72801009FD441 /* TableDataRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableDataRow.swift; sourceTree = "<group>"; };
+		17715CB222C72A5F009FD441 /* TableWatcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableWatcher.swift; sourceTree = "<group>"; };
 		1772A2FA2253705C006D0A16 /* OSColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OSColor.swift; sourceTree = "<group>"; };
 		1797522322C38A2F00BF539A /* MessageHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageHelper.swift; sourceTree = "<group>"; };
 		17B3EE8C2255CD35009988D3 /* SendToRemote.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = SendToRemote.storyboard; sourceTree = "<group>"; };
@@ -283,6 +302,7 @@
 		171EB5F62255C24E0075C134 /* Common */ = {
 			isa = PBXGroup;
 			children = (
+				17715CA822C72681009FD441 /* TableHandling */,
 				17EC153C22C210FC00E4740B /* MessageHelper */,
 				17C4161522C0BE6900A13793 /* RawData */,
 				1733669E225708A700438E66 /* MessageHandler */,
@@ -473,6 +493,18 @@
 			path = Customization;
 			sourceTree = "<group>";
 		};
+		17715CA822C72681009FD441 /* TableHandling */ = {
+			isa = PBXGroup;
+			children = (
+				17715CA322C7216A009FD441 /* TableCommandData.swift */,
+				17715CA922C726AE009FD441 /* TableManager.swift */,
+				17715CAC22C7270F009FD441 /* TableData.swift */,
+				17715CAF22C72801009FD441 /* TableDataRow.swift */,
+				17715CB222C72A5F009FD441 /* TableWatcher.swift */,
+			);
+			path = TableHandling;
+			sourceTree = "<group>";
+		};
 		1772A2F92253704A006D0A16 /* OSColor */ = {
 			isa = PBXGroup;
 			children = (
@@ -583,6 +615,7 @@
 				17EC156122C247AD00E4740B /* +ClientCommands.swift */,
 				17EC155E22C2471200E4740B /* +KVPCommands.swift */,
 				17EC156422C2491700E4740B /* +StatusCommands.swift */,
+				17715CA122C71947009FD441 /* +Tables.swift */,
 			);
 			path = MessageHelper;
 			sourceTree = "<group>";
@@ -740,8 +773,10 @@
 				171EB6092255C4510075C134 /* AppDelegate.swift in Sources */,
 				17B4952B225C688300117CF5 /* MainControllerMessageHandling.swift in Sources */,
 				17EC154122C2157000E4740B /* +DebuggeeExecution.swift in Sources */,
+				17715CB422C72A5F009FD441 /* TableWatcher.swift in Sources */,
 				173366A422570BD800438E66 /* MessageHandlerDelegate.swift in Sources */,
 				17EC154522C2162B00E4740B /* +Broadcasting.swift in Sources */,
+				17715CAB22C726AE009FD441 /* TableManager.swift in Sources */,
 				17B3EE9B2255CD6B009988D3 /* LogItemProtocol.swift in Sources */,
 				17EC156722C24CFA00E4740B /* UUID.swift in Sources */,
 				17EC155122C21B4B00E4740B /* +TextMessages.swift in Sources */,
@@ -754,15 +789,19 @@
 				17B3EEA42255CDF4009988D3 /* KVPItem.swift in Sources */,
 				17EC155A22C245F100E4740B /* +EchoCommands.swift in Sources */,
 				1767D28922AF4D37005EE191 /* PeerType.swift in Sources */,
+				17715CB122C72801009FD441 /* TableDataRow.swift in Sources */,
 				17EC155722C2451F00E4740B /* +PeerCommands.swift in Sources */,
+				17715CA522C7216A009FD441 /* TableCommandData.swift in Sources */,
 				17B3EEA02255CD8D009988D3 /* MainProtocol.swift in Sources */,
 				17B3EE932255CD53009988D3 /* ClientTestUICode.swift in Sources */,
+				17715CAE22C7270F009FD441 /* TableData.swift in Sources */,
 				171EB5F82255C2C60075C134 /* MultiPeerDelegate.swift in Sources */,
 				17EC156322C247AD00E4740B /* +ClientCommands.swift in Sources */,
 				17B3EE8F2255CD40009988D3 /* SendToRemoteCode.swift in Sources */,
 				171EB5FE2255C2E00075C134 /* OSColor.swift in Sources */,
 				17B3EE972255CD60009988D3 /* LogTableCell.swift in Sources */,
 				171EB5FD2255C2DB0075C134 /* StateProtocol.swift in Sources */,
+				17715CA722C7217E009FD441 /* MessageHelper.swift in Sources */,
 				171EB6052255C42E0075C134 /* MainController.swift in Sources */,
 				17EC156022C2471200E4740B /* +KVPCommands.swift in Sources */,
 				17EC156622C2491700E4740B /* +StatusCommands.swift in Sources */,
@@ -773,6 +812,7 @@
 				17EC155422C2449900E4740B /* +Handshake.swift in Sources */,
 				17EC154E22C2193A00E4740B /* +Heartbeat.swift in Sources */,
 				171EB6112255C47D0075C134 /* IDTableCell.swift in Sources */,
+				17715CA622C72178009FD441 /* +Tables.swift in Sources */,
 				17C0E6FB22AF9FD3003FAFA8 /* IdiotLightMessage.swift in Sources */,
 				17B3EE992255CD66009988D3 /* LogItemViewerCode.swift in Sources */,
 				171EB5FC2255C2D80075C134 /* State.swift in Sources */,
@@ -788,6 +828,8 @@
 				172E7F632259C9CA009E4768 /* ViewStateManager.swift in Sources */,
 				1743C1392251DF9B003FE6B2 /* ViewController.swift in Sources */,
 				1746B54822520D4A00E554EC /* LogItem.swift in Sources */,
+				17715CA422C7216A009FD441 /* TableCommandData.swift in Sources */,
+				17715CAA22C726AE009FD441 /* TableManager.swift in Sources */,
 				17EC155322C2449900E4740B /* +Handshake.swift in Sources */,
 				17B49529225C60CC00117CF5 /* ViewControllerMessageHandling.swift in Sources */,
 				17EC154422C2162B00E4740B /* +Broadcasting.swift in Sources */,
@@ -805,6 +847,7 @@
 				17EC154722C217B300E4740B /* +EncapsulatedCommands.swift in Sources */,
 				17EC154D22C2193A00E4740B /* +Heartbeat.swift in Sources */,
 				1767D28822AF4C75005EE191 /* PeerType.swift in Sources */,
+				17715CA222C71947009FD441 /* +Tables.swift in Sources */,
 				1722346E22572E5300518601 /* FiltererUICode.swift in Sources */,
 				17EC154A22C2188600E4740B /* +VersionInfo.swift in Sources */,
 				172E7F6B2259E72D009E4768 /* ItemViewerWindow.swift in Sources */,
@@ -821,12 +864,15 @@
 				172E7F6D2259E739009E4768 /* ItemViewerUICode.swift in Sources */,
 				17EC155C22C2466100E4740B /* +SpecialAndOtherCommands.swift in Sources */,
 				17508F4F225B6DD100BC9FC0 /* MainCustomizeUICode.swift in Sources */,
+				17715CB322C72A5F009FD441 /* TableWatcher.swift in Sources */,
 				172E7F612259A757009E4768 /* ConnectionNotificationProtocol.swift in Sources */,
 				17B49530225C6CE200117CF5 /* BroadcastWindow.swift in Sources */,
 				17C4161122C0BAEC00A13793 /* CommandDump.swift in Sources */,
 				1722346C22572E3F00518601 /* FiltererWindow.swift in Sources */,
 				17EC153B22C1D86700E4740B /* UUID.swift in Sources */,
 				172E7F662259C9F5009E4768 /* ViewState.swift in Sources */,
+				17715CB022C72801009FD441 /* TableDataRow.swift in Sources */,
+				17715CAD22C7270F009FD441 /* TableData.swift in Sources */,
 				17C4161322C0BB3600A13793 /* CommandDumpWindow.swift in Sources */,
 				17B68CCA225468CC00AEBE94 /* MainWindow.swift in Sources */,
 				1704C5B62253123F00C49E91 /* SendToClientUICode.swift in Sources */,
