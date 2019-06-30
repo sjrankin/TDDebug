@@ -17,7 +17,7 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
     MainProtocol,                       //Delegate to export certain functions and data from the ViewController class.
     StateProtocol,                      //Delegate to handle state changes.
     MessageHandlerDelegate,             //Delegate to implement functions for message handling from the MessageHandler class.
-                                        //(These functions are in ViewControllerMessageHandling.swift.
+    //(These functions are in ViewControllerMessageHandling.swift.
     LogItemProtocol                     //Delegate to handle log item viewing in external windows.
 {
     let KVPTableTag = 100
@@ -328,8 +328,8 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
     {
         OperationQueue.main.addOperation
             {
-        self.KVPItems.append(KVPItem(WithKey: Name, AndValue: Value))
-        self.KVPTable.reloadData()
+                self.KVPItems.append(KVPItem(WithKey: Name, AndValue: Value))
+                self.KVPTable.reloadData()
         }
     }
     
@@ -529,14 +529,14 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
     {
         OperationQueue.main.addOperation
             {
-            if let IdiotCommand = MessageHelper.DecodeIdiotLightMessage2(Raw)
-            {
-                let FinalAddress = IdiotCommand.Address.uppercased()
-                self.IdiotLights[FinalAddress]!.1.stringValue = IdiotCommand.Message
-                let FGColor = OSColor(HexString: IdiotCommand.FGColor)
-                self.IdiotLights[FinalAddress]!.1.textColor = FGColor!
-                let BGColor = OSColor(HexString: IdiotCommand.BGColor)
-                self.IdiotLights[FinalAddress]!.0.layer?.backgroundColor = BGColor?.cgColor
+                if let IdiotCommand = MessageHelper.DecodeIdiotLightMessage2(Raw)
+                {
+                    let FinalAddress = IdiotCommand.Address.uppercased()
+                    self.IdiotLights[FinalAddress]!.1.stringValue = IdiotCommand.Message
+                    let FGColor = OSColor(HexString: IdiotCommand.FGColor)
+                    self.IdiotLights[FinalAddress]!.1.textColor = FGColor!
+                    let BGColor = OSColor(HexString: IdiotCommand.BGColor)
+                    self.IdiotLights[FinalAddress]!.0.layer?.backgroundColor = BGColor?.cgColor
                 }
         }
     }
@@ -678,43 +678,43 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
     {
         OperationQueue.main.addOperation
             {
-            var ReturnMe = HandShakeCommands.ConnectionGranted
-            var PostConnect1 = ""
-            var PostConnect2 = ""
-            var ReturnState = ""
-            if DoAccept
-            {
-                self._ConnectedClient = Peer
-                let Item = LogItem(Text: "\(Peer.displayName) is debug client.")
-                Item.HostName = "TDDebug"
-                self.AddLogMessage(Item: Item)
-                ReturnState = MessageHelper.MakeHandShake(ReturnMe)
-                PostConnect1 = MessageHelper.MakeSendVersionInfo()
-                PostConnect2 = MessageHelper.MakeRequestConnectionHeartbeat(From: self.MPMgr.SelfPeer)
-            }
-            else
-            {
-                let Item = LogItem(Text: "User denied connection request from \(Peer.displayName)")
-                Item.HostName = "TDDebug"
-                self.AddLogMessage(Item: Item)
-                ReturnMe = State.TransitionTo(NewState: .Disconnected)
-            }
-            if !ReturnState.isEmpty
-            {
-                self.MPMgr!.SendPreformatted(Message: ReturnState, To: Peer)
-                if !PostConnect1.isEmpty
+                var ReturnMe = HandShakeCommands.ConnectionGranted
+                var PostConnect1 = ""
+                var PostConnect2 = ""
+                var ReturnState = ""
+                if DoAccept
                 {
-                    self.MPMgr.SendPreformatted(Message: PostConnect1, To: Peer)
+                    self._ConnectedClient = Peer
+                    let Item = LogItem(Text: "\(Peer.displayName) is debug client.")
+                    Item.HostName = "TDDebug"
+                    self.AddLogMessage(Item: Item)
+                    ReturnState = MessageHelper.MakeHandShake(ReturnMe)
+                    PostConnect1 = MessageHelper.MakeSendVersionInfo()
+                    PostConnect2 = MessageHelper.MakeRequestConnectionHeartbeat(From: self.MPMgr.SelfPeer)
                 }
-                if !PostConnect2.isEmpty
+                else
                 {
-                    self.MPMgr.SendPreformatted(Message: PostConnect2, To: Peer)
+                    let Item = LogItem(Text: "User denied connection request from \(Peer.displayName)")
+                    Item.HostName = "TDDebug"
+                    self.AddLogMessage(Item: Item)
+                    ReturnMe = State.TransitionTo(NewState: .Disconnected)
                 }
-            }
-            else
-            {
-                print("Empty handshake return state.")
-            }
+                if !ReturnState.isEmpty
+                {
+                    self.MPMgr!.SendPreformatted(Message: ReturnState, To: Peer)
+                    if !PostConnect1.isEmpty
+                    {
+                        self.MPMgr.SendPreformatted(Message: PostConnect1, To: Peer)
+                    }
+                    if !PostConnect2.isEmpty
+                    {
+                        self.MPMgr.SendPreformatted(Message: PostConnect2, To: Peer)
+                    }
+                }
+                else
+                {
+                    print("Empty handshake return state.")
+                }
         }
     }
     
@@ -806,11 +806,11 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
     func HandleEchoReturn(_ Raw: String)
     {
         #if true
-        let (Message, HostName, TimeStamp) = MessageHelper.DecodeTextMessage(Raw)
+        let (Message, HostName, TimeStamp, Marked) = MessageHelper.DecodeTextMessage(Raw)
         OperationQueue.main.addOperation
             {
                 let Item = LogItem(TimeStamp: TimeStamp, Host: HostName, Text: "Echo returned: " + Message,
-                                   ShowInitialAnimation: true, FinalBG: NSColor.green)
+                                   ShowInitialAnimation: true, FinalBG: NSColor.green, IsMarked: Marked)
                 self.AddLogMessage(Item: Item)
         }
         #else
@@ -827,12 +827,13 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
     func HandleTextMessage(_ Raw: String)
     {
         #if true
-        let (Message, HostName, TimeStamp) = MessageHelper.DecodeTextMessage(Raw)
+        let (Message, HostName, TimeStamp, Marked) = MessageHelper.DecodeTextMessage(Raw)
         OperationQueue.main.addOperation
             {
-            let Item = LogItem(TimeStamp: TimeStamp, Host: HostName, Text: Message,
-                               ShowInitialAnimation: true, FinalBG: NSColor.white)
-            self.AddLogMessage(Item: Item)
+                let Item = LogItem(TimeStamp: TimeStamp, Host: HostName, Text: Message,
+                                   ShowInitialAnimation: true, FinalBG: NSColor.white,
+                                   IsMarked: Marked)
+                self.AddLogMessage(Item: Item)
         }
         #else
         let (_, HostName, TimeStamp, FinalMessage) = MessageHelper.DecodeMessage(Raw)
@@ -1630,7 +1631,7 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
     
     func DoResetIdiotLights(_ sender: Any)
     {
-InternalResetIdiotLights()
+        InternalResetIdiotLights()
     }
     
     @IBAction func AboutTDDebug(_ sender: Any)
@@ -1793,7 +1794,6 @@ InternalResetIdiotLights()
     @IBOutlet weak var C1Text: NSTextField!
     @IBOutlet weak var C2Text: NSTextField!
     @IBOutlet weak var C3Text: NSTextField!
-    
     @IBOutlet weak var LogTable: NSTableView!
     @IBOutlet weak var LogTableHeader: NSTableHeaderView!
     @IBOutlet weak var KVPTable: NSTableView!
