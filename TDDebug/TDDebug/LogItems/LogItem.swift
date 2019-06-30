@@ -15,6 +15,8 @@ class LogItem
     /// Initializer. The ID and timestamp are generated automatically.
     ///
     /// - Parameter Text: The text of the item.
+    /// - Parameter ShowInitialAnimation: Determines whether animation is shown when the item is added to the log display.
+    /// - Parameter FinalBG: The final background color of the displayed log item.
     init(Text: String, ShowInitialAnimation: Bool = true, FinalBG: NSColor = NSColor.white)
     {
         _ID = UUID()
@@ -32,6 +34,8 @@ class LogItem
     /// - Parameters:
     ///   - TimeStamp: Timestamp value.
     ///   - Text: Message value.
+    ///   - ShowInitialAnimation: Determines whether animation is shown when the item is added to the log display.
+    ///   - FinalBG: FinalBG: The final background color of the displayed log item.
     init(TimeStamp: String, Text: String, ShowInitialAnimation: Bool = true, FinalBG: NSColor = NSColor.white)
     {
         _ID = UUID()
@@ -50,6 +54,8 @@ class LogItem
     ///   - TimeStamp: Timestamp value.
     ///   - Host: Name of the host where the message originated.
     ///   - Text: Message value.
+    ///   - ShowInitialAnimation: Determines whether animation is shown when the item is added to the log display.
+    ///   - FinalBG: FinalBG: The final background color of the displayed log item.
     init(TimeStamp: String, Host: String, Text: String, ShowInitialAnimation: Bool = true, FinalBG: NSColor = NSColor.white)
     {
         _ID = UUID()
@@ -66,9 +72,35 @@ class LogItem
     /// Initializer.
     ///
     /// - Parameters:
+    ///   - TimeStamp: Timestamp value.
+    ///   - Host: Name of the host where the message originated.
+    ///   - Text: Message value.
+    ///   - ShowInitialAnimation: Determines whether animation is shown when the item is added to the log display.
+    ///   - FinalBG: FinalBG: The final background color of the displayed log item.
+    ///   - IsMarked: Flag from the sender that is context sensitive.
+    init(TimeStamp: String, Host: String, Text: String, ShowInitialAnimation: Bool = true,
+         FinalBG: NSColor = NSColor.white, IsMarked: Bool)
+    {
+        _ID = UUID()
+        Title = TimeStamp
+        Message = Text
+        HostName = Host
+        Marked = IsMarked
+        DoAnimateBGColor = ShowInitialAnimation
+        if ShowInitialAnimation
+        {
+            SetForAutoAnimation(FinalBG)
+        }
+    }
+    
+    /// Initializer.
+    ///
+    /// - Parameters:
     ///   - ItemID: ID of the log item.
     ///   - TimeStamp: Timestamp value.
     ///   - Text: Message value.
+    ///   - ShowInitialAnimation: Determines whether animation is shown when the item is added to the log display.
+    ///   - FinalBG: FinalBG: The final background color of the displayed log item.
     init(ItemID: UUID, TimeStamp: String, Text: String, ShowInitialAnimation: Bool = true, FinalBG: NSColor = NSColor.white)
     {
         _ID = ItemID
@@ -86,6 +118,21 @@ class LogItem
         BGAnimateTargetColor = FinalColor
         DoAnimateBGColor = true
         BGAnimateColorDuration = 2.0
+    }
+    
+    /// Holds the marked flag.
+    private var _Marked: Bool = false
+    /// Get or set the marked flag.
+    public var Marked: Bool
+    {
+        get
+        {
+            return _Marked
+        }
+        set
+        {
+            _Marked = newValue
+        }
     }
     
     /// ID of the item instance.
