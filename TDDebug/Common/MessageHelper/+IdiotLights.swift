@@ -19,6 +19,12 @@ extension MessageHelper
 {
     // MARK: Idiot light encoding commands.
     
+    /// Make an idiot light message.
+    /// - Parameter Address: The address of the idiot light.
+    /// - Parameter Message: The text of the idiot light (which shouldn't be very long).
+    /// - Parameter FGColor: Color of the text.
+    /// - Parameter BGColor: Color of the background.
+    /// - Returns: Formatted string to send to the remote peer to set an idiot light.
     public static func MakeIdiotLightMessage(Address: String, Message: String, FGColor: OSColor, BGColor: OSColor) -> String
     {
         let P1 = "Address=\(Address)"
@@ -29,6 +35,10 @@ extension MessageHelper
         return Final
     }
     
+    /// Make an idiot light message.
+    /// - Parameter Address: The address of the idiot light.
+    /// - Parameter State: UIFeature state enabling flag.
+    /// - Returns: Formatted string to send to the remote peer to set an idiot light.
     public static func MakeIdiotLightMessage(Address: String, State: UIFeatureStates) -> String
     {
         let Addr = "Address=\(Address)"
@@ -37,6 +47,10 @@ extension MessageHelper
         return Final
     }
     
+    /// Make an idiot light message.
+    /// - Parameter Address: The address of the idiot light.
+    /// - Parameter Text: The text of the idiot light (which shouldn't be very long).
+    /// - Returns: Formatted string to send to the remote peer to set an idiot light.
     public static func MakeIdiotLightMessage(Address: String, Text: String) -> String
     {
         let Addr = "Address=\(Address)"
@@ -45,6 +59,10 @@ extension MessageHelper
         return Final
     }
     
+    /// Change the text color of an idiot light.
+    /// - Parameter Address: The address of the idiot light.
+    /// - Parameter FGColor: Color of the text.
+    /// - Returns: Formatted string to send to the remote peer to set an idiot light.
     public static func MakeIdiotLightMessage(Address: String, FGColor: OSColor) -> String
     {
         let Addr = "Address=\(Address)"
@@ -53,6 +71,10 @@ extension MessageHelper
         return Final
     }
     
+    /// Change the background color of an idiot light.
+    /// - Parameter Address: The address of the idiot light.
+    /// - Parameter FGColor: Color of the text.
+    /// - Returns: Formatted string to send to the remote peer to set an idiot light.
     public static func MakeIdiotLightMessage(Address: String, BGColor: OSColor) -> String
     {
         let Addr = "Address=\(Address)"
@@ -63,6 +85,11 @@ extension MessageHelper
     
     // MARK: Idiot light command decoding.
     
+    #if false
+    /// Decode an idiot light command.
+    /// - Note: Not currently used.
+    /// - Parameter Raw: The raw string to decode.
+    /// - Returns: Tuple.
     public static func DecodeIdiotLightCommand(_ Raw: String) -> (MessageTypes, String, String, String)
     {
         if Raw.isEmpty
@@ -80,9 +107,14 @@ extension MessageHelper
         }
         return (MessageTypeFromID(String(Parts[0])), String(Parts[1]), String(Parts[2]), String(Parts[3]))
     }
+    #endif
     
     //Format of command: command,address{,data}
     //returns command, address, text, fg color, bg color
+    /// Decode an idiot light message from a remote peer.
+    /// - Parameter Raw: The raw string to decode.
+    /// - Returns: Tuple in the form: Idiot light command (enable or disable), idiot light address, idiot light text if available
+    ///            (nil if not available), foreground color (nil if not available), and background color (nil if not available).
     public static func DecodeIdiotLightMessage(_ Raw: String) ->(IdiotLightCommands, String, String?, OSColor?, OSColor?)
     {
         let Params = GetParameters(From: Raw, ["Address", "Enable", "Text", "BGColor", "FGColor"])
@@ -128,6 +160,9 @@ extension MessageHelper
         return (Command, Address, Text, FGColor, BGColor)
     }
     
+    /// Decode an idiot light message.
+    /// - Parameter Raw: The raw string to decode.
+    /// - Returns: An IdiotLightMessage class instance with parsed data.
     public static func DecodeIdiotLightMessage2(_ Raw: String) -> IdiotLightMessage?
     {
         let Params = GetParameters(From: Raw, ["Address", "Message", "BGColor", "FGColor"])
