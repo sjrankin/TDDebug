@@ -453,6 +453,7 @@ class MessageHelper
             MessageTypes.ExecutionStarted: MessageTypes.ExecutionStarted.rawValue,
             MessageTypes.ExecutionTerminated: MessageTypes.ExecutionTerminated.rawValue,
             MessageTypes.ResetTDebugUI: MessageTypes.ResetTDebugUI.rawValue,
+            MessageTypes.TableCommand: MessageTypes.TableCommand.rawValue,
             MessageTypes.Unknown: MessageTypes.Unknown.rawValue,
     ]
     
@@ -515,10 +516,10 @@ class MessageHelper
 
 /// Special UI-infrastructure commands.
 ///
-/// - ClearKVPList: Clear the contents of the KVP list.
-/// - ClearLogList: Clear the contents of the log item list.
-/// - ClearIdiotLights: Reset all idiot lights (except for A1, which is reserved for the local instance).
-/// - Unknown: Unknown special command - if explicitly used, ignored.
+/// - **ClearKVPList**: Clear the contents of the KVP list.
+/// - **ClearLogList**: Clear the contents of the log item list.
+/// - **ClearIdiotLights**: Reset all idiot lights (except for A1, which is reserved for the local instance).
+/// - **Unknown**: Unknown special command - if explicitly used, ignored.
 enum SpecialCommands: String, CaseIterable
 {
     case ClearKVPList = "a1a4974c-ed8f-41bc-bdbf-49570f67cc03"
@@ -529,13 +530,13 @@ enum SpecialCommands: String, CaseIterable
 
 /// Sub-commands related to handshakes between two peers when netogiating who is the server and who is the client.
 ///
-/// - RequestConnection: Peer requests the target to be the server.
-/// - ConnectionGranted: Sent when an instance becomes the server - sent to the peer that requested a connection.
-/// - ConnectionRefused: Sent when the instance is not able to be the server.
-/// - ConnectionClose: Sent by the client to close the connection to the server.
-/// - Disconnected: Sent by the server to the client when it closes the connection.
-/// - DropAsClient: Sent by the server asynchronously when it closes the connection for any reason.
-/// - Unknown: Unknown command - if explicitly used, ignored.
+/// - **RequestConnection**: Peer requests the target to be the server.
+/// - **ConnectionGranted**: Sent when an instance becomes the server - sent to the peer that requested a connection.
+/// - **ConnectionRefused**: Sent when the instance is not able to be the server.
+/// - **ConnectionClose**: Sent by the client to close the connection to the server.
+/// - **Disconnected**: Sent by the server to the client when it closes the connection.
+/// - **DropAsClient**: Sent by the server asynchronously when it closes the connection for any reason.
+/// - **Unknown**: Unknown command - if explicitly used, ignored.
 enum HandShakeCommands: String, CaseIterable
 {
     case RequestConnection = "6dc88b50-15c0-41e0-aa6f-c1c33d93303b"
@@ -576,6 +577,9 @@ enum HandShakeCommands: String, CaseIterable
 /// - SendPeerType: Send instance information to a peer.
 /// - IdiotLightMessage: More complete control of idiot lights.
 /// - DebuggerStateChanged: The debug state of the instance changed.
+/// - ExecutionStarted: Logging execution started on remote system.
+/// - ExecutionTerminated: Logging execution terminated on remote system.
+/// - ResetTDebugUI: Resets/clears the UI.
 /// - Unknown: Unknown command - if explicitly used, it will be ignored.
 enum MessageTypes: String, CaseIterable
 {
@@ -609,7 +613,29 @@ enum MessageTypes: String, CaseIterable
     case ExecutionStarted = "9eac9d1b-4423-40d2-a48c-f15949e48f6e"
     case ExecutionTerminated = "e5d86e41-0810-4065-b944-463d696c3b7e"
     case ResetTDebugUI = "0ed866a9-81d8-4296-aa34-b88ce4a69ab1"
+    case TableCommand = "eeb12ca4-9a22-11e9-a2a3-2a2ae2dbcce4"
     case Unknown = "dfc5b2d5-521b-46a8-b459-a4947089312c"
+}
+
+/// Set of sub-commands that control how table data is accumulated.
+/// - **CreateTable**: Creates a new table in memory.
+/// - **DeleteTable**: Deletes an existing table in memory.
+/// - **SaveTable**: Saves an existing table to mass storage.
+/// - **CloseTable**: Closes but does not delete an existing table.
+/// - **AddRow**: Adds a row of data.
+/// - **EditRow**: Edits an existing row of data.
+/// - **DeleteRow**: Deletes an existing row of data.
+/// - **Unknown**: Unknown sub-command. Effectively a NOP.
+enum TableCommands: String, CaseIterable
+{
+    case CreateTable = "3fbf2fce-9a23-11e9-a2a3-2a2ae2dbcce4"
+    case DeleteTable = "44b13da6-9a23-11e9-a2a3-2a2ae2dbcce4"
+    case SaveTable = "490bd9ba-9a23-11e9-a2a3-2a2ae2dbcce4"
+    case CloseTable = "54892c66-9a23-11e9-a2a3-2a2ae2dbcce4"
+    case AddRow = "5984cdf6-9a23-11e9-a2a3-2a2ae2dbcce4"
+    case EditRow = "5d23b4c2-9a23-11e9-a2a3-2a2ae2dbcce4"
+    case DeleteRow = "61843438-9a23-11e9-a2a3-2a2ae2dbcce4"
+    case Unknown = "3ef67b98-9a27-11e9-a2a3-2a2ae2dbcce4"
 }
 
 /// Describes states of UI features.
