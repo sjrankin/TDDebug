@@ -21,7 +21,7 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
     LogItemProtocol,                    //Delegate to handle log item viewing in external windows.
     GridProtocol                        //Delegate to handle grid functions.
 {
-
+    
     
     let KVPTableTag = 100
     let LogTableTag = 200
@@ -292,14 +292,14 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
             {
                 switch HandShake
                 {
-                case .ConnectionGranted:
-                    self.SetIdiotLightA1(ToState: .Connected)
+                    case .ConnectionGranted:
+                        self.SetIdiotLightA1(ToState: .Connected)
                     
-                case .Disconnected:
-                    self.SetIdiotLightA1(ToState: .PeersFound)
+                    case .Disconnected:
+                        self.SetIdiotLightA1(ToState: .PeersFound)
                     
-                default:
-                    break
+                    default:
+                        break
                 }
         }
     }
@@ -498,27 +498,27 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
                 print("Controlling idiot light at \(Address)")
                 switch Command
                 {
-                case .Disable:
-                    self.EnableIdiotLight(FinalAddress, false)
+                    case .Disable:
+                        self.EnableIdiotLight(FinalAddress, false)
                     
-                case .Enable:
-                    self.EnableIdiotLight(FinalAddress, true)
+                    case .Enable:
+                        self.EnableIdiotLight(FinalAddress, true)
                     
-                case .SetBGColor:
-                    self.IdiotLightGrid.SetCell(FinalAddress, WithBackgroundColor: BGColor!)
-                    let CS: String = BGColor!.AsHexString()
-                    print("BGColor for \(FinalAddress) = \(CS)")
+                    case .SetBGColor:
+                        self.IdiotLightGrid.SetCell(FinalAddress, WithBackgroundColor: BGColor!)
+                        let CS: String = BGColor!.AsHexString()
+                        print("BGColor for \(FinalAddress) = \(CS)")
                     
-                case .SetFGColor:
-                    self.IdiotLightGrid.SetCell(FinalAddress, WithForegroundColor: FGColor!)
-                    let CS: String = FGColor!.AsHexString()
-                    print("BGColor for \(FinalAddress) = \(CS)")
+                    case .SetFGColor:
+                        self.IdiotLightGrid.SetCell(FinalAddress, WithForegroundColor: FGColor!)
+                        let CS: String = FGColor!.AsHexString()
+                        print("BGColor for \(FinalAddress) = \(CS)")
                     
-                case .SetText:
-                    self.IdiotLightGrid.SetCell(FinalAddress, WithText: Text!)
+                    case .SetText:
+                        self.IdiotLightGrid.SetCell(FinalAddress, WithText: Text!)
                     
-                default:
-                    return
+                    default:
+                        return
                 }
         }
     }
@@ -529,7 +529,7 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
             {
                 if let IdiotCommand = MessageHelper.DecodeIdiotLightMessage2(Raw)
                 {
-
+                    
                 }
         }
     }
@@ -599,26 +599,26 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
                 let Operation = MessageHelper.DecodeSpecialCommand(Raw)
                 switch Operation
                 {
-                case .ClearIdiotLights:
-                    self.EnableIdiotLight("A2", false)
-                    self.EnableIdiotLight("A3", false)
-                    self.EnableIdiotLight("B1", false)
-                    self.EnableIdiotLight("B2", false)
-                    self.EnableIdiotLight("B3", false)
-                    self.EnableIdiotLight("C1", false)
-                    self.EnableIdiotLight("C2", false)
-                    self.EnableIdiotLight("C3", false)
+                    case .ClearIdiotLights:
+                        self.EnableIdiotLight("A2", false)
+                        self.EnableIdiotLight("A3", false)
+                        self.EnableIdiotLight("B1", false)
+                        self.EnableIdiotLight("B2", false)
+                        self.EnableIdiotLight("B3", false)
+                        self.EnableIdiotLight("C1", false)
+                        self.EnableIdiotLight("C2", false)
+                        self.EnableIdiotLight("C3", false)
                     
-                case .ClearKVPList:
-                    self.KVPItems.removeAll()
-                    self.KVPTable.reloadData()
+                    case .ClearKVPList:
+                        self.KVPItems.removeAll()
+                        self.KVPTable.reloadData()
                     
-                case .ClearLogList:
-                    self.LogItems.Clear()
-                    self.LogTable.reloadData()
+                    case .ClearLogList:
+                        self.LogItems.Clear()
+                        self.LogTable.reloadData()
                     
-                default:
-                    break
+                    default:
+                        break
                 }
         }
     }
@@ -738,42 +738,45 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
                 var ReturnState = ""
                 switch ReturnMe
                 {
-                case .ConnectionClose:
-                    break
+                    case .ConnectionClose:
+                        break
                     
-                case .ConnectionGranted:
-                    //Whether we accept or deny the connection request depends on the user's response to a dialog called
-                    //in AcceptClientConnection. Because of that, we have no commands to send to the client at this point
-                    //because we don't know what the user will do.
-                    self.AcceptClientConnection(From: Peer)
-                    let Item = LogItem(Text: "Waiting for user to respond: \(ReturnMe)")
-                    Item.HostName = "TDDebug"
-                    self.AddLogMessage(Item: Item)
-                    return
+                    case .ConnectionGranted:
+                        //Whether we accept or deny the connection request depends on the user's response to a dialog called
+                        //in AcceptClientConnection. Because of that, we have no commands to send to the client at this point
+                        //because we don't know what the user will do.
+                        self.AcceptClientConnection(From: Peer)
+                        let Item = LogItem(Text: "Waiting for user to respond: \(ReturnMe)")
+                        Item.HostName = "TDDebug"
+                        self.AddLogMessage(Item: Item)
+                        return
                     
-                case .ConnectionRefused:
-                    let Item = LogItem(Text: "Connection refused by \(Peer.displayName)")
-                    self.AddLogMessage(Item: Item)
-                    ReturnState = MessageHelper.MakeHandShake(ReturnMe)
+                    case .ConnectionRefused:
+                        let Item = LogItem(Text: "Connection refused by \(Peer.displayName)")
+                        self.AddLogMessage(Item: Item)
+                        ReturnState = MessageHelper.MakeHandShake(ReturnMe)
                     
-                case .Disconnected:
-                    let Item = LogItem(Text: "\(self._ConnectedClient!.displayName) disconnected.")
-                    Item.HostName = "TDDebug"
-                    self.AddLogMessage(Item: Item)
-                    self._ConnectedClient = nil
-                    ReturnState = MessageHelper.MakeHandShake(ReturnMe)
-                    self.ShowInstanceVersion()
+                    case .Disconnected:
+                        if let Client = self._ConnectedClient
+                        {
+                            let Item = LogItem(Text: "\(Client.displayName) disconnected.")
+                            Item.HostName = "TDDebug"
+                            self.AddLogMessage(Item: Item)
+                            self._ConnectedClient = nil
+                            ReturnState = MessageHelper.MakeHandShake(ReturnMe)
+                            self.ShowInstanceVersion()
+                    }
                     
-                case .RequestConnection:
-                    break
+                    case .RequestConnection:
+                        break
                     
-                case .DropAsClient:
-                    let Item = LogItem(Text: "Dropped as client by \(Peer.displayName)")
-                    self.AddLogMessage(Item: Item)
-                    State.TransitionTo(NewState: .Disconnected)
+                    case .DropAsClient:
+                        let Item = LogItem(Text: "Dropped as client by \(Peer.displayName)")
+                        self.AddLogMessage(Item: Item)
+                        State.TransitionTo(NewState: .Disconnected)
                     
-                case .Unknown:
-                    break
+                    case .Unknown:
+                        break
                 }
                 if !ReturnState.isEmpty
                 {
@@ -953,25 +956,25 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
         let SentCommand: ClientCommandIDs = Command.GetCommandType()!
         switch SentCommand
         {
-        case ClientCommandIDs.ClientVersion:
-            //Send the version.
-            let VerInfo = MessageHelper.MakeSendVersionInfo()
-            MPMgr.SendPreformatted(Message: VerInfo, To: Peer)
+            case ClientCommandIDs.ClientVersion:
+                //Send the version.
+                let VerInfo = MessageHelper.MakeSendVersionInfo()
+                MPMgr.SendPreformatted(Message: VerInfo, To: Peer)
             
-        case ClientCommandIDs.Reset:
-            //Reset
-            break
+            case ClientCommandIDs.Reset:
+                //Reset
+                break
             
-        case ClientCommandIDs.SendText:
-            //Received text to display.
-            let Item = LogItem(TimeStamp: MessageHelper.MakeTimeStamp(FromDate: Date()), Host: Peer.displayName,
-                               Text: Command.ParameterValues[0], ShowInitialAnimation: true,
-                               FinalBG: OSColor.white)
-            self.AddLogMessage(Item: Item)
+            case ClientCommandIDs.SendText:
+                //Received text to display.
+                let Item = LogItem(TimeStamp: MessageHelper.MakeTimeStamp(FromDate: Date()), Host: Peer.displayName,
+                                   Text: Command.ParameterValues[0], ShowInitialAnimation: true,
+                                   FinalBG: OSColor.white)
+                self.AddLogMessage(Item: Item)
             
-        case ClientCommandIDs.ShutDown:
-            //Shut down.
-            HCF()
+            case ClientCommandIDs.ShutDown:
+                //Shut down.
+                HCF()
         }
     }
     
@@ -1061,85 +1064,85 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
         #endif
         switch MessageType
         {
-        case .HandShake:
-            HandleHandShakeCommand(Payload, Peer: Peer)
+            case .HandShake:
+                HandleHandShakeCommand(Payload, Peer: Peer)
             
-        case .GetPeerType:
-            //Send peer data to someone else.
-            HandleReturnPeerType(Payload, Peer: Peer)
+            case .GetPeerType:
+                //Send peer data to someone else.
+                HandleReturnPeerType(Payload, Peer: Peer)
             
-        case .SendPeerType:
-            //Receive peer data from someone else.
-            HandlePeerTypeFromSender(Payload, Peer: Peer)
+            case .SendPeerType:
+                //Receive peer data from someone else.
+                HandlePeerTypeFromSender(Payload, Peer: Peer)
             
-        case .SpecialCommand:
-            HandleSpecialCommand(Payload, Peer: Peer)
+            case .SpecialCommand:
+                HandleSpecialCommand(Payload, Peer: Peer)
             
-        case .EchoMessage:
-            //Should be handled by the instance that received the echo.
-            HandleEchoMessage(Payload, Peer: Peer)
+            case .EchoMessage:
+                //Should be handled by the instance that received the echo.
+                HandleEchoMessage(Payload, Peer: Peer)
             
-        case .Heartbeat:
-            #if true
-            HandleHeartBeatMessage(Payload, Peer: Peer)
-            #else
-            let (_, HostName, TimeStamp, FinalMessage) = MessageHelper.DecodeMessage(RawData)
-            DisplayHeartbeatData(FinalMessage, TimeStamp: TimeStamp, Host: HostName, Peer: Peer)
+            case .Heartbeat:
+                #if true
+                HandleHeartBeatMessage(Payload, Peer: Peer)
+                #else
+                let (_, HostName, TimeStamp, FinalMessage) = MessageHelper.DecodeMessage(RawData)
+                DisplayHeartbeatData(FinalMessage, TimeStamp: TimeStamp, Host: HostName, Peer: Peer)
             #endif
             
-        case .ControlIdiotLight:
-            ControlIdiotLight(Payload)
+            case .ControlIdiotLight:
+                ControlIdiotLight(Payload)
             
-        case .IdiotLightMessage:
-            HandleIdiotLightMessage(Payload)
+            case .IdiotLightMessage:
+                HandleIdiotLightMessage(Payload)
             
-        case .KVPData:
-            ManageKVPData(Payload, Peer: Peer)
+            case .KVPData:
+                ManageKVPData(Payload, Peer: Peer)
             
-        case .EchoReturn:
-            //Should be handled by the instance that sent the echo in the first place.
-            HandleEchoReturn(Payload)
+            case .EchoReturn:
+                //Should be handled by the instance that sent the echo in the first place.
+                HandleEchoReturn(Payload)
             
-        case .TextMessage:
-            HandleTextMessage(Payload)
+            case .TextMessage:
+                HandleTextMessage(Payload)
             
-        case .TextBlock:
+            case .TextBlock:
                 //For now...
-            HandleTextMessage(Payload)
+                HandleTextMessage(Payload)
             
-        case .SendCommandToClient:
-            HandleClientCommand(Payload, Peer: Peer)
+            case .SendCommandToClient:
+                HandleClientCommand(Payload, Peer: Peer)
             
-        case .GetAllClientCommands:
-            SendClientCommandList(Peer: Peer, CommandID: EncapsulatedID!)
+            case .GetAllClientCommands:
+                SendClientCommandList(Peer: Peer, CommandID: EncapsulatedID!)
             
-        case .PushVersionInformation:
-            HandlePushedVersionInformation(Payload)
+            case .PushVersionInformation:
+                HandlePushedVersionInformation(Payload)
             
-        case .ConnectionHeartbeat:
-            HandleConnectionHeartbeat(Payload, Peer: Peer)
+            case .ConnectionHeartbeat:
+                HandleConnectionHeartbeat(Payload, Peer: Peer)
             
-        case .RequestConnectionHeartbeat:
-            HandleConnectionHeartbeatRequest(Payload, Peer: Peer)
+            case .RequestConnectionHeartbeat:
+                HandleConnectionHeartbeatRequest(Payload, Peer: Peer)
             
-        case .BroadcastMessage:
-            HandleBroadcastMessage(Payload, Peer: Peer)
+            case .BroadcastMessage:
+                HandleBroadcastMessage(Payload, Peer: Peer)
             
-        case .DebuggerStateChanged:
-            HandleDebuggerStateChanged(Payload, Peer: Peer)
+            case .DebuggerStateChanged:
+                HandleDebuggerStateChanged(Payload, Peer: Peer)
             
-        case .ResetTDebugUI:
-            ResetUI()
+            case .ResetTDebugUI:
+                ResetUI()
             
-        case .ExecutionStarted:
-            ClientExecutionStarted(Payload, Peer: Peer)
+            case .ExecutionStarted:
+                ClientExecutionStarted(Payload, Peer: Peer)
             
-        case .ExecutionTerminated:
-            ClientExecutionTerminated(Payload, Peer: Peer)
+            case .ExecutionTerminated:
+                ClientExecutionTerminated(Payload, Peer: Peer)
             
-        default:
-            print("Unhandled message type: \(MessageType), Raw=\(RawData)")
-            break
+            default:
+                print("Unhandled message type: \(MessageType), Raw=\(RawData)")
+                break
         }
     }
     
@@ -1149,17 +1152,17 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
         let ReceivedCommand = MessageHelper.GetMessageType(RawData)
         switch ReceivedCommand
         {
-        case .AllClientCommandsReturned:
-            let Parsed = MessageHelper.DecodeReturnedCommandList(RawData)
-            if Parsed!.count < 1
-            {
-                return
-            }
-            print("Received \((Parsed?.count)!) client commands from \(Peer.displayName)")
-            _ClientCommandList = Parsed!
+            case .AllClientCommandsReturned:
+                let Parsed = MessageHelper.DecodeReturnedCommandList(RawData)
+                if Parsed!.count < 1
+                {
+                    return
+                }
+                print("Received \((Parsed?.count)!) client commands from \(Peer.displayName)")
+                _ClientCommandList = Parsed!
             
-        default:
-            break
+            default:
+                break
         }
     }
     
@@ -1218,17 +1221,17 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
         OperationQueue.main.addOperation {
             switch ToState
             {
-            case .NotConnected:
-                self.SetIdiotLight("A1", "Not Connected", OSColor.black, OSColor.white)
+                case .NotConnected:
+                    self.SetIdiotLight("A1", "Not Connected", OSColor.black, OSColor.white)
                 
-            case .Connected:
-                self.SetIdiotLight("A1", "Connected to Client", OSColor.black, OSColor.green)
+                case .Connected:
+                    self.SetIdiotLight("A1", "Connected to Client", OSColor.black, OSColor.green)
                 
-            case .NoPeers:
-                self.SetIdiotLight("A1", "No Peers", OSColor.black, OSColor.lightGray)
+                case .NoPeers:
+                    self.SetIdiotLight("A1", "No Peers", OSColor.black, OSColor.lightGray)
                 
-            case .PeersFound:
-                self.SetIdiotLight("A1", "Peers Available", OSColor.white, OSColor.purple)
+                case .PeersFound:
+                    self.SetIdiotLight("A1", "Peers Available", OSColor.white, OSColor.purple)
             }
         }
     }
@@ -1270,17 +1273,17 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
         
         switch Count
         {
-        case 1:
-            return (RS[0], nil, nil, nil)
+            case 1:
+                return (RS[0], nil, nil, nil)
             
-        case 2:
-            return (RS[0], RS[1], nil, nil)
+            case 2:
+                return (RS[0], RS[1], nil, nil)
             
-        case 3:
-            return (RS[0], RS[1], RS[2], nil)
+            case 3:
+                return (RS[0], RS[1], RS[2], nil)
             
-        default:
-            break
+            default:
+                break
         }
         return (RS[0], RS[1], RS[2], RS[3])
     }
@@ -1341,17 +1344,17 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
     {
         switch tableView.tag
         {
-        case KVPTableTag:
-            return KVPItems.count
+            case KVPTableTag:
+                return KVPItems.count
             
-        case LogTableTag:
-            return LogCountWithFilter()
+            case LogTableTag:
+                return LogCountWithFilter()
             
-        case VersionTableTag:
-            return VersionKVP.count
+            case VersionTableTag:
+                return VersionKVP.count
             
-        default:
-            return 0
+            default:
+                return 0
         }
     }
     
@@ -1359,70 +1362,70 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
     {
         switch tableView.tag
         {
-        case KVPTableTag:
-            var CellContents = ""
-            var CellIdentifier = ""
-            if tableColumn == tableView.tableColumns[0]
-            {
-                CellIdentifier = "KeyColumn"
-                CellContents = KVPItems[row].Key
-            }
-            if tableColumn == tableView.tableColumns[1]
-            {
-                CellIdentifier = "ValueColumn"
-                CellContents = KVPItems[row].Value
-            }
-            let Cell = tableView.makeView(withIdentifier: NSUserInterfaceItemIdentifier(rawValue: CellIdentifier), owner: self) as? NSTableCellView
-            Cell?.textField?.stringValue = CellContents
-            return Cell
-            
-        case VersionTableTag:
-            var CellContents = ""
-            var CellIdentifier = ""
-            var ValueColor = OSColor.black
-            if tableColumn == tableView.tableColumns[0]
-            {
-                CellIdentifier = "NameColumn"
-                CellContents = VersionKVP[row].1
-            }
-            if tableColumn == tableView.tableColumns[1]
-            {
-                CellIdentifier = "ValueColumn"
-                CellContents = VersionKVP[row].2
-                if VersionKVP[row].2 == "TDDebug"
+            case KVPTableTag:
+                var CellContents = ""
+                var CellIdentifier = ""
+                if tableColumn == tableView.tableColumns[0]
                 {
-                    ValueColor = OSColor.blue
+                    CellIdentifier = "KeyColumn"
+                    CellContents = KVPItems[row].Key
                 }
-            }
-            let Cell = tableView.makeView(withIdentifier: NSUserInterfaceItemIdentifier(rawValue: CellIdentifier), owner: self) as? NSTableCellView
-            Cell?.textField?.stringValue = CellContents
-            Cell?.textField?.textColor = ValueColor
-            return Cell
+                if tableColumn == tableView.tableColumns[1]
+                {
+                    CellIdentifier = "ValueColumn"
+                    CellContents = KVPItems[row].Value
+                }
+                let Cell = tableView.makeView(withIdentifier: NSUserInterfaceItemIdentifier(rawValue: CellIdentifier), owner: self) as? NSTableCellView
+                Cell?.textField?.stringValue = CellContents
+                return Cell
             
-        case LogTableTag:
-            var CellContents = ""
-            var CellIdentifier = ""
-            if tableColumn == tableView.tableColumns[0]
-            {
-                CellIdentifier = "TimeColumn"
-                CellContents = LogItems[row].Title
-            }
-            if tableColumn == tableView.tableColumns[1]
-            {
-                CellIdentifier = "SourceColumn"
-                CellContents = LogItems[row].HostName ?? "{unknown}"
-            }
-            if tableColumn == tableView.tableColumns[2]
-            {
-                CellIdentifier = "MessageColumn"
-                CellContents = LogItems[row].Message
-            }
-            let Cell = tableView.makeView(withIdentifier: NSUserInterfaceItemIdentifier(rawValue: CellIdentifier), owner: self) as? NSTableCellView
-            Cell?.textField?.stringValue = CellContents
-            return Cell
+            case VersionTableTag:
+                var CellContents = ""
+                var CellIdentifier = ""
+                var ValueColor = OSColor.black
+                if tableColumn == tableView.tableColumns[0]
+                {
+                    CellIdentifier = "NameColumn"
+                    CellContents = VersionKVP[row].1
+                }
+                if tableColumn == tableView.tableColumns[1]
+                {
+                    CellIdentifier = "ValueColumn"
+                    CellContents = VersionKVP[row].2
+                    if VersionKVP[row].2 == "TDDebug"
+                    {
+                        ValueColor = OSColor.blue
+                    }
+                }
+                let Cell = tableView.makeView(withIdentifier: NSUserInterfaceItemIdentifier(rawValue: CellIdentifier), owner: self) as? NSTableCellView
+                Cell?.textField?.stringValue = CellContents
+                Cell?.textField?.textColor = ValueColor
+                return Cell
             
-        default:
-            return nil
+            case LogTableTag:
+                var CellContents = ""
+                var CellIdentifier = ""
+                if tableColumn == tableView.tableColumns[0]
+                {
+                    CellIdentifier = "TimeColumn"
+                    CellContents = LogItems[row].Title
+                }
+                if tableColumn == tableView.tableColumns[1]
+                {
+                    CellIdentifier = "SourceColumn"
+                    CellContents = LogItems[row].HostName ?? "{unknown}"
+                }
+                if tableColumn == tableView.tableColumns[2]
+                {
+                    CellIdentifier = "MessageColumn"
+                    CellContents = LogItems[row].Message
+                }
+                let Cell = tableView.makeView(withIdentifier: NSUserInterfaceItemIdentifier(rawValue: CellIdentifier), owner: self) as? NSTableCellView
+                Cell?.textField?.stringValue = CellContents
+                return Cell
+            
+            default:
+                return nil
         }
     }
     
@@ -1430,11 +1433,11 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
     {
         switch tableView.tag
         {
-        case LogTableTag:
-            rowView.backgroundColor = OSColor.MakeRandomColor(.Light)
+            case LogTableTag:
+                rowView.backgroundColor = OSColor.MakeRandomColor(.Light)
             
-        default:
-            return
+            default:
+                return
         }
     }
     
