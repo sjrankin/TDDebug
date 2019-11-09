@@ -107,6 +107,7 @@
 		17B68CCD2254713100AEBE94 /* AboutTDDebug.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 17B68CCC2254713100AEBE94 /* AboutTDDebug.storyboard */; };
 		17B68CCF2254731C00AEBE94 /* AboutTDDebugCode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17B68CCE2254731C00AEBE94 /* AboutTDDebugCode.swift */; };
 		17B68CD12254756400AEBE94 /* AboutTDDebugWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17B68CD02254756400AEBE94 /* AboutTDDebugWindow.swift */; };
+		17BE8E5E23766F3F00262F81 /* CellState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17BE8E5D23766F3F00262F81 /* CellState.swift */; };
 		17C0E6FA22AF9FD3003FAFA8 /* IdiotLightMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17C0E6F922AF9FD3003FAFA8 /* IdiotLightMessage.swift */; };
 		17C0E6FB22AF9FD3003FAFA8 /* IdiotLightMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17C0E6F922AF9FD3003FAFA8 /* IdiotLightMessage.swift */; };
 		17C4161122C0BAEC00A13793 /* CommandDump.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17C4161022C0BAEC00A13793 /* CommandDump.swift */; };
@@ -237,6 +238,7 @@
 		17B68CCC2254713100AEBE94 /* AboutTDDebug.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = AboutTDDebug.storyboard; sourceTree = "<group>"; };
 		17B68CCE2254731C00AEBE94 /* AboutTDDebugCode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutTDDebugCode.swift; sourceTree = "<group>"; };
 		17B68CD02254756400AEBE94 /* AboutTDDebugWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutTDDebugWindow.swift; sourceTree = "<group>"; };
+		17BE8E5D23766F3F00262F81 /* CellState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CellState.swift; sourceTree = "<group>"; };
 		17C0E6F922AF9FD3003FAFA8 /* IdiotLightMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IdiotLightMessage.swift; sourceTree = "<group>"; };
 		17C4161022C0BAEC00A13793 /* CommandDump.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommandDump.swift; sourceTree = "<group>"; };
 		17C4161222C0BB3600A13793 /* CommandDumpWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommandDumpWindow.swift; sourceTree = "<group>"; };
@@ -529,6 +531,7 @@
 				177DF35D23755C00000DAD90 /* GridCell.swift */,
 				177DF35F23755C20000DAD90 /* IntraGridProtocol.swift */,
 				177DF36123755C3B000DAD90 /* GridProtocol.swift */,
+				17BE8E5D23766F3F00262F81 /* CellState.swift */,
 			);
 			path = Grid;
 			sourceTree = "<group>";
@@ -876,6 +879,7 @@
 				1704C5B82253244D00C49E91 /* ClientCommands.swift in Sources */,
 				17508F3D225B04B700BC9FC0 /* SelectorWindow.swift in Sources */,
 				1722347022573D7D00518601 /* FilterObject.swift in Sources */,
+				17BE8E5E23766F3F00262F81 /* CellState.swift in Sources */,
 				173366A222570A0400438E66 /* MessageHandlerDelegate.swift in Sources */,
 				1797522422C38A2F00BF539A /* MessageHelper.swift in Sources */,
 				1743C1482252032F003FE6B2 /* MultiPeer.swift in Sources */,
