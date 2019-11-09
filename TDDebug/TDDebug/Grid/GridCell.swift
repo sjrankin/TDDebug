@@ -31,6 +31,12 @@ class GridCell: NSView, IntraGridProtocol
         Initialize(WithTag: TagValue)
     }
     
+    init(frame: NSRect, State: CellState)
+    {
+        super.init(frame: frame)
+        Initialize(WithState: State)
+    }
+    
     /// Initializer.
     /// - Parameter coder: See Apple documentation.
     required init?(coder: NSCoder)
@@ -40,6 +46,7 @@ class GridCell: NSView, IntraGridProtocol
     }
     
     /// Initialize the grid cell.
+    /// - Parameter WithTag: The initial tag value.
     public func Initialize(WithTag: Any? = nil)
     {
         //Set up mouse tracking.
@@ -73,6 +80,39 @@ class GridCell: NSView, IntraGridProtocol
         }
         self.subviews.forEach({$0.removeFromSuperview()})
         self.addSubview(_Label!)
+    }
+    
+    /// Initialize the grid cell.
+    /// The state used to initialize the contents of the cell.
+    public func Initialize(WithState: CellState)
+    {
+        //Set up mouse tracking.
+        let TrackingArea = NSTrackingArea(rect: self.bounds,
+                                          options: [.mouseEnteredAndExited, .activeAlways],
+                                          owner: self,
+                                          userInfo: nil)
+        self.addTrackingArea(TrackingArea)
+        Tag = WithState.CellTag
+        self.wantsLayer = true
+        self.layer?.masksToBounds = true
+        _Label = NSTextField(labelWithString: WithState.CellContents)
+        _Label?.alignment = .center
+        _Label?.lineBreakMode = .byWordWrapping
+        let ParentWidth = self.frame.width
+        let ParentHeight = self.frame.height
+        _Label?.frame = NSRect(x: 2, y: 2, width: ParentWidth - 4, height: ParentHeight - 4)
+        _Label?.font = NSFont.systemFont(ofSize: 14.0)
+        _Label?.alphaValue = 1.0
+        _Label?.maximumNumberOfLines = 4
+        if let SomeTag = Tag
+        {
+            _Label?.tag = (SomeTag as? Int)!
+        }
+        self.subviews.forEach({$0.removeFromSuperview()})
+        self.addSubview(_Label!)
+        SetForegroundColor(WithState.TextColor)
+        BackgroundColor = WithState.BackgroundColor
+        Address = WithState.CellAddress
     }
     
     /// Holds the label.
@@ -243,5 +283,27 @@ class GridCell: NSView, IntraGridProtocol
     override func mouseExited(with event: NSEvent)
     {
         BackgroundColor = OldBG
+    }
+    
+    // MARK: State functions.
+    
+    /// Returns the current state context of the cell. This data can be used to reconstruct a cell if necessary.
+    /// - Returns: Object with the state of the cell.
+    public func GetState() -> CellState
+    {
+        let CurrentState = CellState()
+        CurrentState.BackgroundColor = BackgroundColor
+        CurrentState.TextColor = _Label!.textColor!
+        CurrentState.CellAddress = Address
+        CurrentState.CellContents = _Label!.stringValue
+        CurrentState.CellTag = Tag
+        return CurrentState
+    }
+    
+    /// Populate the cell with the passed state information.
+    /// - Parameter ExistingState: The state to use to populate the cell.
+    public func SetState(_ ExistingState: CellState)
+    {
+        Initialize(WithState: ExistingState)
     }
 }
