@@ -488,7 +488,7 @@ class MainController: UIViewController, UITableViewDelegate, UITableViewDataSour
     func HandleEchoReturn(_ Raw: String)
     {
         #if true
-        let (Message, HostName, TimeStamp) = MessageHelper.DecodeTextMessage(Raw)
+        let (Message, HostName, TimeStamp, _) = MessageHelper.DecodeTextMessage(Raw)
         OperationQueue.main.addOperation
             {
                 let Item = LogItem(TimeStamp: TimeStamp, Host: HostName, Text: "Echo returned: " + Message,
@@ -509,7 +509,7 @@ class MainController: UIViewController, UITableViewDelegate, UITableViewDataSour
     func HandleTextMessage(_ Raw: String)
     {
         #if true
-        let (Message, HostName, TimeStamp) = MessageHelper.DecodeTextMessage(Raw)
+        let (Message, HostName, TimeStamp, _) = MessageHelper.DecodeTextMessage(Raw)
         OperationQueue.main.addOperation
             {
                 let Item = LogItem(TimeStamp: TimeStamp, Host: HostName, Text: Message,
@@ -739,6 +739,10 @@ class MainController: UIViewController, UITableViewDelegate, UITableViewDataSour
             HandleEchoReturn(Payload)
             
         case .TextMessage:
+            HandleTextMessage(Payload)
+            
+        case .TextBlock:
+                //For now...
             HandleTextMessage(Payload)
             
         case .GetAllClientCommands:
