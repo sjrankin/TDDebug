@@ -18,8 +18,11 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
     StateProtocol,                      //Delegate to handle state changes.
     MessageHandlerDelegate,             //Delegate to implement functions for message handling from the MessageHandler class.
     //(These functions are in ViewControllerMessageHandling.swift.
-    LogItemProtocol                     //Delegate to handle log item viewing in external windows.
+    LogItemProtocol,                    //Delegate to handle log item viewing in external windows.
+    GridProtocol                        //Delegate to handle grid functions.
 {
+
+    
     let KVPTableTag = 100
     let LogTableTag = 200
     let VersionTableTag = 300
@@ -42,7 +45,6 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
         
         State.Initialize(WithDelegate: self)
         
-        InitializeIdiotLights()
         InitializeTables()
         
         MPMgr = MultiPeerManager()
@@ -52,34 +54,32 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
         
         LocalCommands = ClientCommands()
         
+        IdiotLightGrid.GridDelegate = self
+        TextBlockOut.backgroundColor = NSColor.white
+        
         ShowInstanceVersion()
     }
     
     override func viewDidLayout()
     {
         super.viewDidLayout()
-        IdiotLights["A1"] = (A1View, A1Text)
-        IdiotLights["A2"] = (A2View, A2Text)
-        IdiotLights["A3"] = (A3View, A3Text)
-        IdiotLights["B1"] = (B1View, B1Text)
-        IdiotLights["B2"] = (B2View, B2Text)
-        IdiotLights["B3"] = (B3View, B3Text)
-        IdiotLights["C1"] = (C1View, C1Text)
-        IdiotLights["C2"] = (C2View, C2Text)
-        IdiotLights["C3"] = (C3View, C3Text)
         
         SetIdiotLightA1(ToState: .NotConnected)
         EnableIdiotLight("A2", false)
         EnableIdiotLight("A3", false)
+        EnableIdiotLight("A4", false)
         EnableIdiotLight("B1", false)
         EnableIdiotLight("B2", false)
         EnableIdiotLight("B3", false)
+        EnableIdiotLight("B4", false)
         EnableIdiotLight("C1", false)
         EnableIdiotLight("C2", false)
         EnableIdiotLight("C3", false)
+        EnableIdiotLight("C4", false)
         
         SetSendEnableState(To: false)
         UpdateLabels()
+        IdiotLightGrid.Start()
     }
     
     @IBOutlet weak var LogLabel: NSTextField!
@@ -142,8 +142,6 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
             AddVersionData(Order: 6, Name: "Program ID", Value: ProgramID)
         }
     }
-    
-    var IdiotLights = [String: (NSView, NSTextField)]()
     
     // MARK: MainProtocol implementation.
     
@@ -507,17 +505,17 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
                     self.EnableIdiotLight(FinalAddress, true)
                     
                 case .SetBGColor:
-                    self.IdiotLights[FinalAddress]!.0.layer?.backgroundColor = BGColor?.cgColor
+                    self.IdiotLightGrid.SetCell(FinalAddress, WithBackgroundColor: BGColor!)
                     let CS: String = BGColor!.AsHexString()
                     print("BGColor for \(FinalAddress) = \(CS)")
                     
                 case .SetFGColor:
-                    self.IdiotLights[FinalAddress]!.1.textColor = FGColor!
+                    self.IdiotLightGrid.SetCell(FinalAddress, WithForegroundColor: FGColor!)
                     let CS: String = FGColor!.AsHexString()
                     print("BGColor for \(FinalAddress) = \(CS)")
                     
                 case .SetText:
-                    self.IdiotLights[FinalAddress]!.1.stringValue = Text!
+                    self.IdiotLightGrid.SetCell(FinalAddress, WithText: Text!)
                     
                 default:
                     return
@@ -531,12 +529,7 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
             {
                 if let IdiotCommand = MessageHelper.DecodeIdiotLightMessage2(Raw)
                 {
-                    let FinalAddress = IdiotCommand.Address.uppercased()
-                    self.IdiotLights[FinalAddress]!.1.stringValue = IdiotCommand.Message
-                    let FGColor = OSColor(HexString: IdiotCommand.FGColor)
-                    self.IdiotLights[FinalAddress]!.1.textColor = FGColor!
-                    let BGColor = OSColor(HexString: IdiotCommand.BGColor)
-                    self.IdiotLights[FinalAddress]!.0.layer?.backgroundColor = BGColor?.cgColor
+
                 }
         }
     }
@@ -846,6 +839,28 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
         #endif
     }
     
+    func HandleTextBlockMessage(_ Raw: String)
+    {
+        let (Block, IsMono, HostName, TimeStamp) = MessageHelper.DecodeTextBlockMessage(Raw)
+        OperationQueue.main.addOperation
+            {
+                let OldSize: CGFloat = (self.TextBlockOut.font?.fontDescriptor.object(forKey: NSFontDescriptor.AttributeName.size) as? CGFloat)!
+                self.TextBlockOut.stringValue = Block
+                if IsMono
+                {
+                    self.TextBlockIsMono = true
+                    self.TextBlockOut.font = NSFont.monospacedSystemFont(ofSize: OldSize, weight: NSFont.Weight.regular)
+                }
+                else
+                {
+                    self.TextBlockIsMono = false
+                    self.TextBlockOut.font = NSFont.systemFont(ofSize: OldSize, weight: NSFont.Weight.regular)
+                }
+        }
+    }
+    
+    var TextBlockIsMono = false
+    
     func HandlePushedVersionInformation(_ Raw: String)
     {
         print("Handling pushed version: \(MessageHelper.MakeSymbolic(Command: Raw))")
@@ -1088,6 +1103,10 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
         case .TextMessage:
             HandleTextMessage(Payload)
             
+        case .TextBlock:
+                //For now...
+            HandleTextMessage(Payload)
+            
         case .SendCommandToClient:
             HandleClientCommand(Payload, Peer: Peer)
             
@@ -1178,8 +1197,8 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
     {
         OperationQueue.main.addOperation
             {
-                self.IdiotLights[Address]!.0.layer?.backgroundColor = DoEnable ? EnableBGColor.cgColor : NSColor.white.cgColor
-                self.IdiotLights[Address]!.1.textColor = DoEnable ? EnableFGColor : NSColor.clear
+                self.IdiotLightGrid.SetCell(Address, WithBackgroundColor: DoEnable ? EnableBGColor : NSColor.white)
+                self.IdiotLightGrid.SetCell(Address, WithForegroundColor: DoEnable ? EnableFGColor : NSColor.clear)
         }
     }
     
@@ -1188,9 +1207,9 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
     {
         OperationQueue.main.addOperation
             {
-                self.IdiotLights[Address]!.0.layer?.backgroundColor = BGColor.cgColor
-                self.IdiotLights[Address]!.1.textColor = TextColor
-                self.IdiotLights[Address]!.1.stringValue = Text
+                self.IdiotLightGrid.SetCell(Address, WithBackgroundColor: BGColor)
+                self.IdiotLightGrid.SetCell(Address, WithForegroundColor: TextColor)
+                self.IdiotLightGrid.SetCell(Address, WithText: Text)
         }
     }
     
@@ -1417,32 +1436,6 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
         default:
             return
         }
-    }
-    
-    func InitializeIdiotLights()
-    {
-        IdiotLightContainer.fillColor = NSColor(calibratedRed: 0.9, green: 0.9, blue: 0.9, alpha: 1.0)
-        
-        InitializeIdiotLight(A1View, A1Text, IsA1: true)
-        InitializeIdiotLight(A2View, A2Text)
-        InitializeIdiotLight(A3View, A3Text)
-        InitializeIdiotLight(B1View, B1Text)
-        InitializeIdiotLight(B2View, B2Text)
-        InitializeIdiotLight(B3View, B3Text)
-        InitializeIdiotLight(C1View, C1Text)
-        InitializeIdiotLight(C2View, C2Text)
-        InitializeIdiotLight(C3View, C3Text)
-    }
-    
-    func InitializeIdiotLight(_ Light: NSView, _ Text: NSTextField, IsA1: Bool = false)
-    {
-        Light.wantsLayer = true
-        Light.layer?.borderColor = NSColor.black.cgColor
-        Light.layer?.borderWidth = IsA1 ? 2.0 : 0.5
-        Light.layer?.cornerRadius = 5.0
-        Light.layer?.backgroundColor = NSColor.white.cgColor
-        Text.font = NSFont(name: "Avenir-Heavy", size: 15.0)
-        Text.alignment = .center
     }
     
     /// Returns the name of the device. In this case, "name" means the name the user gave the device.
@@ -1776,30 +1769,94 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
             ConnectionProtocolTypes.PeerViewer: nil
     ]
     
-    @IBOutlet weak var A1View: NSView!
-    @IBOutlet weak var A2View: NSView!
-    @IBOutlet weak var A3View: NSView!
-    @IBOutlet weak var B1View: NSView!
-    @IBOutlet weak var B2View: NSView!
-    @IBOutlet weak var B3View: NSView!
-    @IBOutlet weak var C1View: NSView!
-    @IBOutlet weak var C2View: NSView!
-    @IBOutlet weak var C3View: NSView!
-    @IBOutlet weak var A1Text: NSTextField!
-    @IBOutlet weak var A2Text: NSTextField!
-    @IBOutlet weak var A3Text: NSTextField!
-    @IBOutlet weak var B1Text: NSTextField!
-    @IBOutlet weak var B2Text: NSTextField!
-    @IBOutlet weak var B3Text: NSTextField!
-    @IBOutlet weak var C1Text: NSTextField!
-    @IBOutlet weak var C2Text: NSTextField!
-    @IBOutlet weak var C3Text: NSTextField!
+    // MARK: - Grid protocol function handlers.
+    
+    func CellSelectionStateChanged(Column: Int, Row: Int, IsSelected: Bool)
+    {
+        
+    }
+    
+    func CellTapped(Column: Int, Row: Int, TapCount: Int)
+    {
+        
+    }
+    
+    func CellCountChanged(ColumnCount: Int, RowCount: Int)
+    {
+        
+    }
+    
+    func ResetAllCells(ToSelection: Bool)
+    {
+        
+    }
+    
+    func PivotCellCoordinates() -> [(Int, Int)]
+    {
+        return [(0, 0)]
+    }
+    
+    func ResetAllPivotPoints()
+    {
+        
+    }
+    
+    func GetPlotCoordinates(ForX: Int, ForY: Int) -> (Int, Int)?
+    {
+        return nil
+    }
+    
+    // MARK: - Handle text block font size controls.
+    
+    @IBAction func HandleIncreaseFontSize(_ sender: Any)
+    {
+        if let OldSize: CGFloat = TextBlockOut.font?.fontDescriptor.object(forKey: NSFontDescriptor.AttributeName.size) as? CGFloat
+        {
+            let NewSize = OldSize + 1
+            var NewFont: NSFont!
+            if TextBlockIsMono
+            {
+                NewFont = NSFont.monospacedSystemFont(ofSize: NewSize, weight: NSFont.Weight.regular)
+            }
+            else
+            {
+                NewFont = NSFont.systemFont(ofSize: NewSize, weight: NSFont.Weight.regular)
+            }
+            TextBlockOut.font = NewFont
+        }
+    }
+    
+    @IBAction func HandleDecreaseFontSize(_ sender: Any)
+    {
+        if let OldSize: CGFloat = TextBlockOut.font?.fontDescriptor.object(forKey: NSFontDescriptor.AttributeName.size) as? CGFloat
+        {
+            let NewSize = OldSize - 1
+            if NewSize < 6
+            {
+                print("New font size too small.")
+                return
+            }
+            var NewFont: NSFont!
+            if TextBlockIsMono
+            {
+                NewFont = NSFont.monospacedSystemFont(ofSize: NewSize, weight: NSFont.Weight.regular)
+            }
+            else
+            {
+                NewFont = NSFont.systemFont(ofSize: NewSize, weight: NSFont.Weight.regular)
+            }
+            TextBlockOut.font = NewFont
+        }
+    }
+    
+    // MARK: - Interface builder outlets.
+    
     @IBOutlet weak var LogTable: NSTableView!
     @IBOutlet weak var LogTableHeader: NSTableHeaderView!
     @IBOutlet weak var KVPTable: NSTableView!
     @IBOutlet weak var KVPTableHeader: NSTableHeaderView!
     @IBOutlet weak var VersionTable: NSTableView!
-    
-    @IBOutlet weak var IdiotLightContainer: NSBox!
+    @IBOutlet weak var IdiotLightGrid: Grid!
+    @IBOutlet weak var TextBlockOut: NSTextField!
 }
 
