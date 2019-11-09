@@ -52,6 +52,7 @@ import AppKit
     
     // MARK: - Drawing and related functions.
     
+    #if false
     /// Holds the bounds for the `Grid` instance. When the bounds changes, the instance will redraw the grid.
     override var bounds: NSRect
         {
@@ -61,6 +62,7 @@ import AppKit
             DrawGrid()
         }
     }
+    #endif
     
     /// Draw the grid. Each time the grid is drawn, all existing grid cells are deleted then recreated.
     /// - Note: If the number of columns or the number of rows is 0, any previously existing grid cells are deleted then control
@@ -121,6 +123,20 @@ import AppKit
 
     /// Map of grid cells to their addresses.
     public var GridCellMap = [String: GridCell]()
+    
+    // MARK: State functions
+    
+    /// Returns an array of cell state data that can be used to reconstitute the grid.
+    /// - Returns: Array of cell state information.
+    public func ExtractState() -> [CellState]
+    {
+        var Results = [CellState]()
+        for (_, Cell) in GridCellMap
+        {
+            Results.append(Cell.GetState())
+        }
+        return Results
+    }
     
     // MARK: Protocol functions not used in this class
     
